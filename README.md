@@ -1,5 +1,7 @@
 # SoPra RESTful Service Template FS20
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sopra-fs-20-group-15_server&metric=alert_status)](https://sonarcloud.io/dashboard?id=sopra-fs-20-group-15_server)
+
 ## Getting started with Spring Boot
 
 -   Documentation: https://docs.spring.io/spring-boot/docs/current/reference/html/index.html
