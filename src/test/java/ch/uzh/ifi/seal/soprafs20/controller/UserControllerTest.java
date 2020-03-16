@@ -368,6 +368,6 @@ public class UserControllerTest {
         catch (JsonProcessingException e) {
             throw new SopraServiceException(String.format("The request body could not be created.%s", e.toString()));
         }
-    }
+    } //
 
 }
