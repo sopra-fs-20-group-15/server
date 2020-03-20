@@ -14,10 +14,11 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.Collections;
@@ -52,10 +53,64 @@ public class UserControllerTest {
 
     @MockBean
     private UserService userService;
+    /**Tests a get-Request to /users*/
+    @Test
+    public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
+
+        // given
+        User user = new User();
+        user.setName("Firstname Lastname");
+        user.setUsername("firstname@lastname");
+
+        List<User> allUsers = Collections.singletonList(user);
+
+        // this mocks the UserService -> we define above what the userService should return when getUsers() is called
+        given(userService.getUsers()).willReturn(allUsers);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/users").contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest).andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name", is(user.getName())))
+                .andExpect(jsonPath("$[0].username", is(user.getUsername())));
+    }
+
+    /**Test the Post-Request to /users*/
+
+    @Test
+    public void createUser_validInput_userCreated() throws Exception {
+
+        // given
+        User user = new User();
+        user.setId(1L);
+        user.setName("Test User");
+        user.setUsername("testUsername");
+
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setName("Test User");
+        userPostDTO.setUsername("testUsername");
+
+        given(userService.createUser(Mockito.any())).willReturn(user);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder postRequest = post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
+
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("$.name", is(user.getName())))
+                .andExpect(jsonPath("$.username", is(user.getUsername())));
+    }
 
 
     /**Tests a get-Request to /games*/
-
+/**
     //Valid game
     @Test
     public void POSTgamesCreateGameWorks() throws Exception {
@@ -105,9 +160,9 @@ public class UserControllerTest {
         mockMvc.perform(postRequest).andExpect(status().isConflict())
 
     }
-
+*/
     /**Tests a Put-Request to /games/{gameId}*/
-
+/**
     //A player joins a game successfully
     @Test
     public void PUTgamesGameIdJoinSuccessfull() throws Exception {
@@ -174,8 +229,9 @@ public class UserControllerTest {
 
 
     }
-
+*/
     /** Test /games/{gameId}/clues Post*/
+    /**
     //Valid Post
     @Test
     public void POSTgamesGameIdCluesValidClue() throws Exception {
@@ -246,8 +302,10 @@ public class UserControllerTest {
 
 
     }
+    */
 
     /** Test /games/{gameId}/guesses Post*/
+    /**
     //Valid Post
     @Test
    public void POSTgamesGameIdGuessesValidGuess() throws Exception {
@@ -315,7 +373,10 @@ public class UserControllerTest {
         mockMvc.perform(postRequest).andExpect(status().isConflict());
 
     }
+    */
+
     /** Test /games/{gameId}/delete DELETE*/
+    /**
     //Valid Delete
     @Test
     public void DELETEgamesGameIdDeleteValidDelete() throws Exception {
@@ -345,6 +406,7 @@ public class UserControllerTest {
         mockMvc.perform(deleteRequest).andExpect(status().isNotFound();
 
     }
+
     //Conflict since game is still running
     @Test
     public void DELETEgamesGameIdDeleteGameNotFinishedYet() throws Exception {
@@ -369,5 +431,28 @@ public class UserControllerTest {
             throw new SopraServiceException(String.format("The request body could not be created.%s", e.toString()));
         }
     } //
+*/
+    /**
+
+     * Helper Method to convert userPostDTO into a JSON string such that the input can be processed
+
+     * Input will look like this: {"name": "Test User", "username": "testUsername"}
+
+     * @param object
+
+     * @return string
+
+     */
+
+    private String asJsonString(final Object object) {
+
+        try {
+            return new ObjectMapper().writeValueAsString(object);
+        }
+
+        catch (JsonProcessingException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("The request body could not be created.%s", e.toString()));
+        }
+    }
 
 }
