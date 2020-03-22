@@ -53,7 +53,7 @@ public class UserControllerTest {
 
     @MockBean
     private UserService userService;
-    /**Tests a get-Request to /users*/
+    /**Tests a get-Request to /users*/ 
     @Test
     public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
 
