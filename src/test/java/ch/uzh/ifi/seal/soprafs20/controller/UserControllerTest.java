@@ -375,7 +375,7 @@ public class UserControllerTest {
     }
     */
 
-    /** Test /games/{gameId}/delete DELETE*/
+    /** Test /games/{gameId}/delete DELETE*/   
     /**
     //Valid Delete
     @Test
