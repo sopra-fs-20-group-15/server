@@ -1,8 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.entity.User;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -40,6 +39,15 @@ public class UserController {
         return userGetDTOs;
     }
 
+    @GetMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public UserGetDTO getUser(@PathVariable String userId) {
+        User userInput = DTOMapper.INSTANCE.convertUserIdStringToEntity(userId);
+        UserGetDTO userGetDTO= DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUser(userInput));
+        return userGetDTO;
+    }
+
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -52,5 +60,29 @@ public class UserController {
 
         // convert internal representation of user back to API
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
+    }
+
+    @PutMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public UserTokenDTO loginUser(@RequestBody UserPutDTO userputDTO){
+        User userInput =DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userputDTO);
+        return DTOMapper.INSTANCE.convertEntityToUserTokenDTO(userService.loginUser(userInput)) ;
+    }
+
+    @PutMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public void updateUser(@RequestBody UserPutUserIdDTO userPutUserIdDTO, @PathVariable String userId){
+        userService.updateUser(DTOMapper.INSTANCE.convertUserPutUserIdDTOToEntity(userPutUserIdDTO), userId);
+
+    }
+
+    @PutMapping("/logout")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void logoutUser(@RequestBody UserTokenDTO userTokenDTO){
+        User userInput = DTOMapper.INSTANCE.convertUserTokenDTOToEntity(userTokenDTO);
+        userService.logOutUser(userInput) ;
     }
 }
