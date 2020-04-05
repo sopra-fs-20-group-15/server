@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
-import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Player;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @WebAppConfiguration
 @SpringBootTest
-public class UserServiceIntegrationTest {
+public class PlayerServiceIntegrationTest {
 
     @Qualifier("userRepository")
     @Autowired
@@ -39,38 +39,38 @@ public class UserServiceIntegrationTest {
         // given
         assertNull(userRepository.findByUsername("testUsername"));
 
-        User testUser = new User();
-        testUser.setName("testName");
-        testUser.setUsername("testUsername");
+        Player testPlayer = new Player();
+        testPlayer.setName("testName");
+        testPlayer.setUsername("testUsername");
 
         // when
-        User createdUser = userService.createUser(testUser);
+        Player createdPlayer = userService.createUser(testPlayer);
 
         // then
-        assertEquals(testUser.getId(), createdUser.getId());
-        assertEquals(testUser.getName(), createdUser.getName());
-        assertEquals(testUser.getUsername(), createdUser.getUsername());
-        assertNotNull(createdUser.getToken());
-        assertEquals(UserStatus.OFFLINE, createdUser.getStatus());
+        assertEquals(testPlayer.getId(), createdPlayer.getId());
+        assertEquals(testPlayer.getName(), createdPlayer.getName());
+        assertEquals(testPlayer.getUsername(), createdPlayer.getUsername());
+        assertNotNull(createdPlayer.getToken());
+        assertEquals(UserStatus.OFFLINE, createdPlayer.getStatus());
     }
 
     @Test
     public void createUser_duplicateUsername_throwsException() {
         assertNull(userRepository.findByUsername("testUsername"));
 
-        User testUser = new User();
-        testUser.setName("testName");
-        testUser.setUsername("testUsername");
-        User createdUser = userService.createUser(testUser);
+        Player testPlayer = new Player();
+        testPlayer.setName("testName");
+        testPlayer.setUsername("testUsername");
+        Player createdPlayer = userService.createUser(testPlayer);
 
         // attempt to create second user with same username
-        User testUser2 = new User();
+        Player testPlayer2 = new Player();
 
         // change the name but forget about the username
-        testUser2.setName("testName2");
-        testUser2.setUsername("testUsername");
+        testPlayer2.setName("testName2");
+        testPlayer2.setUsername("testUsername");
 
         // check that an error is thrown
-        assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser2));
+        assertThrows(ResponseStatusException.class, () -> userService.createUser(testPlayer2));
     }
 }

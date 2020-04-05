@@ -1,8 +1,7 @@
-package GameLogic;
+package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 

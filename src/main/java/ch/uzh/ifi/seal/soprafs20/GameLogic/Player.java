@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.entity;
+package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 
@@ -7,15 +7,16 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Internal User Representation
+ * Internal Player Representation
  * This class composes the internal representation of the user and defines how the user is stored in the database.
  * Every variable will be mapped into a database field with the @Column annotation
  *  nullable = false -> this cannot be left empty
  * - unique = true -> this value must be unqiue across the database -> composes the primary key
  */
 @Entity
-@Table(name = "USER")
-public class User implements Serializable {
+//Even though there is a red line beneath "Player", it should still work
+@Table(name = "PLAYER")
+public class Player implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

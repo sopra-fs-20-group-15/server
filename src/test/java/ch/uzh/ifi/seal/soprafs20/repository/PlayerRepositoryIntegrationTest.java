@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.repository;
 
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
-import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Player;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
-public class UserRepositoryIntegrationTest {
+public class PlayerRepositoryIntegrationTest {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -22,23 +22,23 @@ public class UserRepositoryIntegrationTest {
     @Test
     public void findByName_success() {
         // given
-        User user = new User();
-        user.setName("Firstname Lastname");
-        user.setUsername("firstname@lastname");
-        user.setStatus(UserStatus.OFFLINE);
-        user.setToken("1");
+        Player player = new Player();
+        player.setName("Firstname Lastname");
+        player.setUsername("firstname@lastname");
+        player.setStatus(UserStatus.OFFLINE);
+        player.setToken("1");
 
-        entityManager.persist(user);
+        entityManager.persist(player);
         entityManager.flush();
 
         // when
-        User found = userRepository.findByName(user.getName());
+        Player found = userRepository.findByName(player.getName());
 
         // then
         assertNotNull(found.getId());
-        assertEquals(found.getName(), user.getName());
-        assertEquals(found.getUsername(), user.getUsername());
-        assertEquals(found.getToken(), user.getToken());
-        assertEquals(found.getStatus(), user.getStatus());
+        assertEquals(found.getName(), player.getName());
+        assertEquals(found.getUsername(), player.getUsername());
+        assertEquals(found.getToken(), player.getToken());
+        assertEquals(found.getStatus(), player.getStatus());
     }
 }

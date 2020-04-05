@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Player;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.UserService;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User Controller
+ * Player Controller
  * This class is responsible for handling all REST request that are related to the user.
  * The controller will receive the request and delegate the execution to the UserService and finally return the result.
  */
@@ -28,13 +28,13 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<UserGetDTO> getAllUsers() {
-        // fetch all users in the internal representation
-        List<User> users = userService.getUsers();
+        // fetch all players in the internal representation
+        List<Player> players = userService.getUsers();
         List<UserGetDTO> userGetDTOs = new ArrayList<>();
 
         // convert each user to the API representation
-        for (User user : users) {
-            userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
+        for (Player player : players) {
+            userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(player));
         }
         return userGetDTOs;
     }
@@ -43,8 +43,8 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserGetDTO getUser(@PathVariable String userId) {
-        User userInput = DTOMapper.INSTANCE.convertUserIdStringToEntity(userId);
-        UserGetDTO userGetDTO= DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUser(userInput));
+        Player playerInput = DTOMapper.INSTANCE.convertUserIdStringToEntity(userId);
+        UserGetDTO userGetDTO= DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUser(playerInput));
         return userGetDTO;
     }
 
@@ -53,21 +53,21 @@ public class UserController {
     @ResponseBody
     public UserGetDTO createUser(@RequestBody UserPostDTO userPostDTO) {
         // convert API user to internal representation
-        User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+        Player playerInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
 
         // create user
-        User createdUser = userService.createUser(userInput);
+        Player createdPlayer = userService.createUser(playerInput);
 
         // convert internal representation of user back to API
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdPlayer);
     }
 
     @PutMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserTokenDTO loginUser(@RequestBody UserPutDTO userputDTO){
-        User userInput =DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userputDTO);
-        return DTOMapper.INSTANCE.convertEntityToUserTokenDTO(userService.loginUser(userInput)) ;
+        Player playerInput =DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userputDTO);
+        return DTOMapper.INSTANCE.convertEntityToUserTokenDTO(userService.loginUser(playerInput)) ;
     }
 
     @PutMapping("/users/{userId}")
@@ -82,7 +82,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public void logoutUser(@RequestBody UserTokenDTO userTokenDTO){
-        User userInput = DTOMapper.INSTANCE.convertUserTokenDTOToEntity(userTokenDTO);
-        userService.logOutUser(userInput) ;
+        Player playerInput = DTOMapper.INSTANCE.convertUserTokenDTOToEntity(userTokenDTO);
+        userService.logOutUser(playerInput) ;
     }
 }
