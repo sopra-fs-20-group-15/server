@@ -1,11 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
-import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
-
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**

@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
  */
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(PlayerController.class)
 
 public class PlayerControllerTest {
 

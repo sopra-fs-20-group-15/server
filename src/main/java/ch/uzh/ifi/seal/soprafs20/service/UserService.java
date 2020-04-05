@@ -1,9 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
-import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
+import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Player;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
-import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,73 +26,73 @@ public class UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final UserRepository userRepository;
+    private final PlayerRepository playerRepository;
 
     @Autowired
-    public UserService(@Qualifier("userRepository") UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(@Qualifier("userRepository") PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
     }
 
     public List<Player> getUsers() {
-        return this.userRepository.findAll();
+        return this.playerRepository.findAll();
     }
 
     public Player createUser(Player newPlayer) {
         newPlayer.setToken(UUID.randomUUID().toString());
-        newPlayer.setStatus(UserStatus.OFFLINE);
+        newPlayer.setStatus(PlayerStatus.OFFLINE);
 
         checkIfUserExists(newPlayer);
 
         if (newPlayer.getPassword().equals("")|| newPlayer.getUsername().equals("")) throw new IllegalRegistrationInput("Username and/or password can't consist of an empty string!");
 
         // saves the given entity but data is only persisted in the database once flush() is called
-        newPlayer = userRepository.save(newPlayer);
-        userRepository.flush();
+        newPlayer = playerRepository.save(newPlayer);
+        playerRepository.flush();
 
         log.debug("Created Information for Player: {}", newPlayer);
         return newPlayer;
     }
 
     public Player loginUser(Player potPlayer){
-        Player player = userRepository.findByUsername(potPlayer.getUsername());
-        if (player ==null) throw new UserNotAvailable(String.format("No player with this username exists."));
+        Player player = playerRepository.findByUsername(potPlayer.getUsername());
+        if (player ==null) throw new PlayerNotAvailable(String.format("No player with this username exists."));
         else if (player.getPassword().equals(potPlayer.getPassword())) {
-            if (player.getStatus().equals(UserStatus.OFFLINE)) {
-                player.setStatus(UserStatus.ONLINE);
+            if (player.getStatus().equals(PlayerStatus.OFFLINE)) {
+                player.setStatus(PlayerStatus.ONLINE);
                 return player;
             }
-            else throw new UserAlreadyLoggedIn();
+            else throw new PlayerAlreadyLoggedIn();
         }
-        else throw new UserCredentialsWrong(String.format("Incorrect password."));
+        else throw new PlayerCredentialsWrong(String.format("Incorrect password."));
     }
 
     public void logOutUser(Player playerInput){
-        Player player = userRepository.findByToken(playerInput.getToken());
-        if (player ==null) throw new UserNotAvailable("No player with same token as your session exists.");
-        else if (player.getStatus().equals(UserStatus.ONLINE)) {
-            player.setStatus(UserStatus.OFFLINE);
+        Player player = playerRepository.findByToken(playerInput.getToken());
+        if (player ==null) throw new PlayerNotAvailable("No player with same token as your session exists.");
+        else if (player.getStatus().equals(PlayerStatus.ONLINE)) {
+            player.setStatus(PlayerStatus.OFFLINE);
         }
-        else throw new UserAlreadyLoggedOut();
+        else throw new PlayerAlreadyLoggedOut();
     }
 
     public Player getUser (Player playerInput){
-        Optional<Player> userOp =this.userRepository.findById(playerInput.getId());
-        if (userOp.isEmpty()) throw new UserNotAvailable("No user with this id exists, that can be fetched.");
+        Optional<Player> userOp =this.playerRepository.findById(playerInput.getId());
+        if (userOp.isEmpty()) throw new PlayerNotAvailable("No user with this id exists, that can be fetched.");
         return userOp.get();
 
     }
 
     public void updateUser (Player player, String userId){
-        Optional<Player> userOp =this.userRepository.findById(Long.parseLong(userId));
-        if (userOp.isEmpty()) throw new UserNotAvailable("No player with specified ID exists.");
+        Optional<Player> userOp =this.playerRepository.findById(Long.parseLong(userId));
+        if (userOp.isEmpty()) throw new PlayerNotAvailable("No player with specified ID exists.");
         else if (userOp.get().getToken().equals(player.getToken())) {
             if (player.getUsername()!=null) {
                 if (player.getUsername().equals(userOp.get().getUsername()));
-                else if (this.userRepository.findByUsername(player.getUsername())!=null) throw new UsernameAlreadyExists("Username is already in use!");
+                else if (this.playerRepository.findByUsername(player.getUsername())!=null) throw new UsernameAlreadyExists("Username is already in use!");
                 else userOp.get().setUsername(player.getUsername());
             }
         }
-        else throw new UserCredentialsWrong("You are not authorized to change this player, since tokens do not match.");
+        else throw new PlayerCredentialsWrong("You are not authorized to change this player, since tokens do not match.");
     }
 
 
@@ -106,7 +106,7 @@ public class UserService {
      * @see Player
      */
     private void checkIfUserExists(Player playerToBeCreated) {
-        Player playerByUsername = userRepository.findByUsername(playerToBeCreated.getUsername());
+        Player playerByUsername = playerRepository.findByUsername(playerToBeCreated.getUsername());
 
         String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
         if (playerByUsername != null) {

@@ -1,8 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
-import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
+import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Player;
-import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +24,20 @@ public class PlayerServiceIntegrationTest {
 
     @Qualifier("userRepository")
     @Autowired
-    private UserRepository userRepository;
+    private PlayerRepository playerRepository;
 
     @Autowired
     private UserService userService;
 
     @BeforeEach
     public void setup() {
-        userRepository.deleteAll();
+        playerRepository.deleteAll();
     }
 
     @Test
     public void createUser_validInputs_success() {
         // given
-        assertNull(userRepository.findByUsername("testUsername"));
+        assertNull(playerRepository.findByUsername("testUsername"));
 
         Player testPlayer = new Player();
         testPlayer.setName("testName");
@@ -51,12 +51,12 @@ public class PlayerServiceIntegrationTest {
         assertEquals(testPlayer.getName(), createdPlayer.getName());
         assertEquals(testPlayer.getUsername(), createdPlayer.getUsername());
         assertNotNull(createdPlayer.getToken());
-        assertEquals(UserStatus.OFFLINE, createdPlayer.getStatus());
+        assertEquals(PlayerStatus.OFFLINE, createdPlayer.getStatus());
     }
 
     @Test
     public void createUser_duplicateUsername_throwsException() {
-        assertNull(userRepository.findByUsername("testUsername"));
+        assertNull(playerRepository.findByUsername("testUsername"));
 
         Player testPlayer = new Player();
         testPlayer.setName("testName");

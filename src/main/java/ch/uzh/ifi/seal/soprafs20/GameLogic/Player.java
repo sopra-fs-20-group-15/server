@@ -1,11 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
-import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
+import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Internal Player Representation
@@ -32,7 +30,7 @@ public class Player implements Serializable {
     private String token;
 
     @Column(nullable = false)
-    private UserStatus status;
+    private PlayerStatus status;
 
     @Column(nullable = false)
     private String password;
@@ -61,11 +59,11 @@ public class Player implements Serializable {
         this.token = token;
     }
 
-    public UserStatus getStatus() {
+    public PlayerStatus getStatus() {
         return status;
     }
 
-    public void setStatus(UserStatus status) {
+    public void setStatus(PlayerStatus status) {
         this.status = status;
     }
 

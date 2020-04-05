@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
-import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
+import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Player;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DTOMapperTest {
     @Test
     public void testCreateUser_fromUserPostDTO_toUser_success() {
-        // create UserPostDTO
+        // create PlayerPostDTO
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setName("name");
         userPostDTO.setUsername("username");
@@ -32,10 +32,10 @@ public class DTOMapperTest {
         Player player = new Player();
         player.setName("Firstname Lastname");
         player.setUsername("firstname@lastname");
-        player.setStatus(UserStatus.OFFLINE);
+        player.setStatus(PlayerStatus.OFFLINE);
         player.setToken("1");
 
-        // MAP -> Create UserGetDTO
+        // MAP -> Create PlayerGetDTO
         UserGetDTO userGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(player);
 
         // check content

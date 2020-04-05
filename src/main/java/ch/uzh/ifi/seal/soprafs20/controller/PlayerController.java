@@ -16,44 +16,44 @@ import java.util.List;
  * The controller will receive the request and delegate the execution to the UserService and finally return the result.
  */
 @RestController
-public class UserController {
+public class PlayerController {
 
     private final UserService userService;
 
-    UserController(UserService userService) {
+    PlayerController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
+    @GetMapping("/players")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<UserGetDTO> getAllUsers() {
+    public List<PlayerGetDTO> getAllUsers() {
         // fetch all players in the internal representation
         List<Player> players = userService.getUsers();
-        List<UserGetDTO> userGetDTOs = new ArrayList<>();
+        List<PlayerGetDTO> playerGetDTOS = new ArrayList<>();
 
         // convert each user to the API representation
         for (Player player : players) {
-            userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(player));
+            playerGetDTOS.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(player));
         }
-        return userGetDTOs;
+        return playerGetDTOS;
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("/players/{playerId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserGetDTO getUser(@PathVariable String userId) {
-        Player playerInput = DTOMapper.INSTANCE.convertUserIdStringToEntity(userId);
-        UserGetDTO userGetDTO= DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUser(playerInput));
-        return userGetDTO;
+    public PlayerGetDTO getUser(@PathVariable String playerId) {
+        Player playerInput = DTOMapper.INSTANCE.convertUserIdStringToEntity(playerId);
+        PlayerGetDTO playerGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUser(playerInput));
+        return playerGetDTO;
     }
 
-    @PostMapping("/users")
+    @PostMapping("/players")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public UserGetDTO createUser(@RequestBody UserPostDTO userPostDTO) {
+    public PlayerGetDTO createUser(@RequestBody PlayerPostDTO playerPostDTO) {
         // convert API user to internal representation
-        Player playerInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+        Player playerInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(playerPostDTO);
 
         // create user
         Player createdPlayer = userService.createUser(playerInput);
@@ -65,24 +65,24 @@ public class UserController {
     @PutMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserTokenDTO loginUser(@RequestBody UserPutDTO userputDTO){
+    public PlayerTokenDTO loginUser(@RequestBody PlayerPutDTO userputDTO){
         Player playerInput =DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userputDTO);
         return DTOMapper.INSTANCE.convertEntityToUserTokenDTO(userService.loginUser(playerInput)) ;
     }
 
-    @PutMapping("/users/{userId}")
+    @PutMapping("/players/{playerId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
-    public void updateUser(@RequestBody UserPutUserIdDTO userPutUserIdDTO, @PathVariable String userId){
-        userService.updateUser(DTOMapper.INSTANCE.convertUserPutUserIdDTOToEntity(userPutUserIdDTO), userId);
+    public void updateUser(@RequestBody PlayerPutUserIdDTO playerPutUserIdDTO, @PathVariable String playerId){
+        userService.updateUser(DTOMapper.INSTANCE.convertUserPutUserIdDTOToEntity(playerPutUserIdDTO), playerId);
 
     }
 
     @PutMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void logoutUser(@RequestBody UserTokenDTO userTokenDTO){
-        Player playerInput = DTOMapper.INSTANCE.convertUserTokenDTOToEntity(userTokenDTO);
+    public void logoutUser(@RequestBody PlayerTokenDTO playerTokenDTO){
+        Player playerInput = DTOMapper.INSTANCE.convertUserTokenDTOToEntity(playerTokenDTO);
         userService.logOutUser(playerInput) ;
     }
 }
