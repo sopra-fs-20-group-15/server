@@ -372,7 +372,7 @@ public class UserControllerTest {
 
     /** Test /games/{gameId}/delete DELETE*/
     /**
-    //Valid Delete  
+    //Valid Delete
     @Test
     public void DELETEgamesGameIdDeleteValidDelete() throws Exception {
 
