@@ -1,9 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
-import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
-import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Player;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
-import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +11,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 /**
- * User Service
+ * Player Service
  * This class is the "worker" and responsible for all functionality related to the user
  * (e.g., it creates, modifies, deletes, finds). The result will be passed back to the caller.
  */
@@ -27,90 +26,90 @@ public class UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final UserRepository userRepository;
+    private final PlayerRepository playerRepository;
 
     @Autowired
-    public UserService(@Qualifier("userRepository") UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(@Qualifier("userRepository") PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
     }
 
-    public List<User> getUsers() {
-        return this.userRepository.findAll();
+    public List<Player> getUsers() {
+        return this.playerRepository.findAll();
     }
 
-    public User createUser(User newUser) {
-        newUser.setToken(UUID.randomUUID().toString());
-        newUser.setStatus(UserStatus.OFFLINE);
+    public Player createUser(Player newPlayer) {
+        newPlayer.setToken(UUID.randomUUID().toString());
+        newPlayer.setStatus(PlayerStatus.OFFLINE);
 
-        checkIfUserExists(newUser);
+        checkIfUserExists(newPlayer);
 
-        if (newUser.getPassword().equals("")||newUser.getUsername().equals("")) throw new IllegalRegistrationInput("Username and/or password can't consist of an empty string!");
+        if (newPlayer.getPassword().equals("")|| newPlayer.getUsername().equals("")) throw new IllegalRegistrationInput("Username and/or password can't consist of an empty string!");
 
         // saves the given entity but data is only persisted in the database once flush() is called
-        newUser = userRepository.save(newUser);
-        userRepository.flush();
+        newPlayer = playerRepository.save(newPlayer);
+        playerRepository.flush();
 
-        log.debug("Created Information for User: {}", newUser);
-        return newUser;
+        log.debug("Created Information for Player: {}", newPlayer);
+        return newPlayer;
     }
 
-    public User loginUser(User potUser){
-        User user= userRepository.findByUsername(potUser.getUsername());
-        if (user==null) throw new UserNotAvailable(String.format("No user with this username exists."));
-        else if (user.getPassword().equals(potUser.getPassword())) {
-            if (user.getStatus().equals(UserStatus.OFFLINE)) {
-                user.setStatus(UserStatus.ONLINE);
-                return user;
+    public Player loginUser(Player potPlayer){
+        Player player = playerRepository.findByUsername(potPlayer.getUsername());
+        if (player ==null) throw new PlayerNotAvailable(String.format("No player with this username exists."));
+        else if (player.getPassword().equals(potPlayer.getPassword())) {
+            if (player.getStatus().equals(PlayerStatus.OFFLINE)) {
+                player.setStatus(PlayerStatus.ONLINE);
+                return player;
             }
-            else throw new UserAlreadyLoggedIn();
+            else throw new PlayerAlreadyLoggedIn();
         }
-        else throw new UserCredentialsWrong(String.format("Incorrect password."));
+        else throw new PlayerCredentialsWrong(String.format("Incorrect password."));
     }
 
-    public void logOutUser(User userInput){
-        User user= userRepository.findByToken(userInput.getToken());
-        if (user==null) throw new UserNotAvailable("No user with same token as your session exists.");
-        else if (user.getStatus().equals(UserStatus.ONLINE)) {
-            user.setStatus(UserStatus.OFFLINE);
+    public void logOutUser(Player playerInput){
+        Player player = playerRepository.findByToken(playerInput.getToken());
+        if (player ==null) throw new PlayerNotAvailable("No player with same token as your session exists.");
+        else if (player.getStatus().equals(PlayerStatus.ONLINE)) {
+            player.setStatus(PlayerStatus.OFFLINE);
         }
-        else throw new UserAlreadyLoggedOut();
+        else throw new PlayerAlreadyLoggedOut();
     }
 
-    public User getUser (User userInput){
-        Optional<User> userOp =this.userRepository.findById(userInput.getId());
-        if (userOp.isEmpty()) throw new UserNotAvailable("No user with this id exists, that can be fetched.");
+    public Player getUser (Player playerInput){
+        Optional<Player> userOp =this.playerRepository.findById(playerInput.getId());
+        if (userOp.isEmpty()) throw new PlayerNotAvailable("No user with this id exists, that can be fetched.");
         return userOp.get();
 
     }
 
-    public void updateUser (User user, String userId){
-        Optional<User> userOp =this.userRepository.findById(Long.parseLong(userId));
-        if (userOp.isEmpty()) throw new UserNotAvailable("No user with specified ID exists.");
-        else if (userOp.get().getToken().equals(user.getToken())) {
-            if (user.getUsername()!=null) {
-                if (user.getUsername().equals(userOp.get().getUsername()));
-                else if (this.userRepository.findByUsername(user.getUsername())!=null) throw new UsernameAlreadyExists("Username is already in use!");
-                else userOp.get().setUsername(user.getUsername());
+    public void updateUser (Player player, String userId){
+        Optional<Player> userOp =this.playerRepository.findById(Long.parseLong(userId));
+        if (userOp.isEmpty()) throw new PlayerNotAvailable("No player with specified ID exists.");
+        else if (userOp.get().getToken().equals(player.getToken())) {
+            if (player.getUsername()!=null) {
+                if (player.getUsername().equals(userOp.get().getUsername()));
+                else if (this.playerRepository.findByUsername(player.getUsername())!=null) throw new UsernameAlreadyExists("Username is already in use!");
+                else userOp.get().setUsername(player.getUsername());
             }
         }
-        else throw new UserCredentialsWrong("You are not authorized to change this user, since tokens do not match.");
+        else throw new PlayerCredentialsWrong("You are not authorized to change this player, since tokens do not match.");
     }
 
 
 
     /**
      * This is a helper method that will check the uniqueness criteria of the username and the name
-     * defined in the User entity. The method will do nothing if the input is unique and throw an error otherwise.
+     * defined in the Player entity. The method will do nothing if the input is unique and throw an error otherwise.
      *
-     * @param userToBeCreated
+     * @param playerToBeCreated
      * @throws UsernameAlreadyExists
-     * @see User
+     * @see Player
      */
-    private void checkIfUserExists(User userToBeCreated) {
-        User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
+    private void checkIfUserExists(Player playerToBeCreated) {
+        Player playerByUsername = playerRepository.findByUsername(playerToBeCreated.getUsername());
 
         String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
-        if (userByUsername != null) {
+        if (playerByUsername != null) {
             throw new UsernameAlreadyExists(String.format(baseErrorMessage, "username", "is"));
         }
 

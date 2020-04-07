@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
-public class UserCredentialsWrong extends RuntimeException {
-    public UserCredentialsWrong(String message) {
+public class PlayerCredentialsWrong extends RuntimeException {
+    public PlayerCredentialsWrong(String message) {
         super(message);
     }
 }

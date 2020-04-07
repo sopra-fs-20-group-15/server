@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
-public class UserTokenDTO {
+public class PlayerTokenDTO {
 
     private String token;
     private long id;
