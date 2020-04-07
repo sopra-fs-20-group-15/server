@@ -16,8 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test class for the UserResource REST resource.
  *
- * @see UserService
+ * @see PlayerService
  */
+/**
 @WebAppConfiguration
 @SpringBootTest
 public class PlayerServiceIntegrationTest {
@@ -27,7 +28,7 @@ public class PlayerServiceIntegrationTest {
     private PlayerRepository playerRepository;
 
     @Autowired
-    private UserService userService;
+    private PlayerService playerService;
 
     @BeforeEach
     public void setup() {
@@ -44,7 +45,7 @@ public class PlayerServiceIntegrationTest {
         testPlayer.setUsername("testUsername");
 
         // when
-        Player createdPlayer = userService.createUser(testPlayer);
+        Player createdPlayer = playerService.createUser(testPlayer);
 
         // then
         assertEquals(testPlayer.getId(), createdPlayer.getId());
@@ -61,7 +62,7 @@ public class PlayerServiceIntegrationTest {
         Player testPlayer = new Player();
         testPlayer.setName("testName");
         testPlayer.setUsername("testUsername");
-        Player createdPlayer = userService.createUser(testPlayer);
+        Player createdPlayer = playerService.createUser(testPlayer);
 
         // attempt to create second user with same username
         Player testPlayer2 = new Player();
@@ -71,6 +72,6 @@ public class PlayerServiceIntegrationTest {
         testPlayer2.setUsername("testUsername");
 
         // check that an error is thrown
-        assertThrows(ResponseStatusException.class, () -> userService.createUser(testPlayer2));
+        assertThrows(ResponseStatusException.class, () -> playerService.createUser(testPlayer2));
     }
-}
+}*/
