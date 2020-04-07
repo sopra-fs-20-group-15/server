@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Internal Player Representation
@@ -33,13 +34,86 @@ public class Game {
     @ElementCollection
     List<Long> CardIds;
 
+    @ElementCollection
+    Map<Player,Integer> ScoreBoard;
+
     @Column(nullable = false)
     private Long Milliseconds;
 
     @Column(nullable = false)
     private Long nrOfDuplicates;
 
+    public Boolean getRightGuess() {
+        return rightGuess;
+    }
 
+    public Boolean getValidClue() {
+        return validClue;
+    }
+
+    public Long getActivePlayerId() {
+        return activePlayerId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Map<Player, Integer> getScoreBoard() {
+        return ScoreBoard;
+    }
+
+    public List<Long> getCardIds() {
+        return CardIds;
+    }
+
+    public List<Long> getPassivePlayerIds() {
+        return passivePlayerIds;
+    }
+
+    public Long getMilliseconds() {
+        return Milliseconds;
+    }
+
+    public Long getNrOfDuplicates() {
+        return nrOfDuplicates;
+    }
+
+    public void setActivePlayerId(Long activePlayerId) {
+        this.activePlayerId = activePlayerId;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setCardIds(List<Long> cardIds) {
+        CardIds = cardIds;
+    }
+
+    public void setMilliseconds(Long milliseconds) {
+        Milliseconds = milliseconds;
+    }
+
+    public void setRightGuess(Boolean rightGuess) {
+        this.rightGuess = rightGuess;
+    }
+
+    public void setValidClue(Boolean validClue) {
+        this.validClue = validClue;
+    }
+
+    public void setNrOfDuplicates(Long nrOfDuplicates) {
+        this.nrOfDuplicates = nrOfDuplicates;
+    }
+
+    public void setPassivePlayerIds(List<Long> passivePlayerIds) {
+        this.passivePlayerIds = passivePlayerIds;
+    }
+
+    public void setScoreBoard(Map<Player, Integer> scoreBoard) {
+        ScoreBoard = scoreBoard;
+    }
 
 
 }

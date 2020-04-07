@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class UserService {
     private final PlayerRepository playerRepository;
 
     @Autowired
-    public UserService(@Qualifier("userRepository") PlayerRepository playerRepository) {
+    public UserService(@Qualifier("playerRepository") PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
     }
 
@@ -37,9 +38,16 @@ public class UserService {
         return this.playerRepository.findAll();
     }
 
+    public List<Player> getUsersSortedByPointsDescending(){
+        List<Player> list = this.playerRepository.findAll();
+        list.sort(Collections.reverseOrder());
+        return list;
+    }
+
     public Player createUser(Player newPlayer) {
         newPlayer.setToken(UUID.randomUUID().toString());
         newPlayer.setStatus(PlayerStatus.OFFLINE);
+        newPlayer.setScore(0);
 
         checkIfUserExists(newPlayer);
 

@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Entity
 //Even though there is a red line beneath "Player", it should still work
 @Table(name = "PLAYER")
-public class Player implements Serializable {
+public class Player implements Serializable, Comparable<Player> {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,6 +34,24 @@ public class Player implements Serializable {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private int score;
+
+    @Override
+    public int compareTo(Player other) {
+        if (this.getScore()==other.getScore()) return 0;
+        else if (this.getScore()>other.getScore()) return 1;
+        else return -1;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getScore() {
+        return score;
+    }
 
     public Long getId() {
         return id;
