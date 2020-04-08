@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,11 +38,6 @@ public class PlayerService {
         return this.playerRepository.findAll();
     }
 
-<<<<<<< Updated upstream
-    public Player createUser(Player newPlayer) {
-        newPlayer.setToken(UUID.randomUUID().toString());
-        newPlayer.setStatus(PlayerStatus.OFFLINE);
-=======
     public List<PlayerEntity> getUsersSortedByPointsDescending(){
         List<PlayerEntity> list = this.playerRepository.findAll();
         list.sort(Collections.reverseOrder());
@@ -52,7 +48,7 @@ public class PlayerService {
         newPlayerEntity.setToken(UUID.randomUUID().toString());
         newPlayerEntity.setStatus(PlayerStatus.OFFLINE);
         newPlayerEntity.setScore(0);
->>>>>>> Stashed changes
+
 
         checkIfUserExists(newPlayerEntity);
 
