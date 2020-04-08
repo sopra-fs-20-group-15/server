@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
+import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.CardService;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.GameService;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.ValidationService;
@@ -50,6 +51,18 @@ public class LogicController {
         GameEntity game = gameService.getGameById(gameIdLong);
         CardEntity card = cardService.getCardById(game.getActiveCardId());
         String word = cardService.chooseWordOnCard(cardPostDTO.getWordId(), card);
+        return word;
+    }
+
+    @GetMapping("/games/{gameId}/Cards/{playerToken}/")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String getUser(@PathVariable String gameId, @PathVariable String playerToken) {
+        stringIsALong(gameId);
+        Long gameIdLong = parseLong(gameId);
+        validationService.checkPlayerIsPassivePlayerOfGame(playerToken, gameIdLong);
+        GameEntity game = gameService.getGameById(gameIdLong);
+        String word = game.getActiveWord();
         return word;
     }
 }

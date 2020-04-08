@@ -25,6 +25,9 @@ public class GameEntity {
     private Long activeCardId;
 
     @Column(nullable = false)
+    private String activeWord;
+
+    @Column(nullable = false)
     private Long activePlayerId;
 
     @Column(nullable = false)
@@ -54,6 +57,14 @@ public class GameEntity {
 
     public void setActiveCardId(Long cardId) {
         this.activeCardId = cardId;
+    }
+
+    public String getActiveWord() {
+        return activeWord;
+    }
+
+    public void setActiveWord(String activeWord) {
+        this.activeWord = activeWord;
     }
 
     public Boolean getRightGuess() {

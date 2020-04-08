@@ -62,6 +62,12 @@ public class PlayerService {
         return newPlayerEntity;
     }
 
+    public PlayerEntity getPlayerByToken(String token){
+        PlayerEntity player = playerRepository.findByToken(token);
+        if (player == null) throw new PlayerNotAvailable("No playerEntity with same token as your session exists.");
+        return player;
+    }
+
     public PlayerEntity loginUser(PlayerEntity potPlayerEntity){
         PlayerEntity playerEntity = playerRepository.findByUsername(potPlayerEntity.getUsername());
         if (playerEntity ==null) throw new PlayerNotAvailable(String.format("No playerEntity with this username exists."));
