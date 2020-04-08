@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.GameLogic;
+package ch.uzh.ifi.seal.soprafs20.Entities;
 
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 
@@ -6,16 +6,20 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * Internal Player Representation
+ * Internal PlayerEntity Representation
  * This class composes the internal representation of the user and defines how the user is stored in the database.
  * Every variable will be mapped into a database field with the @Column annotation
  *  nullable = false -> this cannot be left empty
  * - unique = true -> this value must be unqiue across the database -> composes the primary key
  */
 @Entity
-//Even though there is a red line beneath "Player", it should still work
+//Even though there is a red line beneath "PlayerEntity", it should still work
 @Table(name = "PLAYER")
+<<<<<<< Updated upstream:src/main/java/ch/uzh/ifi/seal/soprafs20/GameLogic/Player.java
 public class Player implements Serializable {
+=======
+public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
+>>>>>>> Stashed changes:src/main/java/ch/uzh/ifi/seal/soprafs20/Entities/PlayerEntity.java
 
     private static final long serialVersionUID = 1L;
 
@@ -35,6 +39,27 @@ public class Player implements Serializable {
     @Column(nullable = false)
     private String password;
 
+<<<<<<< Updated upstream:src/main/java/ch/uzh/ifi/seal/soprafs20/GameLogic/Player.java
+=======
+    @Column(nullable = false)
+    private int score;
+
+    @Override
+    public int compareTo(PlayerEntity other) {
+        if (this.getScore()==other.getScore()) return 0;
+        else if (this.getScore()>other.getScore()) return 1;
+        else return -1;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+>>>>>>> Stashed changes:src/main/java/ch/uzh/ifi/seal/soprafs20/Entities/PlayerEntity.java
     public Long getId() {
         return id;
     }
