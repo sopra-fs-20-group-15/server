@@ -6,8 +6,10 @@ import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.CardService;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.GameService;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.ValidationService;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CardPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerPostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.WordPostDTO;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -42,27 +44,33 @@ public class LogicController {
     }
 
     @PostMapping("/games/{gameId}/Cards/")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public String getUser(@PathVariable String gameId, @RequestBody CardPostDTO cardPostDTO) {
+    public WordPostDTO getUser(@PathVariable String gameId, @RequestBody CardPostDTO cardPostDTO) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsActivePlayerOfGame(cardPostDTO.getPlayerToken(), gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
         CardEntity card = cardService.getCardById(game.getActiveCardId());
+        if (game.getActiveWord() != ""){
         String word = cardService.chooseWordOnCard(cardPostDTO.getWordId(), card);
-        return word;
+            WordPostDTO wordPostDTO = new WordPostDTO();
+            wordPostDTO.setWord(word);
+            return wordPostDTO;}
+        else throw new NoContentException("The MysteryWord has already been set");
     }
 
     @GetMapping("/games/{gameId}/Cards/{playerToken}/")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String getUser(@PathVariable String gameId, @PathVariable String playerToken) {
+    public WordPostDTO getUser(@PathVariable String gameId, @PathVariable String playerToken) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPassivePlayerOfGame(playerToken, gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
         String word = game.getActiveWord();
-        return word;
+        WordPostDTO wordPostDTO = new WordPostDTO();
+        wordPostDTO.setWord(word);
+        return wordPostDTO;
     }
 }

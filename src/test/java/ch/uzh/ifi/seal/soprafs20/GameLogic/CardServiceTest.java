@@ -50,7 +50,8 @@ public class CardServiceTest {
         // when -> any object is being save in the playerRepository -> return the dummy testPlayer
         Mockito.when(cardRepository.save(Mockito.any())).thenReturn(testCard);
     }
-
+    //These tests are not needed anymore since only Longs can be given now
+/**
     @Test
     public void NonNumberShouldThrowError() {
         CardService cardService = new CardService(cardRepository);
@@ -76,12 +77,12 @@ public class CardServiceTest {
 
         assertTrue(thrown.getMessage().contains("The input should be an integer!"));
     }
-
+*/
     @Test
     public void ZeroShouldThrowError() {
         CardService cardService = new CardService(cardRepository);
         CardEntity card = new CardEntity();
-        String wordId = "0";
+        Long wordId = 0L;
 
         NotANumberbetweenOneAndFive thrown = assertThrows(NotANumberbetweenOneAndFive.class, () -> {
             cardService.chooseWordOnCard(wordId, card);
@@ -93,7 +94,7 @@ public class CardServiceTest {
     public void SixShouldThrowError() {
         CardService cardService = new CardService(cardRepository);
         CardEntity card = new CardEntity();
-        String wordId = "6";
+        Long wordId = 6L;
 
         NotANumberbetweenOneAndFive thrown = assertThrows(NotANumberbetweenOneAndFive.class, () -> {
             cardService.chooseWordOnCard(wordId, card);
@@ -105,7 +106,7 @@ public class CardServiceTest {
     public void OneShouldWork() {
         CardService cardService = new CardService(cardRepository);
         CardEntity card = new CardEntity();
-        String wordId = "1";
+        Long wordId = 1L;
         List<String> words = new ArrayList<String>();
         words.add("Kuchen");
         words.add("Kaffeeeis");
@@ -121,7 +122,7 @@ public class CardServiceTest {
     @Test
     public void FiveShouldWork() {
         CardEntity card = new CardEntity();
-        String wordId = "5";
+        Long wordId = 5L;
         List<String> words = new ArrayList<String>();
         words.add("Kuchen");
         words.add("Kaffeeeis");
