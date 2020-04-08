@@ -1,8 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
-<<<<<<< Updated upstream
 
-public class Scoreboard {
-=======
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 
 import java.util.HashMap;
@@ -32,6 +29,4 @@ public class Scoreboard {
     public void updateScore(PlayerEntity playerEntity, boolean rightGuess, boolean validClue, long milliseconds, int numOfDuplicateGuesses) {
         scoreBoard.put(playerEntity, scoreBoard.get(playerEntity) + ScoreCalculator.calculateScorePassivePlayer(playerEntity, rightGuess, validClue, 33000-milliseconds, numOfDuplicateGuesses));
     }
-
->>>>>>> Stashed changes
 }

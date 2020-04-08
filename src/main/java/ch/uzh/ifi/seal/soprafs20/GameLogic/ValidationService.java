@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.PlayerNotAvailable;
+import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
@@ -32,27 +33,45 @@ public class ValidationService {
  * @throws: 404 not found, wenn es Player oder Game nicht gibt
  * @return : boolean: true, wenn player aktiver player des games ist
  * */
-    boolean playerIsActivePlayerOfGame(String playerToken, Long gameId){
+    public boolean checkPlayerIsActivePlayerOfGame(String playerToken, Long gameId){
         PlayerEntity playerByToken = playerRepository.findByToken(playerToken);
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);
         //Check, that both player and game exist
         if (gameOp.isEmpty()) throw new NotFoundException("No gameEntity with specified ID exists.");
         if (playerByToken ==null) throw new PlayerNotAvailable("No player with same token as your session exists.");
         //Check, that player is active Player of that game
+        GameEntity game = gameOp.get();
+        if (game.getActivePlayerId() == playerByToken.getId())
+            return true;
+        else
+            throw new UnauthorizedException("This player is not the active player!");
 
     }
-    boolean playerIsPassivePlayerOfGame(String playerToken, Long gameId){
+
+    public boolean checkPlayerIsPassivePlayerOfGame(String playerToken, Long gameId){
         PlayerEntity playerByToken = playerRepository.findByToken(playerToken);
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);
         //Check, that both player and game exist
         if (gameOp.isEmpty()) throw new NotFoundException("No gameEntity with specified ID exists.");
         if (playerByToken ==null) throw new PlayerNotAvailable("No player with same token as your session exists.");
+        GameEntity game = gameOp.get();
+        //Check that player is one of the passive players
+        if (game.getPassivePlayerIds().contains(playerByToken.getId()))
+            return true;
+        else
+            throw new UnauthorizedException("This player is not a passive player!");
     }
-    boolean playerIsPartOfGame(String playerToken, Long gameId){
+    public boolean checkPlayerIsPartOfGame(String playerToken, Long gameId){
         PlayerEntity playerByToken = playerRepository.findByToken(playerToken);
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);
         //Check, that both player and game exist
         if (gameOp.isEmpty()) throw new NotFoundException("No gameEntity with specified ID exists.");
         if (playerByToken ==null) throw new PlayerNotAvailable("No player with same token as your session exists.");
+        GameEntity game = gameOp.get();
+        //Check that player is part of the game
+        if (game.getPassivePlayerIds().contains(playerByToken.getId()) || game.getActivePlayerId() == playerByToken.getId())
+            return true;
+        else
+            throw new UnauthorizedException("This player is not part of the game!");
     }
 }

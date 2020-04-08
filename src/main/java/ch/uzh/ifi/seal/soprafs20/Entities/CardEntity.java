@@ -43,41 +43,5 @@ public class CardEntity {
         this.words = words;
     }
 
-    /**
-     * functions about controlling and getting the Id of a word on a card
-     */
-
-    protected boolean stringIsAnInteger(String str) {
-        try {
-            Integer.parseInt(str);
-        } catch(NumberFormatException e) {
-            return false;
-        } catch(NullPointerException e) {
-            return false;
-        }
-        return true;
-    }
-
-    protected String chooseWordOnCardByNumber(int number){
-        return words.get(number-1);
-    }
-
-    public String chooseWordOnCard(String wordId){
-        if (stringIsAnInteger(wordId))
-        {
-            int wordIdAsInt = Integer.parseInt(wordId);
-            // Is the number between one end five
-            if (wordIdAsInt > 0 && wordIdAsInt < 6){
-                //In card I think
-                return chooseWordOnCardByNumber(wordIdAsInt);
-            }
-            else{
-                throw new NotANumberbetweenOneAndFive("The input should be between 1 and 5!");
-            }
-        }
-        else{
-            throw new NotANumber("The input should be an integer!");
-        }
-    }
 }
 

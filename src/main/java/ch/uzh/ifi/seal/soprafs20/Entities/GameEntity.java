@@ -2,6 +2,9 @@ package ch.uzh.ifi.seal.soprafs20.Entities;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+
 
 /**
  * Internal PlayerEntity Representation
@@ -19,6 +22,9 @@ public class GameEntity {
     private Long id;
 
     @Column(nullable = false)
+    private Long activeCardId;
+
+    @Column(nullable = false)
     private Long activePlayerId;
 
     @Column(nullable = false)
@@ -33,21 +39,23 @@ public class GameEntity {
     @ElementCollection
     List<Long> CardIds;
 
-<<<<<<< Updated upstream:src/main/java/ch/uzh/ifi/seal/soprafs20/GameLogic/Game.java
-=======
     @ElementCollection
     Map<PlayerEntity,Integer> ScoreBoard;
 
->>>>>>> Stashed changes:src/main/java/ch/uzh/ifi/seal/soprafs20/Entities/GameEntity.java
     @Column(nullable = false)
     private Long Milliseconds;
 
     @Column(nullable = false)
     private Long nrOfDuplicates;
 
-<<<<<<< Updated upstream:src/main/java/ch/uzh/ifi/seal/soprafs20/GameLogic/Game.java
+    public Long getActiveCardId() {
+        return activeCardId;
+    }
 
-=======
+    public void setActiveCardId(Long cardId) {
+        this.activeCardId = cardId;
+    }
+
     public Boolean getRightGuess() {
         return rightGuess;
     }
@@ -119,7 +127,5 @@ public class GameEntity {
     public void setScoreBoard(Map<PlayerEntity, Integer> scoreBoard) {
         ScoreBoard = scoreBoard;
     }
->>>>>>> Stashed changes:src/main/java/ch/uzh/ifi/seal/soprafs20/Entities/GameEntity.java
-
 
 }

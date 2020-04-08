@@ -2,6 +2,8 @@ package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.PlayerNotAvailable;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import org.slf4j.Logger;
@@ -31,6 +33,12 @@ public class GameService {
     public GameService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
+    }
+
+    public GameEntity getGameById(Long id){
+        Optional<GameEntity> gameOp = gameRepository.findById(id);
+        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
+        return gameOp.get();
     }
 
     public void updateLeaderBoard(GameEntity gameEntity){

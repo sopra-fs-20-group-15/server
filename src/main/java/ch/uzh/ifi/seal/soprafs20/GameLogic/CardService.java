@@ -2,14 +2,18 @@ package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
+import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumber;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumberbetweenOneAndFive;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,25 +37,27 @@ public class CardService {
         return true;
     }
 
-    protected String chooseWordOnCardByNumber(int number, CardEntity card){
-        return card.get(number-1);
+    public CardEntity getCardById(Long id){
+        Optional<CardEntity> cardOp = cardRepository.findById(id);
+        if (cardOp.isEmpty()) throw new NotFoundException("No card with this id exists");
+        return cardOp.get();
     }
 
-    public String chooseWordOnCard(String wordId){
-        if (stringIsAnInteger(wordId))
-        {
-            int wordIdAsInt = Integer.parseInt(wordId);
+    protected String chooseWordOnCardByNumber(Long number, CardEntity card){
+        int i = number.intValue();
+        return card.getWords().get(i-1);
+    }
+
+    public String chooseWordOnCard(Long wordId, CardEntity card){
+
             // Is the number between one end five
-            if (wordIdAsInt > 0 && wordIdAsInt < 6){
+            if (wordId> 0 && wordId < 6){
                 //In card I think
-                return chooseWordOnCardByNumber(wordIdAsInt);
+                return chooseWordOnCardByNumber(wordId, card);
             }
             else{
                 throw new NotANumberbetweenOneAndFive("The input should be between 1 and 5!");
             }
         }
-        else{
-            throw new NotANumber("The input should be an integer!");
-        }
-    }
 }
+
