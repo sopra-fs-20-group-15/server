@@ -2,6 +2,8 @@ package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
+import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
+import ch.uzh.ifi.seal.soprafs20.exceptions.IllegalRegistrationInput;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.PlayerNotAvailable;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * PlayerEntity Service
@@ -39,6 +42,17 @@ public class GameService {
         Optional<GameEntity> gameOp = gameRepository.findById(id);
         if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
         return gameOp.get();
+    }
+
+    public GameEntity createGame(GameEntity gameEntity) {
+        GameEntity newGameEntity = new GameEntity();
+
+        // saves the given entity but data is only persisted in the database once flush() is called
+        gameRepository.save(newGameEntity);
+        gameRepository.flush();
+
+        log.debug("Created Information for PlayerEntity: {}", newGameEntity);
+        return newGameEntity;
     }
 
     public void updateLeaderBoard(GameEntity gameEntity){

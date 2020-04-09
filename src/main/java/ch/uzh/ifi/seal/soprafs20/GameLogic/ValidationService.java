@@ -27,11 +27,13 @@ public class ValidationService {
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
     }
+
 /**
  * Checks if the given Player is the active player of a game
  * @Param: String playerToken, Long gameId
- * @throws: 404 not found, wenn es Player oder Game nicht gibt
- * @return : boolean: true, wenn player aktiver player des games ist
+ * @throws: 404 not found, if player or game does not exist
+ *  @throws: 401 unauthorized, if player ist not part of the game
+ * @return : boolean: true, if it is the active player
  * */
     public boolean checkPlayerIsActivePlayerOfGame(String playerToken, Long gameId){
         PlayerEntity playerByToken = playerRepository.findByToken(playerToken);
