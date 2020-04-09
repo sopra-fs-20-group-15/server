@@ -1,8 +1,10 @@
-package ch.uzh.ifi.seal.soprafs20.GameLogic;
+package ch.uzh.ifi.seal.soprafs20.Entities;
 
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
@@ -39,9 +41,9 @@ public class Player implements Serializable, Comparable<Player> {
     private int score;
 
     @Override
-    public int compareTo(Player other) {
-        if (this.getScore()==other.getScore()) return 0;
-        else if (this.getScore()>other.getScore()) return 1;
+    public int compareTo(PlayerEntity other) {
+        if (this.getScore() == other.getScore()) return 0;
+        else if (this.getScore() > other.getScore()) return 1;
         else return -1;
     }
 
@@ -85,7 +87,11 @@ public class Player implements Serializable, Comparable<Player> {
         this.status = status;
     }
 
-    public void setPassword (String password){this.password = password;}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public String getPassword(){return password;}
+    public String getPassword() {
+        return password;
+    }
 }

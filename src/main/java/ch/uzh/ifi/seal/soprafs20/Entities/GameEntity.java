@@ -1,23 +1,31 @@
-package ch.uzh.ifi.seal.soprafs20.GameLogic;
+package ch.uzh.ifi.seal.soprafs20.Entities;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+
 
 /**
- * Internal Player Representation
+ * Internal PlayerEntity Representation
  * This class composes the internal representation of the user and defines how the user is stored in the database.
  * Every variable will be mapped into a database field with the @Column annotation
  *  nullable = false -> this cannot be left empty
  * - unique = true -> this value must be unqiue across the database -> composes the primary key
  */
 @Entity
-//Even though there is a red line beneath "Player", it should still work
+//Even though there is a red line beneath "PlayerEntity", it should still work
 @Table(name = "GAME")
-public class Game {
+public class GameEntity {
     @Id
     @GeneratedValue
     private Long id;
+
+    @Column(nullable = false)
+    private Long activeCardId;
+
+    @Column(nullable = false)
+    private String activeWord;
 
     @Column(nullable = false)
     private Long activePlayerId;
@@ -35,13 +43,29 @@ public class Game {
     List<Long> CardIds;
 
     @ElementCollection
-    Map<Player,Integer> ScoreBoard;
+    Map<PlayerEntity,Integer> ScoreBoard;
 
     @Column(nullable = false)
     private Long Milliseconds;
 
     @Column(nullable = false)
     private Long nrOfDuplicates;
+
+    public Long getActiveCardId() {
+        return activeCardId;
+    }
+
+    public void setActiveCardId(Long cardId) {
+        this.activeCardId = cardId;
+    }
+
+    public String getActiveWord() {
+        return activeWord;
+    }
+
+    public void setActiveWord(String activeWord) {
+        this.activeWord = activeWord;
+    }
 
     public Boolean getRightGuess() {
         return rightGuess;
@@ -59,7 +83,7 @@ public class Game {
         return id;
     }
 
-    public Map<Player, Integer> getScoreBoard() {
+    public Map<PlayerEntity, Integer> getScoreBoard() {
         return ScoreBoard;
     }
 
@@ -111,9 +135,8 @@ public class Game {
         this.passivePlayerIds = passivePlayerIds;
     }
 
-    public void setScoreBoard(Map<Player, Integer> scoreBoard) {
+    public void setScoreBoard(Map<PlayerEntity, Integer> scoreBoard) {
         ScoreBoard = scoreBoard;
     }
-
 
 }

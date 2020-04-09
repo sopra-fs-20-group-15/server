@@ -5,6 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 
+import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
 public class Scoreboard {
     private Map<Player, Integer> scoreBoard = new HashMap<Player, Integer>();
 
@@ -29,6 +36,3 @@ public class Scoreboard {
     }
 
 }
-
-
-

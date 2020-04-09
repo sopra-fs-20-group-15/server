@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Player;
+import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Player Controller
+ * PlayerEntity Controller
  * This class is responsible for handling all REST request that are related to the user.
  * The controller will receive the request and delegate the execution to the PlayerService and finally return the result.
  */
@@ -28,13 +28,13 @@ public class PlayerController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<PlayerGetDTO> getAllUsers() {
-        // fetch all players in the internal representation
-        List<Player> players = playerService.getUsers();
+        // fetch all playerEntities in the internal representation
+        List<PlayerEntity> playerEntities = playerService.getUsers();
         List<PlayerGetDTO> playerGetDTOS = new ArrayList<>();
 
         // convert each user to the API representation
-        for (Player player : players) {
-            playerGetDTOS.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(player));
+        for (PlayerEntity playerEntity : playerEntities) {
+            playerGetDTOS.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(playerEntity));
         }
         return playerGetDTOS;
     }
@@ -43,8 +43,8 @@ public class PlayerController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public PlayerGetDTO getUser(@PathVariable String playerId) {
-        Player playerInput = DTOMapper.INSTANCE.convertUserIdStringToEntity(playerId);
-        PlayerGetDTO playerGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(playerService.getUser(playerInput));
+        PlayerEntity playerEntityInput = DTOMapper.INSTANCE.convertUserIdStringToEntity(playerId);
+        PlayerGetDTO playerGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(playerService.getUser(playerEntityInput));
         return playerGetDTO;
     }
 
@@ -53,21 +53,21 @@ public class PlayerController {
     @ResponseBody
     public PlayerGetDTO createUser(@RequestBody PlayerPostDTO playerPostDTO) {
         // convert API user to internal representation
-        Player playerInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(playerPostDTO);
+        PlayerEntity playerEntityInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(playerPostDTO);
 
         // create user
-        Player createdPlayer = playerService.createUser(playerInput);
+        PlayerEntity createdPlayerEntity = playerService.createUser(playerEntityInput);
 
         // convert internal representation of user back to API
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdPlayer);
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdPlayerEntity);
     }
 
     @PutMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public PlayerTokenDTO loginUser(@RequestBody PlayerPutDTO userputDTO){
-        Player playerInput =DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userputDTO);
-        return DTOMapper.INSTANCE.convertEntityToUserTokenDTO(playerService.loginUser(playerInput)) ;
+        PlayerEntity playerEntityInput =DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userputDTO);
+        return DTOMapper.INSTANCE.convertEntityToUserTokenDTO(playerService.loginUser(playerEntityInput)) ;
     }
 
     @PutMapping("/players/{playerId}")
@@ -82,7 +82,7 @@ public class PlayerController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public void logoutUser(@RequestBody PlayerTokenDTO playerTokenDTO){
-        Player playerInput = DTOMapper.INSTANCE.convertUserTokenDTOToEntity(playerTokenDTO);
-        playerService.logOutUser(playerInput) ;
+        PlayerEntity playerEntityInput = DTOMapper.INSTANCE.convertUserTokenDTOToEntity(playerTokenDTO);
+        playerService.logOutUser(playerEntityInput) ;
     }
 }
