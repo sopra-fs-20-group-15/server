@@ -10,16 +10,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class WordComparer {
-    private ArrayList<String> helperWords;
 
     /*
-
+        @param: List of clues
+        @Return: List of validClued
      */
     public ArrayList<String> compareClues(ArrayList<String> clues) {
-        ArrayList<String> okClues = new ArrayList<String>();
-        ArrayList<String> tmpClues = new ArrayList<String>();
-        ArrayList<String> wordStems = new ArrayList<String>();
-        ArrayList<String> duplicates = new ArrayList<String>();
+        ArrayList<String> okClues = new ArrayList<>();
+        ArrayList<String> tmpClues = new ArrayList<>();
+        ArrayList<String> wordStems = new ArrayList<>();
+        ArrayList<String> duplicates = new ArrayList<>();
         for (String word : clues) {
             String stem;
             try {
@@ -28,7 +28,7 @@ public class WordComparer {
                 stem = word.toLowerCase();
             }//get the word stem from API
             if (wordStems.contains(stem)){duplicates.add(stem);} //if stem is already in wordStems, it's a duplicate
-            wordStems.add(stem);    //add stem to stemlist
+            wordStems.add(stem);    //add stem to stemList
         }
         for (int i = 0; i < clues.size(); i++) {
 
@@ -52,8 +52,8 @@ public class WordComparer {
         return okClues;
     }
 
-    public boolean compareMysteryWords(String guess, String mysterWord){
-        return closeWords(guess, mysterWord);
+    public boolean compareMysteryWords(String guess, String mysteryWord){
+        return closeWords(guess, mysteryWord);
     }
 
     /*
@@ -66,8 +66,8 @@ public class WordComparer {
             return false;
         }
         int count = 0;
-        if (word1.length() < 2 || word2.length() < 2){
-            return word1 == word2;
+        if (word1.length() < 2){
+            return word1.equals(word2);
         }
         if (word1.charAt(0) != word2.charAt(0)) {
             return false;
@@ -99,18 +99,17 @@ public class WordComparer {
         conn.setUseCaches(false);
         try(DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
             wr.write(postData);
-            int responseCode = conn.getResponseCode();
+            //int responseCode = conn.getResponseCode();
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String inputLine;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
             in.close();
             apiAnswer = response.toString();
         }
-        String stem = convertApiAnswer(apiAnswer);
-        return stem;
+        return convertApiAnswer(apiAnswer);
     }
 
     /**
@@ -119,8 +118,7 @@ public class WordComparer {
      */
     private String convertApiAnswer(String s){
         int middle = s.indexOf(":");
-        String newString = s.substring(middle+3, s.length()-2);
-        return newString;
+        return s.substring(middle+3, s.length()-2);
 
     }
 

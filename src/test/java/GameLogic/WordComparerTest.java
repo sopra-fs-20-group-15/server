@@ -2,8 +2,6 @@ package GameLogic;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.assertj.core.api.Assert;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -12,9 +10,9 @@ import java.util.ArrayList;
 class WordComparerTest {
 
     @Test
-    public void noDuplicateInClues() {
+    void noDuplicateInClues() {
         WordComparer wordComparer = new WordComparer();
-        ArrayList<String> words = new ArrayList<String>();
+        ArrayList<String> words = new ArrayList<>();
         words.add("Tree");
         words.add("live");
         words.add("house");
@@ -23,13 +21,13 @@ class WordComparerTest {
     }
 
     @Test
-    public void OneDuplicateInClues() {
+    void OneDuplicateInClues() {
         WordComparer wordComparer = new WordComparer();
-        ArrayList<String> words = new ArrayList<String>();
+        ArrayList<String> words = new ArrayList<>();
         words.add("live");
         words.add("living");
         words.add("Tree");
-        ArrayList<String> expected = new ArrayList<String>();
+        ArrayList<String> expected = new ArrayList<>();
         expected.add("Tree");
         ArrayList<String> actual = wordComparer.compareClues(words);
 
@@ -37,15 +35,15 @@ class WordComparerTest {
     }
 
     @Test
-    public void TwoDuplicateInClues() {
+    void TwoDuplicateInClues() {
         WordComparer wordComparer = new WordComparer();
-        ArrayList<String> words = new ArrayList<String>();
+        ArrayList<String> words = new ArrayList<>();
         words.add("live");
         words.add("living");
         words.add("Horse");
         words.add("horses");
         words.add("Tree");
-        ArrayList<String> expected = new ArrayList<String>();
+        ArrayList<String> expected = new ArrayList<>();
         expected.add("Tree");
         ArrayList<String> actual = wordComparer.compareClues(words);
 
@@ -53,14 +51,14 @@ class WordComparerTest {
     }
 
     @Test
-    public void TriplicateInClues() {
+    void TriplicateInClues() {
         WordComparer wordComparer = new WordComparer();
-        ArrayList<String> words = new ArrayList<String>();
+        ArrayList<String> words = new ArrayList<>();
         words.add("live");
         words.add("life");
         words.add("living");
         words.add("house");
-        ArrayList<String> expected = new ArrayList<String>();
+        ArrayList<String> expected = new ArrayList<>();
         expected.add("house");
         ArrayList<String> actual = wordComparer.compareClues(words);
 
@@ -68,20 +66,20 @@ class WordComparerTest {
     }
 
     @Test
-    public void OnlyDuplicatesInClues() {
+    void OnlyDuplicatesInClues() {
         WordComparer wordComparer = new WordComparer();
-        ArrayList<String> words = new ArrayList<String>();
+        ArrayList<String> words = new ArrayList<>();
         words.add("lives");
         words.add("lifes");
         words.add("life");
-        ArrayList<String> expected = new ArrayList<String>();
+        ArrayList<String> expected = new ArrayList<>();
         ArrayList<String> actual = wordComparer.compareClues(words);
 
         assertEquals(expected, actual);
     }
 
     @Test
-    public void TestStemAPI() {
+    void TestStemAPI() {
         WordComparer wordComparer = new WordComparer();
         String expected = "live";
         String actual1;
@@ -98,7 +96,7 @@ class WordComparerTest {
     }
 
     @Test
-    public void TestCloseWordsNoMistakes() {
+    void TestCloseWordsNoMistakes() {
         WordComparer wordComparer = new WordComparer();
         String word1 = "Azkaban";
         String word2 = "Azkaban";
@@ -107,7 +105,7 @@ class WordComparerTest {
     }
 
     @Test
-    public void TestCloseWordsDifferentCapitalization() {
+    void TestCloseWordsDifferentCapitalization() {
         WordComparer wordComparer = new WordComparer();
         String word1 = "ASKaBan";
         String word2 = "Askaban";
@@ -116,7 +114,7 @@ class WordComparerTest {
     }
 
     @Test
-    public void TestCloseWordsNotCloseEnough() {
+    void TestCloseWordsNotCloseEnough() {
         WordComparer wordComparer = new WordComparer();
         String word1 = "house";
         String word2 = "Mouse";
@@ -125,7 +123,7 @@ class WordComparerTest {
     }
 
     @Test
-    public void TestCloseWordsOneMistake() {
+    void TestCloseWordsOneMistake() {
         WordComparer wordComparer = new WordComparer();
         String word1 = "Askaban";
         String word2 = "Azkaban";
@@ -134,7 +132,7 @@ class WordComparerTest {
     }
 
     @Test
-    public void TestCloseWordsTwoMistakes() {
+    void TestCloseWordsTwoMistakes() {
         WordComparer wordComparer = new WordComparer();
         String word1 = "Askaban";
         String word2 = "Azcaban";
@@ -143,7 +141,7 @@ class WordComparerTest {
     }
 
     @Test
-    public void TestCompareMysteryWordsCorrect() {
+    void TestCompareMysteryWordsCorrect() {
         WordComparer wordComparer = new WordComparer();
         String word1 = "Askaban";
         String word2 = "Azkaban";
@@ -152,7 +150,7 @@ class WordComparerTest {
     }
 
     @Test
-    public void TestCompareMysteryWordsWrong() {
+    void TestCompareMysteryWordsWrong() {
         WordComparer wordComparer = new WordComparer();
         String word1 = "Dog";
         String word2 = "Azkaban";
