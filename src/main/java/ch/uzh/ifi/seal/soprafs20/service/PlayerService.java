@@ -2,7 +2,6 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
-
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import org.slf4j.Logger;
@@ -39,18 +38,20 @@ public class PlayerService {
         return this.playerRepository.findAll();
     }
 
+
     public List<PlayerEntity> getUsersSortedByPointsDescending(){
         List<PlayerEntity> list = this.playerRepository.findAll();
+
         list.sort(Collections.reverseOrder());
         return list;
     }
-
 
 
     public PlayerEntity createUser(PlayerEntity newPlayerEntity) {
         newPlayerEntity.setToken(UUID.randomUUID().toString());
         newPlayerEntity.setStatus(PlayerStatus.OFFLINE);
         newPlayerEntity.setScore(0);
+
 
 
         checkIfUserExists(newPlayerEntity);

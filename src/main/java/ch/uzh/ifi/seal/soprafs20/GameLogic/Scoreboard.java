@@ -1,5 +1,10 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 
 import java.util.HashMap;
@@ -8,6 +13,7 @@ import java.util.Map;
 
 
 public class Scoreboard {
+
     private Map<PlayerEntity, Integer> scoreBoard = new HashMap<PlayerEntity, Integer>();
 
     public Scoreboard(List<PlayerEntity> playerEntities) {
@@ -17,6 +23,7 @@ public class Scoreboard {
     }
 
     public Map<PlayerEntity, Integer> getEndScore() {
+
         return scoreBoard;
     }
 
@@ -30,3 +37,6 @@ public class Scoreboard {
         scoreBoard.put(playerEntity, scoreBoard.get(playerEntity) + ScoreCalculator.calculateScorePassivePlayer(playerEntity, rightGuess, validClue, 33000-milliseconds, numOfDuplicateGuesses));
     }
 }
+
+
+

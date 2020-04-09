@@ -1,5 +1,3 @@
-
-
 package ch.uzh.ifi.seal.soprafs20.Entities;
 
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
@@ -7,9 +5,14 @@ import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import javax.persistence.*;
 import java.io.Serializable;
 
-
+/**
+ * Internal Player Representation
+ * This class composes the internal representation of the user and defines how the user is stored in the database.
+ * Every variable will be mapped into a database field with the @Column annotation
+ *  nullable = false -> this cannot be left empty
+ * - unique = true -> this value must be unqiue across the database -> composes the primary key
+ */
 @Entity
-
 @Table(name="Player")
 @Embeddable
 public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
@@ -36,9 +39,11 @@ public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
     private int score;
 
     @Override
+
     public int compareTo(PlayerEntity other) {
         if (this.getScore() == other.getScore()) return 0;
         else if (this.getScore() > other.getScore()) return 1;
+
         else return -1;
     }
 
@@ -49,6 +54,8 @@ public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
     public void setScore(int score) {
         this.score = score;
     }
+
+
 
     public Long getId() {
         return id;

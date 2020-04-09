@@ -56,7 +56,7 @@ public class LogicController {
     @PostMapping("/games/{gameId}/Cards/")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public WordPostDTO getUser(@PathVariable String gameId, @RequestBody CardPostDTO cardPostDTO) {
+    public WordPostDTO setMysteryWord(@PathVariable String gameId, @RequestBody CardPostDTO cardPostDTO) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsActivePlayerOfGame(cardPostDTO.getPlayerToken(), gameIdLong);
@@ -89,10 +89,11 @@ public class LogicController {
 
     }
 
-    @GetMapping("/games/{gameId}/Cards/{playerToken}/")
+    /**Gives back the chosen MysteryWord*/
+    @GetMapping("/games/{gameId}/activeWord/{playerToken}/")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public WordPostDTO getUser(@PathVariable String gameId, @PathVariable String playerToken) {
+    public WordPostDTO getMysteryWord(@PathVariable String gameId, @PathVariable String playerToken) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPassivePlayerOfGame(playerToken, gameIdLong);

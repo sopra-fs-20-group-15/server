@@ -1,6 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
-
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 
 public class ScoreCalculator {
