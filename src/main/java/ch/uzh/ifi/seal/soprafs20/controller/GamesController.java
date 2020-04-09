@@ -37,7 +37,7 @@ public class GamesController {
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public GamePostDTO getUser(@PathVariable String gameId, @RequestBody GamePostDTO gamePostDTO) {
+    public GamePostDTO createGame(@RequestBody GamePostDTO gamePostDTO) {
         //Check that Player actually exists
         PlayerEntity player = playerService.getPlayerByToken(gamePostDTO.getPlayerToken());
         GameEntity game = DTOMapper.INSTANCE.convertGamePostDTOtoEntity(gamePostDTO);
