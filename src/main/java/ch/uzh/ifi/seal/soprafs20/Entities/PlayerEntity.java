@@ -3,10 +3,12 @@ package ch.uzh.ifi.seal.soprafs20.Entities;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
 
+@Embeddable
 public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
 
     private static final long serialVersionUID = 1L;

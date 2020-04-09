@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
 
 /**
  * DTOMapper
@@ -47,7 +48,9 @@ public interface DTOMapper {
     @Mapping(source = "username", target = "username")
     PlayerEntity convertUserPutUserIdDTOToEntity(PlayerPutUserIdDTO playerPutUserIdDTO);
 
-
+    @Mapping(source = "playerToken", target = "playerToken")
+    @Mapping(source = "clue", target = "clue")
+    Clue convertCluePostDTOToClue(CluePostDTO cluePostDTO);
 
 
 }

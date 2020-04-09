@@ -1,5 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.Entities;
 
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Clue;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
@@ -37,10 +39,19 @@ public class GameEntity {
     private Boolean validClue;
 
     @ElementCollection
+    List<PlayerEntity> players;
+
+    @ElementCollection
     List<Long> passivePlayerIds;
 
     @ElementCollection
     List<Long> CardIds;
+
+    @ElementCollection
+    Map<String, String> clueList;
+
+    @ElementCollection
+    List<String> validClues;
 
     @ElementCollection
     Map<PlayerEntity,Integer> ScoreBoard;
@@ -50,6 +61,26 @@ public class GameEntity {
 
     @Column(nullable = false)
     private Long nrOfDuplicates;
+
+    public void setValidClues(List<String> validClues) {
+        this.validClues = validClues;
+    }
+
+    public List<String> getValidClues() {
+        return validClues;
+    }
+
+    public Map<String, String> getClueList() {
+        return clueList;
+    }
+
+    public List<PlayerEntity> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<PlayerEntity> players) {
+        this.players = players;
+    }
 
     public Long getActiveCardId() {
         return activeCardId;
