@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
+
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import org.slf4j.Logger;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,10 +44,7 @@ public class PlayerService {
         return list;
     }
 
-    public PlayerEntity createUser(PlayerEntity newPlayerEntity) {
-        newPlayerEntity.setToken(UUID.randomUUID().toString());
-        newPlayerEntity.setStatus(PlayerStatus.OFFLINE);
-        newPlayerEntity.setScore(0);
+
 
 
         checkIfUserExists(newPlayerEntity);
