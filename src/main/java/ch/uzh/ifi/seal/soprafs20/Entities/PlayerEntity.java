@@ -2,9 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.Entities;
 
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -17,7 +15,7 @@ import java.io.Serializable;
 @Entity
 //Even though there is a red line beneath "Player", it should still work
 @Table(name = "PLAYER")
-public class Player implements Serializable, Comparable<Player> {
+public class PlayerEntity implements Serializable, Comparable<PlayerEntity>{
 
     private static final long serialVersionUID = 1L;
 
@@ -95,3 +93,4 @@ public class Player implements Serializable, Comparable<Player> {
         return password;
     }
 }
+
