@@ -70,6 +70,10 @@ public class GameEntity {
         return validClues;
     }
 
+    public void setClueList(Map<String, String> clueList) {
+        this.clueList = clueList;
+    }
+
     public Map<String, String> getClueList() {
         return clueList;
     }

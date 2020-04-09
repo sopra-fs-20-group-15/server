@@ -1,6 +1,6 @@
 
 
-package ch.uzh.ifi.seal.soprafs20.GameLogic;
+package ch.uzh.ifi.seal.soprafs20.Entities;
 
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 
@@ -31,6 +31,24 @@ public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private int score;
+
+    @Override
+    public int compareTo(PlayerEntity other) {
+        if (this.getScore() == other.getScore()) return 0;
+        else if (this.getScore() > other.getScore()) return 1;
+        else return -1;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 
     public Long getId() {
         return id;

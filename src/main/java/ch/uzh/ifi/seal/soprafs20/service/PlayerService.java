@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,6 +46,11 @@ public class PlayerService {
     }
 
 
+
+    public PlayerEntity createUser(PlayerEntity newPlayerEntity) {
+        newPlayerEntity.setToken(UUID.randomUUID().toString());
+        newPlayerEntity.setStatus(PlayerStatus.OFFLINE);
+        newPlayerEntity.setScore(0);
 
 
         checkIfUserExists(newPlayerEntity);

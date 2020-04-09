@@ -3,15 +3,22 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
+import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.CardService;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.GameService;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.ValidationService;
-import ch.uzh.ifi.seal.soprafs20.exceptions.*;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.WordComparer;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CardPostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.WordPostDTO;
+import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,14 +26,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import java.util.Collections;
-import java.util.List;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+
+import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -37,6 +47,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * This is a WebMvcTest which allows to test the UserController i.e. GET/POST request without actually sending them over the network.
  * This tests if the UserController works.
  */
+
+@WebMvcTest(LogicController.class)
 public class LogicControllerTest {
 
     @Autowired
@@ -50,6 +62,14 @@ public class LogicControllerTest {
 
     @MockBean
     private ValidationService validationService;
+
+    @MockBean
+    private PlayerService playerService;
+
+    @Mock
+    private WordComparer wordComparer;
+
+
 
 
     /**Tests a post-Request to /games/{gameId}/Cards/*/
@@ -125,6 +145,145 @@ public class LogicControllerTest {
             throw new SopraServiceException(String.format("The request body could not be created.%s", e.toString()));
         }
     }
+
+
+    /**Tests a post-Request to /games/{gameId}/Clues/*/
+    @Test
+    public void postRequestPassivePlayerSuccessfullyGivesClue() throws Exception {
+        CluePostDTO clue=new CluePostDTO();
+        clue.setClue("clue");
+        clue.setPlayerToken("token");
+        GameEntity game = new GameEntity();
+        Map<String, String> clueList= new HashMap<>();
+        List<PlayerEntity> players= new ArrayList<>();
+        game.setClueList(clueList);
+        game.setPlayers(players);
+
+        PlayerEntity player = new PlayerEntity();
+        player.setUsername("playerName");
+        game.getPlayers().add(player);
+        game.getPlayers().add(new PlayerEntity());
+
+        given(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
+        given(gameService.getGameById(Mockito.any())).willReturn(game);
+        given(playerService.getPlayerByToken(Mockito.anyString())).willReturn(player);
+
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder postRequest = post("/games/{gameId}/clues/", "123")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(clue));
+
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated());
+
+    }
+
+    @Test
+    public void postRequestPassivePlayerTriesToGiveTwoClues() throws Exception {
+        CluePostDTO clue=new CluePostDTO();
+        clue.setClue("clue");
+        clue.setPlayerToken("token");
+        GameEntity game = new GameEntity();
+        Map<String, String> clueList= new HashMap<>();
+        List<PlayerEntity> players= new ArrayList<>();
+        game.setClueList(clueList);
+        game.setPlayers(players);
+
+        PlayerEntity player = new PlayerEntity();
+        player.setUsername("playerName");
+        game.getPlayers().add(player);
+        game.getPlayers().add(new PlayerEntity());
+
+        given(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
+        given(gameService.getGameById(Mockito.any())).willReturn(game);
+        given(playerService.getPlayerByToken(Mockito.anyString())).willReturn(player);
+
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder postRequest = post("/games/{gameId}/clues/", "123")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(clue));
+
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    @Test
+    public void postRequestActivePlayerTriesToGiveClue() throws Exception {
+        CluePostDTO clue=new CluePostDTO();
+        clue.setClue("clue");
+        clue.setPlayerToken("token");
+        GameEntity game = new GameEntity();
+        Map<String, String> clueList= new HashMap<>();
+        List<PlayerEntity> players= new ArrayList<>();
+        game.setClueList(clueList);
+        game.setPlayers(players);
+
+        PlayerEntity player = new PlayerEntity();
+        player.setUsername("playerName");
+        game.getPlayers().add(player);
+        game.getPlayers().add(new PlayerEntity());
+
+        given(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.anyString(),Mockito.anyLong())).willThrow(new UnauthorizedException(""));
+        given(gameService.getGameById(Mockito.any())).willReturn(game);
+        given(playerService.getPlayerByToken(Mockito.anyString())).willReturn(player);
+
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder postRequest = post("/games/{gameId}/clues/", "123")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(clue));
+
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    @Test
+    public void playerNotInGameTriesToGiveClueOrGameDoesNotExistOrBoth() throws Exception {
+        CluePostDTO clue=new CluePostDTO();
+        clue.setClue("clue");
+        clue.setPlayerToken("token");
+        GameEntity game = new GameEntity();
+        Map<String, String> clueList= new HashMap<>();
+        List<PlayerEntity> players= new ArrayList<>();
+        game.setClueList(clueList);
+        game.setPlayers(players);
+
+        PlayerEntity player = new PlayerEntity();
+        player.setUsername("playerName");
+        game.getPlayers().add(player);
+        game.getPlayers().add(new PlayerEntity());
+
+        given(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.anyString(),Mockito.anyLong())).willThrow(new NotFoundException(""));
+        given(gameService.getGameById(Mockito.any())).willReturn(game);
+        given(playerService.getPlayerByToken(Mockito.anyString())).willReturn(player);
+
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder postRequest = post("/games/{gameId}/clues/", "123")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(clue));
+
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+
+    }
+
+
 }
 /**
  public void createUser_invalidInput_userExistsAlready() throws Exception {

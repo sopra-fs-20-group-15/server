@@ -14,6 +14,7 @@ import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.WordPostDTO;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,7 @@ public class LogicController {
     private final GameService gameService;
     private final ValidationService validationService;
     private final WordComparer wordComparer;
+
 
     LogicController(PlayerService playerService, CardService cardService, ValidationService validationService, GameService gameService) {
         this.playerService = playerService;
