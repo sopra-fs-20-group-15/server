@@ -1,4 +1,4 @@
-package GameLogic;
+package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 import static org.junit.jupiter.api.Assertions.*;
 

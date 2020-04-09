@@ -1,14 +1,12 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
-import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
+import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 
-import java.util.Date;
-
-public class UserGetDTO {
+public class PlayerGetDTO {
 
     private Long id;
     private String username;
-    private UserStatus status;
+    private PlayerStatus status;
 
 
     public Long getId() {
@@ -27,11 +25,11 @@ public class UserGetDTO {
         this.username = username;
     }
 
-    public UserStatus getStatus() {
+    public PlayerStatus getStatus() {
         return status;
     }
 
-    public void setStatus(UserStatus status) {
+    public void setStatus(PlayerStatus status) {
         this.status = status;
     }
 }

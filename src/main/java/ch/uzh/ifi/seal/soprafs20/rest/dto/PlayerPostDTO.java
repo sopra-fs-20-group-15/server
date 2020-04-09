@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
-public class UserPutDTO {
+public class PlayerPostDTO {
 
     private String username;
 

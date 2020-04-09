@@ -2,7 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
 import java.util.Date;
 
-public class UserPutUserIdDTO {
+public class PlayerPutUserIdDTO {
 
     private String token;
     private String username;

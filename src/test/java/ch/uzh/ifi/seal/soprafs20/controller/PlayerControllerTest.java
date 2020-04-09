@@ -2,7 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 
 
 
-import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Player;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -33,15 +33,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
 
- * UserControllerTest
+ * PlayerControllerTest
  * This is a WebMvcTest which allows to test the UserController i.e. GET/POST request without actually sending them over the network.
  * This tests if the UserController works.
 
  */
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(PlayerController.class)
 
-public class UserControllerTest {
+public class PlayerControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -53,14 +53,14 @@ public class UserControllerTest {
     public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
 
         // given
-        User user = new User();
-        user.setName("Firstname Lastname");
-        user.setUsername("firstname@lastname");
+        Player player = new Player();
+        player.setName("Firstname Lastname");
+        player.setUsername("firstname@lastname");
 
-        List<User> allUsers = Collections.singletonList(user);
+        List<Player> allPlayers = Collections.singletonList(player);
 
         // this mocks the UserService -> we define above what the userService should return when getUsers() is called
-        given(userService.getUsers()).willReturn(allUsers);
+        given(userService.getUsers()).willReturn(allPlayers);
 
         // when
         MockHttpServletRequestBuilder getRequest = get("/users").contentType(MediaType.APPLICATION_JSON);
@@ -68,8 +68,8 @@ public class UserControllerTest {
         // then
         mockMvc.perform(getRequest).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].name", is(user.getName())))
-                .andExpect(jsonPath("$[0].username", is(user.getUsername())));
+                .andExpect(jsonPath("$[0].name", is(player.getName())))
+                .andExpect(jsonPath("$[0].username", is(player.getUsername())));
     }
 
     /**Test the Post-Request to /users*/
@@ -78,16 +78,16 @@ public class UserControllerTest {
     public void createUser_validInput_userCreated() throws Exception {
 
         // given
-        User user = new User();
-        user.setId(1L);
-        user.setName("Test User");
-        user.setUsername("testUsername");
+        Player player = new Player();
+        player.setId(1L);
+        player.setName("Test Player");
+        player.setUsername("testUsername");
 
         UserPostDTO userPostDTO = new UserPostDTO();
-        userPostDTO.setName("Test User");
+        userPostDTO.setName("Test Player");
         userPostDTO.setUsername("testUsername");
 
-        given(userService.createUser(Mockito.any())).willReturn(user);
+        given(userService.createUser(Mockito.any())).willReturn(player);
 
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder postRequest = post("/users")
@@ -98,9 +98,9 @@ public class UserControllerTest {
 
         mockMvc.perform(postRequest)
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", is(user.getId().intValue())))
-                .andExpect(jsonPath("$.name", is(user.getName())))
-                .andExpect(jsonPath("$.username", is(user.getUsername())));
+                .andExpect(jsonPath("$.id", is(player.getId().intValue())))
+                .andExpect(jsonPath("$.name", is(player.getName())))
+                .andExpect(jsonPath("$.username", is(player.getUsername())));
     }
 
 
@@ -372,7 +372,7 @@ public class UserControllerTest {
 
     /** Test /games/{gameId}/delete DELETE*/
     /**
-    //Valid Delete  
+    //Valid Delete
     @Test
     public void DELETEgamesGameIdDeleteValidDelete() throws Exception {
 
@@ -431,7 +431,7 @@ public class UserControllerTest {
 
      * Helper Method to convert userPostDTO into a JSON string such that the input can be processed
 
-     * Input will look like this: {"name": "Test User", "username": "testUsername"}
+     * Input will look like this: {"name": "Test Player", "username": "testUsername"}
 
      * @param object
 

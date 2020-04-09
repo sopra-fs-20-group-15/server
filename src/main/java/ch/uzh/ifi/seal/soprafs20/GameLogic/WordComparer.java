@@ -1,4 +1,5 @@
-package GameLogic;
+package ch.uzh.ifi.seal.soprafs20.GameLogic;
+
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
