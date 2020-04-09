@@ -1,5 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.Entities;
 
+import ch.uzh.ifi.seal.soprafs20.constant.GameType;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,21 @@ public class GameEntity {
     @Id
     @GeneratedValue
     private Long id;
+
+    @Column(nullable = false)
+    private Long numberOfPlayers;
+
+    @Column(nullable = false)
+    private Long numberOfBots;
+
+    @Column(nullable = false)
+    private GameType gameType;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private Long HostId;
 
     @Column(nullable = false)
     private Long activeCardId;
@@ -50,6 +67,46 @@ public class GameEntity {
 
     @Column(nullable = false)
     private Long nrOfDuplicates;
+
+    public Long getHostId() {
+        return HostId;
+    }
+
+    public void setHostId(Long hostId) {
+        HostId = hostId;
+    }
+
+    public Long getNumberOfPlayers() {
+        return numberOfPlayers;
+    }
+
+    public void setNumberOfPlayers(Long numberOfPlayers) {
+        this.numberOfPlayers = numberOfPlayers;
+    }
+
+    public Long getNumberOfBots() {
+        return numberOfBots;
+    }
+
+    public void setNumberOfBots(Long numberOfBots) {
+        this.numberOfBots = numberOfBots;
+    }
+
+    public GameType getGameType() {
+        return gameType;
+    }
+
+    public void setGameType(GameType gameType) {
+        this.gameType = gameType;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public Long getActiveCardId() {
         return activeCardId;

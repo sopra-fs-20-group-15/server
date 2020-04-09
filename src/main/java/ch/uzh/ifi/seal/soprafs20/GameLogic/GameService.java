@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.GameLogic;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
+import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.IllegalRegistrationInput;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.PlayerNotAvailable;
@@ -44,15 +45,36 @@ public class GameService {
         return gameOp.get();
     }
 
-    public GameEntity createGame(GameEntity gameEntity) {
+    /**Creates a game. GameToken should be checked beforehand so that player exists*/
+    public GameEntity createGame(GameEntity game) {
+        //Check, if parameters are acceptable
         GameEntity newGameEntity = new GameEntity();
-
-        // saves the given entity but data is only persisted in the database once flush() is called
-        gameRepository.save(newGameEntity);
-        gameRepository.flush();
-
-        log.debug("Created Information for PlayerEntity: {}", newGameEntity);
-        return newGameEntity;
+        if (game.getNumberOfPlayers() < 8 && game.getNumberOfPlayers() > 2) {
+            if (game.getNumberOfBots() > 0 && game.getNumberOfBots() < game.getNumberOfPlayers()){
+             if(game.getGameType().name().equals("PRIVATE")){
+                if(game.getPassword() != null && ! game.getPassword().isEmpty()){
+                    GameEntity newGame = gameRepository.save(game);
+                    gameRepository.flush();
+                    return newGame;
+                }
+                else{
+                    throw new ConflictException("The Password should not be empty or null!");
+                }
+             }
+             // If it is a public game
+             else{
+                 GameEntity newGame = gameRepository.save(game);
+                 gameRepository.flush();
+                 return newGame;
+             }
+            }
+            else{
+                throw new ConflictException("The number of Player should be smaller than the number of players and bigger than 0");
+            }
+        }
+        else{
+            throw new ConflictException("The number of Player should be smaller than 7 and bigger than 3");
+        }
     }
 
     public void updateLeaderBoard(GameEntity gameEntity){
