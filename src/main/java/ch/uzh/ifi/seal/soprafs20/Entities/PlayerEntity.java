@@ -1,16 +1,13 @@
-
-
-package ch.uzh.ifi.seal.soprafs20.GameLogic;
+package ch.uzh.ifi.seal.soprafs20.Entities;
 
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
-
-@Entity
-
-@Table(name="Player")
 @Embeddable
 public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
 
@@ -31,6 +28,24 @@ public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private int score;
+
+    @Override
+    public int compareTo(PlayerEntity other) {
+        if (this.getScore() == other.getScore()) return 0;
+        else if (this.getScore() > other.getScore()) return 1;
+        else return -1;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getScore() {
+        return score;
+    }
 
     public Long getId() {
         return id;
@@ -64,7 +79,11 @@ public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
         this.status = status;
     }
 
-    public void setPassword (String password){this.password = password;}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public String getPassword(){return password;}
+    public String getPassword() {
+        return password;
+    }
 }
