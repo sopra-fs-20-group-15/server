@@ -28,13 +28,16 @@ public class GameEntity {
     private Long activeCardId;
 
     @Column(nullable = false)
-    private String activeWord;
+    private String activeMysteryWord;
 
     @Column(nullable = false)
     private Long activePlayerId;
 
     @Column(nullable = false)
-    private Boolean rightGuess;
+    private String Guess;
+
+    @Column(nullable = false)
+    private Boolean isValidGuess;
 
     @Column(nullable = false)
     private Boolean validClue;
@@ -95,16 +98,16 @@ public class GameEntity {
         this.activeCardId = cardId;
     }
 
-    public String getActiveWord() {
-        return activeWord;
+    public String getActiveMysteryWord() {
+        return activeMysteryWord;
     }
 
-    public void setActiveWord(String activeWord) {
-        this.activeWord = activeWord;
+    public void setActiveMysteryWord(String activeMysteryWord) {
+        this.activeMysteryWord = activeMysteryWord;
     }
 
-    public Boolean getRightGuess() {
-        return rightGuess;
+    public Boolean getIsValidGuess() {
+        return isValidGuess;
     }
 
     public Boolean getValidClue() {
@@ -155,8 +158,8 @@ public class GameEntity {
         Milliseconds = milliseconds;
     }
 
-    public void setRightGuess(Boolean rightGuess) {
-        this.rightGuess = rightGuess;
+    public void setIsValidGuess(Boolean isValidGuess) {
+        this.isValidGuess = isValidGuess;
     }
 
     public void setValidClue(Boolean validClue) {
@@ -175,11 +178,16 @@ public class GameEntity {
         ScoreBoard = scoreBoard;
     }
 
-    public void updateScoreboard(){
+     public void updateScoreboard(){
         for (PlayerEntity player: players){
             if (activePlayerId.equals(player.getId())) ScoreCalculator.calculateScoreActivePlayer(player, rightGuess,33000 - getMilliseconds());
 
-        }
-    }
+     }   
+      public String getGuess() {
+        	return Guess;
+      }
 
+    public void setGuess(String guess) {
+        Guess = guess;
+    }
 }
