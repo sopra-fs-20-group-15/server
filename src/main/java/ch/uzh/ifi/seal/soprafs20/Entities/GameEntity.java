@@ -1,11 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.Entities;
 
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Clue;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 
 /**
@@ -27,10 +24,13 @@ public class GameEntity {
     private Long activeCardId;
 
     @Column(nullable = false)
-    private String activeWord;
+    private String activeMysteryWord;
 
     @Column(nullable = false)
     private Long activePlayerId;
+
+    @Column(nullable = false)
+    private String Guess;
 
     @Column(nullable = false)
     private Boolean rightGuess;
@@ -61,6 +61,9 @@ public class GameEntity {
 
     @Column(nullable = false)
     private Long nrOfDuplicates;
+
+    public GameEntity() {
+    }
 
     public void setValidClues(List<String> validClues) {
         this.validClues = validClues;
@@ -94,12 +97,12 @@ public class GameEntity {
         this.activeCardId = cardId;
     }
 
-    public String getActiveWord() {
-        return activeWord;
+    public String getActiveMysteryWord() {
+        return activeMysteryWord;
     }
 
-    public void setActiveWord(String activeWord) {
-        this.activeWord = activeWord;
+    public void setActiveMysteryWord(String activeMysteryWord) {
+        this.activeMysteryWord = activeMysteryWord;
     }
 
     public Boolean getRightGuess() {
@@ -174,4 +177,11 @@ public class GameEntity {
         ScoreBoard = scoreBoard;
     }
 
+    public String getGuess() {
+        return Guess;
+    }
+
+    public void setGuess(String guess) {
+        Guess = guess;
+    }
 }

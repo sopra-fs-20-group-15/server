@@ -42,7 +42,6 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
-
     public GameEntity getGameById(Long id){
         Optional<GameEntity> gameOp = gameRepository.findById(id);
         if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
