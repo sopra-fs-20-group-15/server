@@ -23,21 +23,6 @@ public class GameEntity {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
-    private Long numberOfPlayers;
-
-    @Column(nullable = false)
-    private Long numberOfBots;
-
-    @Column(nullable = false)
-    private GameType gameType;
-
-    @Column(nullable = true)
-    private String password;
-
-    @Column(nullable = false)
-    private Long HostId;
-/
     @Column(nullable = true)
     private Long activeCardId;
 
@@ -52,7 +37,7 @@ public class GameEntity {
 
     @Column(nullable = true)
     private Boolean validClue;
-/**
+
     @ElementCollection
     List<Long> passivePlayerIds;
 
@@ -61,50 +46,11 @@ public class GameEntity {
 
     @ElementCollection
     Map<PlayerEntity,Integer> ScoreBoard;
- */
 
     @Column(nullable = true)
     private Long nrOfDuplicates;
 
-    public Long getHostId() {
-        return HostId;
-    }
 
-    public void setHostId(Long hostId) {
-        HostId = hostId;
-    }
-
-    public Long getNumberOfPlayers() {
-        return numberOfPlayers;
-    }
-
-    public void setNumberOfPlayers(Long numberOfPlayers) {
-        this.numberOfPlayers = numberOfPlayers;
-    }
-
-    public Long getNumberOfBots() {
-        return numberOfBots;
-    }
-
-    public void setNumberOfBots(Long numberOfBots) {
-        this.numberOfBots = numberOfBots;
-    }
-
-    public GameType getGameType() {
-        return gameType;
-    }
-
-    public void setGameType(GameType gameType) {
-        this.gameType = gameType;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
     public Long getId() {
         return id;
     }
@@ -165,7 +111,7 @@ public class GameEntity {
     public void setNrOfDuplicates(Long nrOfDuplicates) {
         this.nrOfDuplicates = nrOfDuplicates;
     }
-/**
+
     public Map<PlayerEntity, Integer> getScoreBoard() {
         return ScoreBoard;
     }
@@ -189,5 +135,5 @@ public class GameEntity {
 
     public void setCardIds(List<Long> cardIds) {
         CardIds = cardIds;
-    }*/
+    }
 }

@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
+import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
@@ -8,6 +9,7 @@ import ch.uzh.ifi.seal.soprafs20.exceptions.IllegalRegistrationInput;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.PlayerNotAvailable;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +34,13 @@ public class GameService {
 
     private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
+    private final GameSetUpRepository gameSetUpRepository;
 
     @Autowired
-    public GameService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository) {
+    public GameService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpRepository") GameSetUpRepository gameSetUpRepository,@Qualifier("gameRepository") GameRepository gameRepository) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
+        this.gameSetUpRepository = gameSetUpRepository;
     }
 
     public GameEntity getGameById(Long id){
@@ -46,14 +50,13 @@ public class GameService {
     }
 
     /**Creates a game. GameToken should be checked beforehand so that player exists*/
-    public GameEntity createGame(GameEntity game) {
+    public GameSetUpEntity createGame(GameSetUpEntity game) {
         //Check, if parameters are acceptable
-        GameEntity newGameEntity = new GameEntity();
         if (game.getNumberOfPlayers() < 8 && game.getNumberOfPlayers() > 2) {
             if (game.getNumberOfBots() > -1 && game.getNumberOfBots() < game.getNumberOfPlayers()){
              if(game.getGameType().name().equals("PRIVATE")){
                 if(game.getPassword() != null && ! game.getPassword().isEmpty()){
-                    GameEntity newGame = gameRepository.save(game);
+                    GameSetUpEntity newGame = gameSetUpRepository.save(game);
                     gameRepository.flush();
                     return newGame;
                 }
@@ -63,7 +66,7 @@ public class GameService {
              }
              // If it is a public game
              else{
-                 GameEntity newGame = gameRepository.save(game);
+                 GameSetUpEntity newGame = gameSetUpRepository.save(game);
                  gameRepository.flush();
                  return newGame;
              }
