@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.GameLogic;
+package ch.uzh.ifi.seal.soprafs20.Entities;
 
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 
@@ -13,9 +13,9 @@ import java.io.Serializable;
  * - unique = true -> this value must be unqiue across the database -> composes the primary key
  */
 @Entity
-//Even though there is a red line beneath "Player", it should still work
-@Table(name = "PLAYER")
-public class Player implements Serializable, Comparable<Player> {
+@Table(name="Player")
+@Embeddable
+public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,19 +39,23 @@ public class Player implements Serializable, Comparable<Player> {
     private int score;
 
     @Override
-    public int compareTo(Player other) {
-        if (this.getScore()==other.getScore()) return 0;
-        else if (this.getScore()>other.getScore()) return 1;
+
+    public int compareTo(PlayerEntity other) {
+        if (this.getScore() == other.getScore()) return 0;
+        else if (this.getScore() > other.getScore()) return 1;
+
         else return -1;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     public void setScore(int score) {
         this.score = score;
     }
 
-    public int getScore() {
-        return score;
-    }
+
 
     public Long getId() {
         return id;

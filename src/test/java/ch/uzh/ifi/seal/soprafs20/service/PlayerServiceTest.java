@@ -1,17 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
-import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Player;
-import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.springframework.web.server.ResponseStatusException;
-
-import static org.junit.jupiter.api.Assertions.*;
 /**
 public class PlayerServiceTest {
 
@@ -21,14 +9,14 @@ public class PlayerServiceTest {
     @InjectMocks
     private PlayerService playerService;
 
-    private Player testPlayer;
+    private PlayerEntity testPlayer;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
         // given
-        testPlayer = new Player();
+        testPlayer = new PlayerEntity();
         testPlayer.setId(1L);
         testPlayer.setName("testName");
         testPlayer.setUsername("testUsername");
@@ -40,7 +28,7 @@ public class PlayerServiceTest {
     @Test
     public void createUser_validInputs_success() {
         // when -> any object is being save in the playerRepository -> return the dummy testPlayer
-        Player createdPlayer = playerService.createUser(testPlayer);
+        PlayerEntity createdPlayer = playerService.createUser(testPlayer);
 
         // then
         Mockito.verify(playerRepository, Mockito.times(1)).save(Mockito.any());

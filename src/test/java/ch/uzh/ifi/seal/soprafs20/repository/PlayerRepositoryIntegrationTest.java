@@ -1,12 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.repository;
 
-import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Player;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
@@ -22,7 +15,7 @@ public class PlayerRepositoryIntegrationTest {
     @Test
     public void findByName_success() {
         // given
-        Player player = new Player();
+        PlayerEntity player = new PlayerEntity();
         player.setName("Firstname Lastname");
         player.setUsername("firstname@lastname");
         player.setStatus(PlayerStatus.OFFLINE);
@@ -32,7 +25,7 @@ public class PlayerRepositoryIntegrationTest {
         entityManager.flush();
 
         // when
-        Player found = playerRepository.findByName(player.getName());
+        PlayerEntity found = playerRepository.findByName(player.getName());
 
         // then
         assertNotNull(found.getId());
