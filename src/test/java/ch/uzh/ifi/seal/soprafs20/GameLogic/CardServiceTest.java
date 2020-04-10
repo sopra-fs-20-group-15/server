@@ -1,16 +1,11 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumber;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumberbetweenOneAndFive;
 import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import org.junit.jupiter.api.Assertions;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,8 +14,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CardServiceTest {
 
@@ -90,6 +88,20 @@ public class CardServiceTest {
 
         assertTrue(thrown.getMessage().contains("The input should be between 1 and 5!"));
     }
+
+    /*
+    @Test
+    public void cardRepositoryGetsFilled() throws IOException {
+        CardService cardService = new CardService(cardRepository);
+        cardService.addAllCards();
+        //CardEntity card = cardService.getCardById(0L);
+        List<String> words= testCard.getWords();
+        String word = words.get(0);
+        Long id = testCard.getId();
+        Long exptected = 0L;
+
+    }*/
+
     @Test
     public void SixShouldThrowError() {
         CardService cardService = new CardService(cardRepository);

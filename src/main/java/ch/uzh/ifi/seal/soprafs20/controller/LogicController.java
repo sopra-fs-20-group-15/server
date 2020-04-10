@@ -10,6 +10,7 @@ import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.lang.Integer.parseInt;
@@ -112,8 +113,35 @@ public class LogicController {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
+        try {cardService.addAllCards();     //fills repository with cards, should not be done here
+        } catch (IOException ex) {
+            throw new NoContentException("The CardDatabase couldn't be filled");
+        }
+
         GameEntity game = gameService.getGameById(gameIdLong);
         long cardId = game.getActiveCardId();
+        CardEntity cardEntity = cardService.getCardById(cardId);
+        CardGetDTO cardGetDTO = new CardGetDTO();
+        cardGetDTO.setId(cardEntity.getId());
+        cardGetDTO.setWords(cardEntity.getWords());
+        return cardGetDTO;
+    }
+
+    //just to test if repository actually gets cards
+    @GetMapping("/games/cardtest")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public CardGetDTO getCardTest() {
+        /*stringIsALong(gameId);
+        Long gameIdLong = parseLong(gameId);
+        validationService.checkPlaygrIsPartOfGame(playerToken, gameIdLong);*/
+        try {cardService.addAllCards();
+        } catch (IOException ex) {
+            throw new NoContentException("The CardDatabase couldn't be filled");
+        }
+
+        //GameEntity game = gameService.getGameById(gameIdLong);
+        long cardId = 1;
         CardEntity cardEntity = cardService.getCardById(cardId);
         CardGetDTO cardGetDTO = new CardGetDTO();
         cardGetDTO.setId(cardEntity.getId());
