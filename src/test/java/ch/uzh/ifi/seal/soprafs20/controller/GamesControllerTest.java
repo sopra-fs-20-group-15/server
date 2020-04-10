@@ -106,7 +106,7 @@ public class GamesControllerTest {
         cardPostDTO.setWordId(1L);
         //Game
         GameEntity game = new GameEntity();
-        game.setActiveWord("Eis");
+        game.setActiveMysteryWord("Eis");
         //returns
         WordPostDTO wordPostDTO = new WordPostDTO();
         wordPostDTO.setWord("Eis");
