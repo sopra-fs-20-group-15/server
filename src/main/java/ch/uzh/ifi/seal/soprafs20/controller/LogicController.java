@@ -44,7 +44,7 @@ public class LogicController {
         return true;
     }
 
-    @PostMapping("/games/{gameId}/Cards/")
+    @PostMapping("/games/{gameId}/Cards")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public WordPostDTO setMysteryWord(@PathVariable String gameId, @RequestBody CardPostDTO cardPostDTO) {
@@ -133,7 +133,7 @@ public class LogicController {
     }
 
     /**Gives back the chosen MysteryWord*/
-    @GetMapping("/games/{gameId}/activeWord/{playerToken}/")
+    @GetMapping("/games/{gameId}/activeWord/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public WordPostDTO getMysteryWord(@PathVariable String gameId, @PathVariable String playerToken) {

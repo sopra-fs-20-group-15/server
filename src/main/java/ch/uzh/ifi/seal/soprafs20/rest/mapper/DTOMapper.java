@@ -1,12 +1,16 @@
 package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
+import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
+import ch.uzh.ifi.seal.soprafs20.constant.GameType;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
+
+import javax.persistence.Column;
 
 /**
  * DTOMapper
@@ -20,6 +24,18 @@ import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
 public interface DTOMapper {
 
     DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
+
+    @Mapping(source = "numberOfPlayers", target = "numberOfPlayers")
+    @Mapping(source = "numberOfBots", target = "numberOfBots")
+    @Mapping(source = "gameType", target = "gameType")
+    @Mapping(source = "password", target = "password")
+    GameEntity convertGamePostDTOtoEntity(GamePostDTO gamePostDTO);
+
+    @Mapping(source = "numberOfPlayers", target = "numberOfPlayers")
+    @Mapping(source = "numberOfBots", target = "numberOfBots")
+    @Mapping(source = "gameType", target = "gameType")
+    @Mapping(source = "password", target = "password")
+    GamePostDTO convertEntityToGamePostDTO(GameEntity gameEntity);
 
     @Mapping(source = "username", target = "username")
     @Mapping(source = "password", target = "password")
