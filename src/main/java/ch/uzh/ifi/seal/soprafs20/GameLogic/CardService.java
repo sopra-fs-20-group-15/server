@@ -2,17 +2,19 @@ package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
-import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumber;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumberbetweenOneAndFive;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -46,6 +48,29 @@ public class CardService {
     protected String chooseWordOnCardByNumber(Long number, CardEntity card){
         int i = number.intValue();
         return card.getWords().get(i-1);
+    }
+
+    public void addAllCards() throws IOException {
+        BufferedReader bufReader = new BufferedReader(new FileReader("cardsEn.txt"));
+        ArrayList<String> listOfLines = new ArrayList<>();
+        String line = bufReader.readLine();
+        while (line != null) {
+            listOfLines.add(line);
+            line = bufReader.readLine();
+        }
+        bufReader.close();
+
+        for (int i = 0; i < listOfLines.size(); i= i+6) {
+            CardEntity card = new CardEntity();
+            List<String> words = new ArrayList<>();
+            for(int j = 0; j < 5; j++){
+                words.add(listOfLines.get(i+j));
+            }
+            card.setWords(words);
+
+            cardRepository.save(card);
+            cardRepository.flush();
+        }
     }
 
     public String chooseWordOnCard(Long wordId, CardEntity card){
