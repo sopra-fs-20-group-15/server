@@ -33,7 +33,7 @@ public class GameEntity {
     private String Guess;
 
     @Column(nullable = false)
-    private Boolean rightGuess;
+    private Boolean isValidGuess;
 
     @Column(nullable = false)
     private Boolean validClue;
@@ -105,8 +105,8 @@ public class GameEntity {
         this.activeMysteryWord = activeMysteryWord;
     }
 
-    public Boolean getRightGuess() {
-        return rightGuess;
+    public Boolean getIsValidGuess() {
+        return isValidGuess;
     }
 
     public Boolean getValidClue() {
@@ -157,8 +157,8 @@ public class GameEntity {
         Milliseconds = milliseconds;
     }
 
-    public void setRightGuess(Boolean rightGuess) {
-        this.rightGuess = rightGuess;
+    public void setIsValidGuess(Boolean isValidGuess) {
+        this.isValidGuess = isValidGuess;
     }
 
     public void setValidClue(Boolean validClue) {

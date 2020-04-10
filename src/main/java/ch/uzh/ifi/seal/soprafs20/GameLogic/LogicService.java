@@ -36,8 +36,8 @@ public class LogicService {
 
     public void setGuess(GameEntity game, String guess){
         boolean isValidGuess = wordComparer.compareMysteryWords(game.getActiveMysteryWord(), guess);
-        //somehow update game with guess, and isValidGuess
-
+        game.setGuess(guess);
+        game.setIsValidGuess(isValidGuess);
     }
 
 
