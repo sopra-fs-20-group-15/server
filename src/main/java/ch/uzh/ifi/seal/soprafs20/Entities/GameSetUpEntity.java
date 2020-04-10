@@ -38,6 +38,10 @@ public class GameSetUpEntity {
     @Column(nullable = false)
     private Long hostId;
 
+    @Column(nullable = true)
+    @ElementCollection
+    List<Long> CardIds;
+
     /**Getters and Setters*/
     public Long getHostId() {
         return hostId;

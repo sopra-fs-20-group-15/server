@@ -19,9 +19,9 @@ public class GameSetUpRepositoryIntegrationTest {
     @Autowired
     private TestEntityManager entityManager;
 
-    @Qualifier("gameSetUpRepository")
+    @Qualifier("gameSetUpEntityRepository")
     @Autowired
-    private GameSetUpRepository gameSetUpRepository;
+    private GameSetUpRepository gameSetUpEntityRepository;
 
     @Test
     public void setGameSetup_success() {
@@ -37,7 +37,7 @@ public class GameSetUpRepositoryIntegrationTest {
         entityManager.flush();
 
         // when
-        GameSetUpEntity found = gameSetUpRepository.findByNumberOfBots(gameSetUp.getNumberOfBots());
+        GameSetUpEntity found = gameSetUpEntityRepository.findByNumberOfBots(gameSetUp.getNumberOfBots());
 
         // then
         assertEquals(found.getNumberOfPlayers(), gameSetUp.getNumberOfPlayers());

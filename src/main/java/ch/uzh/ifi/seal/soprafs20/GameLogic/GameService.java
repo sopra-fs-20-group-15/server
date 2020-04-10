@@ -37,7 +37,7 @@ public class GameService {
     private final GameSetUpRepository gameSetUpRepository;
 
     @Autowired
-    public GameService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpRepository") GameSetUpRepository gameSetUpRepository,@Qualifier("gameRepository") GameRepository gameRepository) {
+    public GameService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository,@Qualifier("gameRepository") GameRepository gameRepository) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.gameSetUpRepository = gameSetUpRepository;
