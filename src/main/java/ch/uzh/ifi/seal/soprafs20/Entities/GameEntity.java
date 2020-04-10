@@ -1,5 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.Entities;
 
+import ch.uzh.ifi.seal.soprafs20.GameLogic.ScoreCalculator;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
@@ -53,17 +56,11 @@ public class GameEntity {
     @ElementCollection
     List<String> validClues;
 
-    @ElementCollection
-    Map<PlayerEntity,Integer> ScoreBoard;
+    @Embedded
+    private Scoreboard scoreboard;
 
     @Column(nullable = false)
     private Long Milliseconds;
-
-    @Column(nullable = false)
-    private Long nrOfDuplicates;
-
-    public GameEntity() {
-    }
 
     public void setValidClues(List<String> validClues) {
         this.validClues = validClues;
@@ -121,9 +118,6 @@ public class GameEntity {
         return id;
     }
 
-    public Map<PlayerEntity, Integer> getScoreBoard() {
-        return ScoreBoard;
-    }
 
     public List<Long> getCardIds() {
         return CardIds;
@@ -135,10 +129,6 @@ public class GameEntity {
 
     public Long getMilliseconds() {
         return Milliseconds;
-    }
-
-    public Long getNrOfDuplicates() {
-        return nrOfDuplicates;
     }
 
     public void setActivePlayerId(Long activePlayerId) {
@@ -165,21 +155,42 @@ public class GameEntity {
         this.validClue = validClue;
     }
 
-    public void setNrOfDuplicates(Long nrOfDuplicates) {
-        this.nrOfDuplicates = nrOfDuplicates;
+    public Scoreboard getScoreboard() {
+        return scoreboard;
     }
 
     public void setPassivePlayerIds(List<Long> passivePlayerIds) {
         this.passivePlayerIds = passivePlayerIds;
     }
 
-    public void setScoreBoard(Map<PlayerEntity, Integer> scoreBoard) {
-        ScoreBoard = scoreBoard;
+    private int getNumOfDuplicates(PlayerEntity player){
+        String  clue = clueList.get(player.getUsername()).toLowerCase();
+        int cnt=-1;
+        for (String clue2: clueList.values()
+             ) {
+            if (clue.equals(clue2.toLowerCase())) cnt++;
+        }
+        return cnt;
     }
 
-    public String getGuess() {
-        return Guess;
-    }
+     public void updateScoreboard(){
+        for (PlayerEntity player: players) {
+            if (activePlayerId.equals(player.getId())) scoreboard.updateScore(player,
+                    ScoreCalculator.calculateScoreActivePlayer(player, isValidGuess, 33000 - getMilliseconds()));
+            else if (passivePlayerIds.contains(player.getId())) {
+                if (validClues.contains(clueList.get(player.getUsername()))) scoreboard.updateScore(player,
+                        ScoreCalculator.calculateScorePassivePlayer(player,isValidGuess,true,
+                                33000 -getMilliseconds(), getNumOfDuplicates(player)));
+                else scoreboard.updateScore(player,
+                        ScoreCalculator.calculateScorePassivePlayer(player,isValidGuess,false,
+                                33000 -getMilliseconds(), getNumOfDuplicates(player)));
+            }
+        }
+
+     }
+      public String getGuess() {
+        	return Guess;
+      }
 
     public void setGuess(String guess) {
         Guess = guess;

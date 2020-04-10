@@ -4,10 +4,7 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.CardService;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.GameService;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.ValidationService;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.WordComparer;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
@@ -30,6 +27,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 
 
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -58,8 +56,8 @@ public class LogicControllerTest {
     @MockBean
     private PlayerService playerService;
 
-    @Mock
-    private WordComparer wordComparer;
+    @MockBean
+    private LogicService logicService;
 
 
 
@@ -217,7 +215,7 @@ public class LogicControllerTest {
     }
 
     @Test
-    public void postRequestPassivePlayerTriesToGiveTwoClues() throws Exception {
+    public void postRequestPassivePlayerTriesToGiveClueSecondTime() throws Exception {
         CluePostDTO clue=new CluePostDTO();
         clue.setClue("clue");
         clue.setPlayerToken("token");
@@ -235,17 +233,13 @@ public class LogicControllerTest {
         given(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
         given(gameService.getGameById(Mockito.any())).willReturn(game);
         given(playerService.getPlayerByToken(Mockito.anyString())).willReturn(player);
-
-        // when/then -> do the request + validate the result
+        doThrow(new UnauthorizedException("Test")).when(logicService).giveClue(Mockito.any(),Mockito.any(),Mockito.any());
 
         MockHttpServletRequestBuilder postRequest = post("/games/{gameId}/clues/", "123")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(clue));
 
         // then
-
-        mockMvc.perform(postRequest)
-                .andExpect(status().isCreated());
 
         mockMvc.perform(postRequest)
                 .andExpect(status().isUnauthorized());
