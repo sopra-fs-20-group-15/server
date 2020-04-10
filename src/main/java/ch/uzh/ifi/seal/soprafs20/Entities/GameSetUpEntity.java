@@ -36,15 +36,15 @@ public class GameSetUpEntity {
     private String password;
 
     @Column(nullable = false)
-    private Long HostId;
+    private Long hostId;
 
     /**Getters and Setters*/
     public Long getHostId() {
-        return HostId;
+        return hostId;
     }
 
     public void setHostId(Long hostId) {
-        HostId = hostId;
+        this.hostId = hostId;
     }
 
     public Long getNumberOfPlayers() {

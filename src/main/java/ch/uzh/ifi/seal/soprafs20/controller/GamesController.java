@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
+import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.CardService;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.GameService;
@@ -40,11 +41,11 @@ public class GamesController {
     public GamePostDTO createGame(@RequestBody GamePostDTO gamePostDTO) {
         //Check that Player actually exists
         PlayerEntity player = playerService.getPlayerByToken(gamePostDTO.getPlayerToken());
-        GameEntity game = DTOMapper.INSTANCE.convertGamePostDTOtoEntity(gamePostDTO);
+        GameSetUpEntity game = DTOMapper.INSTANCE.convertGameSetUpPostDTOtoEntity(gamePostDTO);
         game.setHostId(player.getId());
         //Try to create Game
-        GameEntity newGame = gameService.createGame(game);
-        GamePostDTO gamePostDTOReturn = DTOMapper.INSTANCE.convertEntityToGamePostDTO(newGame);
+        GameSetUpEntity newGame = gameService.createGame(game);
+        GamePostDTO gamePostDTOReturn = DTOMapper.INSTANCE.convertEntityToGameSetUpPostDTO(newGame);
         return gamePostDTOReturn;
     }
 

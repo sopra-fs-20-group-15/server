@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
+import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.CardService;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.GameService;
@@ -42,7 +43,7 @@ public class GameServiceIntegrationTest {
     @Autowired
     private GameService gameService;
 
-    private GameEntity game = new GameEntity();
+    private GameSetUpEntity game = new GameSetUpEntity();
 
     @BeforeEach
     public void setup() {
@@ -63,7 +64,7 @@ public class GameServiceIntegrationTest {
     public void gameCreationWithThreePlayers() {
         game.setNumberOfPlayers(3L);
 
-        GameEntity newGame = gameService.createGame(game);
+        GameSetUpEntity newGame = gameService.createGame(game);
 
         //Test itself
         assertEquals(newGame.getNumberOfPlayers(), game.getNumberOfPlayers());
@@ -71,7 +72,6 @@ public class GameServiceIntegrationTest {
         assertEquals(newGame.getGameType(), game.getGameType());
         assertEquals(newGame.getPassword(), game.getPassword());
         assertEquals(newGame.getHostId(), game.getHostId());
-        assertNotNull(newGame.getId());
 
     }
 

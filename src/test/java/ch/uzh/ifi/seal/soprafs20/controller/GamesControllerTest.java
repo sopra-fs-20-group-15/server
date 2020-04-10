@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
+import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.CardService;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.GameService;
@@ -61,7 +62,7 @@ public class GamesControllerTest {
 
         // given
         //a game
-        GameEntity game = new GameEntity();
+        GameSetUpEntity game = new GameSetUpEntity();
         game.setNumberOfPlayers(3L);
         game.setNumberOfBots(0L);
         game.setGameType(PRIVATE);
