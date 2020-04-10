@@ -22,7 +22,6 @@ public class LogicController {
     private final CardService cardService;
     private final GameService gameService;
     private final ValidationService validationService;
-    private final WordComparer wordComparer;
     private final LogicService logicService;
 
 
@@ -31,7 +30,6 @@ public class LogicController {
         this.cardService = cardService;
         this.validationService = validationService;
         this.gameService = gameService;
-        this.wordComparer= new WordComparer();
         this.logicService = logicService;
     }
 
@@ -88,14 +86,7 @@ public class LogicController {
         validationService.checkPlayerIsPassivePlayerOfGame(cluePostDTO.getPlayerToken(), gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
         String playerName= playerService.getPlayerByToken(cluePostDTO.getPlayerToken()).getUsername();
-        if (game.getClueList().get(playerName)==null) game.getClueList().put(playerName,cluePostDTO.getClue());
-        else throw new UnauthorizedException("You have already submitted a clue for this round!");
-        if (game.getClueList().size()==game.getPlayers().size()-1){
-            ArrayList<String> clues=new ArrayList<String>();
-            clues.addAll(game.getClueList().values());
-            game.setValidClues(wordComparer.compareClues(clues));
-        }
-
+        logicService.giveClue(playerName,game,cluePostDTO);
     }
 
     @GetMapping("/games/{gameId}/guesses/{playerToken}/")
