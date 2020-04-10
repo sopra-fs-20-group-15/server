@@ -113,10 +113,10 @@ public class LogicController {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
-        try {cardService.addAllCards();     //fills repository with cards, should not be done here
+        try {cardService.addAllCards();     //fills repository with cards, should not be done here, CHANGE THIS LATER
         } catch (IOException ex) {
             throw new NoContentException("The CardDatabase couldn't be filled");
-        }
+        }                                       //till here-------------------------------------
 
         GameEntity game = gameService.getGameById(gameIdLong);
         long cardId = game.getActiveCardId();
