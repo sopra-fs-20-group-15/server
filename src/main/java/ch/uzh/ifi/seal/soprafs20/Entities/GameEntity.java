@@ -35,11 +35,12 @@ public class GameEntity {
     @Column(nullable = true)
     private Boolean rightGuess;
 
-    @Column(nullable = false)
-    private Boolean isValidGuess;
+    @Column(nullable = true)
+    private Boolean validClue;
 
     @Column(nullable = false)
     private Boolean validCluesAreSet = false;
+
 
     @ElementCollection
     List<PlayerEntity> players;
@@ -69,7 +70,6 @@ public class GameEntity {
         return validCluesAreSet;
     }
 
-
     public void setValidClues(List<String> validClues) {
         this.validClues = validClues;
     }
@@ -94,6 +94,15 @@ public class GameEntity {
         this.players = players;
     }
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getActiveCardId() {
         return activeCardId;
     }
@@ -114,7 +123,9 @@ public class GameEntity {
         return isValidGuess;
     }
 
-
+    public Boolean getValidClue() {
+        return validClue;
+    }
 
     public Long getActivePlayerId() {
         return activePlayerId;
@@ -155,11 +166,14 @@ public class GameEntity {
 
     public void setIsValidGuess(Boolean isValidGuess) {
         this.isValidGuess = isValidGuess;
-      }
+    }
 
     public Scoreboard getScoreboard() {
         return scoreboard;
     }
+
+
+
 
     public void setPassivePlayerIds(List<Long> passivePlayerIds) {
         this.passivePlayerIds = passivePlayerIds;
@@ -196,5 +210,9 @@ public class GameEntity {
 
     public void setGuess(String guess) {
         Guess = guess;
+    }
+
+    public void setCardIds(List<Long> cardIds) {
+        CardIds = cardIds;
     }
 }
