@@ -59,10 +59,10 @@ public class GameService {
         return newGameEntity;
     }
 
-    public void updateLeaderBoard(GameEntity gameEntity){
-        for (PlayerEntity playerEntity : gameEntity.getScoreBoard().keySet()){
-            Optional<PlayerEntity> playerToBeUpdated = playerRepository.findById(playerEntity.getId());
-            playerToBeUpdated.ifPresent(value -> value.setScore(value.getScore() + gameEntity.getScoreBoard().get(playerEntity)));
+    public void updateLeaderBoard(GameEntity game){
+        for (PlayerEntity player : game.getScoreboard().getEndScore().keySet()){
+            Optional<PlayerEntity> playerToBeUpdated = playerRepository.findById(player.getId());
+            playerToBeUpdated.ifPresent(value -> value.setScore(value.getScore() + game.getScoreboard().getEndScore().get(player)));
         }
     }
 
