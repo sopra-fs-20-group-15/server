@@ -1,16 +1,16 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
-import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
@@ -87,6 +87,17 @@ public class LogicController {
         GameEntity game = gameService.getGameById(gameIdLong);
         String playerName= playerService.getPlayerByToken(cluePostDTO.getPlayerToken()).getUsername();
         logicService.giveClue(playerName,game,cluePostDTO);
+    }
+
+    @GetMapping("/games/{gameId}/clues/{playerToken}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<ClueGetDTO> getClues(@PathVariable String gameId, @PathVariable String playerToken) {
+        stringIsALong(gameId);
+        Long gameIdLong = parseLong(gameId);
+        validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
+        GameEntity game = gameService.getGameById(gameIdLong);
+        return logicService.getClues(game);
     }
 
     @GetMapping("/games/{gameId}/guesses/{playerToken}/")

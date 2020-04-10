@@ -39,7 +39,7 @@ public class GameEntity {
     private Boolean isValidGuess;
 
     @Column(nullable = false)
-    private Boolean validClue;
+    private Boolean validCluesAreSet = false;
 
     @ElementCollection
     List<PlayerEntity> players;
@@ -61,6 +61,14 @@ public class GameEntity {
 
     @Column(nullable = false)
     private Long Milliseconds;
+
+    public void setValidCluesAreSet(Boolean validCluesAreSet) {
+        this.validCluesAreSet = validCluesAreSet;
+    }
+
+    public Boolean getValidCluesAreSet() {
+        return validCluesAreSet;
+    }
 
     public void setValidClues(List<String> validClues) {
         this.validClues = validClues;
@@ -106,9 +114,6 @@ public class GameEntity {
         return isValidGuess;
     }
 
-    public Boolean getValidClue() {
-        return validClue;
-    }
 
     public Long getActivePlayerId() {
         return activePlayerId;
@@ -149,10 +154,6 @@ public class GameEntity {
 
     public void setIsValidGuess(Boolean isValidGuess) {
         this.isValidGuess = isValidGuess;
-    }
-
-    public void setValidClue(Boolean validClue) {
-        this.validClue = validClue;
     }
 
     public Scoreboard getScoreboard() {

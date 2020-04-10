@@ -1,6 +1,7 @@
 
 package ch.uzh.ifi.seal.soprafs20.controller;
 
+import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
@@ -311,6 +312,79 @@ public class LogicControllerTest {
                 .andExpect(status().isNotFound());
 
     }
+
+    /**Tests a get-Request to /games/{gameId}/Clues/{playerToken}*/
+    @Test
+    public void playerGetsAllValidClues() throws Exception {
+        GameEntity game=new GameEntity();
+        ClueGetDTO clue1= new ClueGetDTO();
+        ClueGetDTO clue2= new ClueGetDTO();
+        clue1.setPlayerName("joe");
+        clue1.setClue("test");
+        clue2.setPlayerName("charlotte");
+        clue2.setClue("toast");
+        List<ClueGetDTO> list =new ArrayList<>();
+
+
+        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
+        given(gameService.getGameById(Mockito.any())).willReturn(game);
+        given(logicService.getClues(Mockito.any())).willReturn(list);
+
+
+
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/clues/{playerToken}", "123","test");
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void playerNotFromGameTriesGetClues() throws Exception {
+        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willThrow(new UnauthorizedException("test"));
+
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/clues/{playerToken}", "123","test");
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void playerOrGameDoesNotExistGetClues() throws Exception {
+        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willThrow(new NotFoundException("test"));
+
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/clues/{playerToken}", "123","test");
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    public void validCluesNotSetYet() throws Exception {
+        GameEntity game=new GameEntity();
+        game.setValidCluesAreSet(false);
+        ClueGetDTO clue1= new ClueGetDTO();
+        ClueGetDTO clue2= new ClueGetDTO();
+        clue1.setPlayerName("joe");
+        clue1.setClue("test");
+        clue2.setPlayerName("charlotte");
+        clue2.setClue("toast");
+        List<ClueGetDTO> list =new ArrayList<>();
+
+        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
+        given(gameService.getGameById(Mockito.any())).willReturn(game);
+
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/clues/{playerToken}", "123","test");
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNoContent());
+
+    }
+
+
 }
 /**
  public void createUser_invalidInput_userExistsAlready() throws Exception {
