@@ -2,10 +2,9 @@ package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumber;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumberbetweenOneAndFive;
 import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
-import org.junit.jupiter.api.Assertions;
+import ch.uzh.ifi.seal.soprafs20.service.CardService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

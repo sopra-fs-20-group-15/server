@@ -1,12 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.CardService;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.GameService;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.ValidationService;
+import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CardPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GamePostDTO;
@@ -14,11 +11,8 @@ import ch.uzh.ifi.seal.soprafs20.rest.dto.WordPostDTO;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -91,7 +85,7 @@ public class GamesControllerTest {
                 .andExpect(jsonPath("$.numberOfPlayers", is(3)))
                 .andExpect(jsonPath("$.numberOfBots", is(0)))
                 .andExpect(jsonPath("$.gameType", is("PRIVATE")))
-                .andExpect(jsonPath("$.password", is(gamePostDTO.getPassword())));
+                .andExpect(jsonPath("$.gameId", is(1)));
 
     }
 

@@ -1,16 +1,12 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
-import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.CardService;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.GameService;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.PlayerNotAvailable;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.CardPostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.CreatedGameSetUpDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerIntoGameSetUpDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerTokenDTO;
+import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GamePostDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.WordPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
 import org.springframework.http.HttpStatus;
@@ -34,19 +30,42 @@ public class GamesController {
         this.playerService = playerService;
     }
 
+    protected boolean stringIsALong(String str) {
+        try {
+            parseLong(str);
+        } catch(NumberFormatException e) {
+            return false;
+        } catch(NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+
     /**Creates a game*/
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public GamePostDTO createGame(@RequestBody GamePostDTO gamePostDTO) {
+    public CreatedGameSetUpDTO createGameSetUp(@RequestBody GamePostDTO gamePostDTO) {
         //Check that Player actually exists
         PlayerEntity player = playerService.getPlayerByToken(gamePostDTO.getPlayerToken());
         GameSetUpEntity game = DTOMapper.INSTANCE.convertGameSetUpPostDTOtoEntity(gamePostDTO);
         game.setHostId(player.getId());
         //Try to create Game
         GameSetUpEntity newGame = gameService.createGame(game);
-        GamePostDTO gamePostDTOReturn = DTOMapper.INSTANCE.convertEntityToGameSetUpPostDTO(newGame);
+        CreatedGameSetUpDTO gamePostDTOReturn = DTOMapper.INSTANCE.convertEntityToGameSetUpPostDTO(newGame);
         return gamePostDTOReturn;
+    }
+    /**Lets a player join a GameSetUp*/
+
+    @PutMapping("/games/{gameId}/players")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void putPlayerIntoGameSetUp(@PathVariable String gameId, @RequestBody PlayerIntoGameSetUpDTO playerIntoGameSetUpDTO) {
+        //Check that Player actually exists
+        PlayerEntity player = playerService.getPlayerByToken(playerIntoGameSetUpDTO.getPlayerToken());
+        stringIsALong(gameId);
+        Long gameIdLong = parseLong(gameId);
+        gameService.putPlayerIntoGame(gameIdLong, player);
     }
 
 

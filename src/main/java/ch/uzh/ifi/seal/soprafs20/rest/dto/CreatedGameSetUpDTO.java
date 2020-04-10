@@ -2,13 +2,11 @@ package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
 import ch.uzh.ifi.seal.soprafs20.constant.GameType;
 
-public class GamePostDTO {
+public class CreatedGameSetUpDTO {
     private Long gameId;
     private Long numberOfPlayers;
     private Long numberOfBots;
     private GameType gameType;
-    private String password;
-    private String playerToken;
 
     public Long getNumberOfPlayers() {
         return numberOfPlayers;
@@ -34,21 +32,6 @@ public class GamePostDTO {
         this.gameType = gameType;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPlayerToken() {
-        return playerToken;
-    }
-
-    public void setPlayerToken(String playerToken) {
-        this.playerToken = playerToken;
-    }
 
     public Long getGameId() {
         return gameId;

@@ -1,14 +1,11 @@
-package ch.uzh.ifi.seal.soprafs20.GameLogic;
+package ch.uzh.ifi.seal.soprafs20.service;
 
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.IllegalRegistrationInput;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.PlayerNotAvailable;
 
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
@@ -22,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * PlayerEntity Service
@@ -84,6 +80,10 @@ public class GameService {
         }
     }
 
+    /**Puts a player into a gameSetUp if all the requirements for that are met*/
+    public void putPlayerIntoGame(Long gameId, PlayerEntity player){
+//Check if gameSetUpId exists
+    }
     public void updateLeaderBoard(GameEntity game){
         for (PlayerEntity player : game.getScoreboard().getEndScore().keySet()){
             Optional<PlayerEntity> playerToBeUpdated = playerRepository.findById(player.getId());

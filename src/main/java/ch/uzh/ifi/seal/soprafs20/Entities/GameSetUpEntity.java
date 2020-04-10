@@ -40,9 +40,27 @@ public class GameSetUpEntity {
 
     @Column(nullable = true)
     @ElementCollection
-    List<String> PlayerToken;
+    List<String> playerTokens;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<String> getPlayerToken() {
+        return playerTokens;
+    }
+
+    public void setPlayerToken(List<String> playerTokens) {
+        this.playerTokens = playerTokens;
+    }
 
     /**Getters and Setters*/
+
+
     public Long getHostId() {
         return hostId;
     }
