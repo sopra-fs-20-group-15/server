@@ -40,7 +40,7 @@ public class GameSetUpEntity {
 
     @Column(nullable = true)
     @ElementCollection
-    List<Long> CardIds;
+    List<String> PlayerToken;
 
     /**Getters and Setters*/
     public Long getHostId() {
