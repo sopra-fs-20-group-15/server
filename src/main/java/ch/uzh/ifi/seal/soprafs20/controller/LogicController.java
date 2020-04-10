@@ -98,6 +98,22 @@ public class LogicController {
 
     }
 
+    @GetMapping("/games/{gameId}/guesses/{playerToken}/")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GuessGetDTO getGuess(@PathVariable String gameId, @PathVariable String playerToken) {
+        stringIsALong(gameId);
+        Long gameIdLong = parseLong(gameId);
+        validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
+        GameEntity game = gameService.getGameById(gameIdLong);
+        String guess = game.getGuess();
+        boolean isValidGuess = game.getIsValidGuess();
+        GuessGetDTO guessGetDTO = new GuessGetDTO();
+        guessGetDTO.setGuess(guess);
+        guessGetDTO.setIsValidGuess(isValidGuess);
+        return guessGetDTO;
+    }
+
     /**Gives back the chosen MysteryWord*/
     @GetMapping("/games/{gameId}/activeWord/{playerToken}/")
     @ResponseStatus(HttpStatus.OK)
