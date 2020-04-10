@@ -23,22 +23,19 @@ public class GameEntity {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long activeCardId;
 
     @Column(nullable = false)
     private String activeMysteryWord;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long activePlayerId;
 
-    @Column(nullable = false)
-    private String Guess;
+    @Column(nullable = true)
+    private Boolean rightGuess;
 
-    @Column(nullable = false)
-    private Boolean isValidGuess;
-
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Boolean validClue;
 
     @ElementCollection
@@ -86,6 +83,15 @@ public class GameEntity {
         this.players = players;
     }
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getActiveCardId() {
         return activeCardId;
     }
@@ -127,25 +133,13 @@ public class GameEntity {
         return passivePlayerIds;
     }
 
-    public Long getMilliseconds() {
-        return Milliseconds;
-    }
 
     public void setActivePlayerId(Long activePlayerId) {
         this.activePlayerId = activePlayerId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public void setCardIds(List<Long> cardIds) {
-        CardIds = cardIds;
-    }
 
-    public void setMilliseconds(Long milliseconds) {
-        Milliseconds = milliseconds;
-    }
 
     public void setIsValidGuess(Boolean isValidGuess) {
         this.isValidGuess = isValidGuess;
@@ -158,6 +152,19 @@ public class GameEntity {
     public Scoreboard getScoreboard() {
         return scoreboard;
     }
+
+    public Map<PlayerEntity, Integer> getScoreBoard() {
+        return ScoreBoard;
+    }
+
+    public List<Long> getCardIds() {
+        return CardIds;
+    }
+
+    public List<Long> getPassivePlayerIds() {
+        return passivePlayerIds;
+    }
+
 
     public void setPassivePlayerIds(List<Long> passivePlayerIds) {
         this.passivePlayerIds = passivePlayerIds;
@@ -194,5 +201,9 @@ public class GameEntity {
 
     public void setGuess(String guess) {
         Guess = guess;
+    }
+
+    public void setCardIds(List<Long> cardIds) {
+        CardIds = cardIds;
     }
 }
