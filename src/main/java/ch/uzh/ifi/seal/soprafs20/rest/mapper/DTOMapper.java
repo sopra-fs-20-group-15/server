@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
+import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import org.mapstruct.Mapper;
@@ -28,6 +29,10 @@ public interface DTOMapper {
     @Mapping(source = "username", target = "username")
     @Mapping(source = "status", target = "status")
     PlayerGetDTO convertEntityToUserGetDTO(PlayerEntity playerEntity);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "words", target = "words")
+    CardGetDTO convertEntityToCardGetDTO(CardEntity cardEntity);
 
     @Mapping(source = "username", target = "username")
     @Mapping(source = "password", target = "password")

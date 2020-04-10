@@ -9,9 +9,7 @@ import ch.uzh.ifi.seal.soprafs20.GameLogic.GameService;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.ValidationService;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.WordComparer;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.CardPostDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.WordPostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,6 +94,40 @@ public class LogicControllerTest {
                 .andExpect(jsonPath("$.word", is(wordPostDTO.getWord())));
 
 
+    }
+
+    /**
+     * Tests a get-Request to /games/{gameId}/guesses/{playerToken}/
+     */
+    @Test
+    public void getGuessRequestPassivePlayerWorksSuccessful() throws Exception {
+        // given
+        GuessGetDTO guessGetDTO = new GuessGetDTO();
+        guessGetDTO.setGuess("test");
+        guessGetDTO.setIsValidGuess(true);
+
+        //Game
+        GameEntity game = new GameEntity();
+        game.setGuess("test");
+        game.setIsValidGuess(true);
+
+        /**
+         doReturn(true).when(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.any(),Mockito.any()));
+         doReturn(game).when(gameService.getGameById(Mockito.any()));*/
+        given(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.any(), Mockito.any())).willReturn(true);
+        given(gameService.getGameById(Mockito.any())).willReturn(game);
+
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder getRequest = get("/games/{gameId}/guesses/{playerToken}/", 1, "df")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.guess", is(guessGetDTO.getGuess())))
+                .andExpect(jsonPath("$.isValidGuess", is(guessGetDTO.getIsValidGuess())));
     }
 
     /**
