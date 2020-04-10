@@ -64,7 +64,6 @@ public class GameService {
         for (PlayerEntity playerEntity : gameEntity.getScoreBoard().keySet()){
             Optional<PlayerEntity> playerToBeUpdated = playerRepository.findById(playerEntity.getId());
             playerToBeUpdated.ifPresent(value -> value.setScore(value.getScore() + gameEntity.getScoreBoard().get(playerEntity)));
-
         }
     }
 

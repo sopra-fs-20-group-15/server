@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.Entities;
 
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Clue;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.ScoreCalculator;
 
 import javax.persistence.*;
 import java.util.List;
@@ -172,6 +173,13 @@ public class GameEntity {
 
     public void setScoreBoard(Map<PlayerEntity, Integer> scoreBoard) {
         ScoreBoard = scoreBoard;
+    }
+
+    public void updateScoreboard(){
+        for (PlayerEntity player: players){
+            if (activePlayerId.equals(player.getId())) ScoreCalculator.calculateScoreActivePlayer(player, rightGuess,33000 - getMilliseconds());
+
+        }
     }
 
 }
