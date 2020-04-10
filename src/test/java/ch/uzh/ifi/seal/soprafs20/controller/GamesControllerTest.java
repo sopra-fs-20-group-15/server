@@ -62,6 +62,7 @@ public class GamesControllerTest {
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
         game.setHostId(1L);
+        game.setId(1L);
         //a player
         PlayerEntity player = new PlayerEntity();
         player.setId(1L);
