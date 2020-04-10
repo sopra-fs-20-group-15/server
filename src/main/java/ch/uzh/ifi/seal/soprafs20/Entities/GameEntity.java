@@ -61,7 +61,14 @@ public class GameEntity {
     private Scoreboard scoreboard;
 
     @Column(nullable = false)
-    private Long Milliseconds;    
+    private Long Milliseconds;
+
+    @Column
+    private String Guess;
+
+    @Column
+    private boolean isValidGuess;
+
     public void setValidCluesAreSet(Boolean validCluesAreSet) {
         this.validCluesAreSet = validCluesAreSet;
     }
@@ -95,14 +102,6 @@ public class GameEntity {
     }
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getActiveCardId() {
         return activeCardId;
     }
@@ -119,9 +118,6 @@ public class GameEntity {
         this.activeMysteryWord = activeMysteryWord;
     }
 
-    public Boolean getIsValidGuess() {
-        return isValidGuess;
-    }
 
     public Boolean getValidClue() {
         return validClue;
@@ -156,16 +152,8 @@ public class GameEntity {
         this.id = id;
     }
 
-    public void setCardIds(List<Long> cardIds) {
-        CardIds = cardIds;
-    }
-
     public void setMilliseconds(Long milliseconds) {
         Milliseconds = milliseconds;
-    }
-
-    public void setIsValidGuess(Boolean isValidGuess) {
-        this.isValidGuess = isValidGuess;
     }
 
     public Scoreboard getScoreboard() {
@@ -192,7 +180,7 @@ public class GameEntity {
      public void updateScoreboard(){
         for (PlayerEntity player: players) {
             if (activePlayerId.equals(player.getId())) scoreboard.updateScore(player,
-                    ScoreCalculator.calculateScoreActivePlayer(player, isValidGuess, 33000 - getMilliseconds()));
+                    ScoreCalculator.calculateScoreActivePlayer(player,isValidGuess, 33000 - getMilliseconds()));
             else if (passivePlayerIds.contains(player.getId())) {
                 if (validClues.contains(clueList.get(player.getUsername()))) scoreboard.updateScore(player,
                         ScoreCalculator.calculateScorePassivePlayer(player,isValidGuess,true,
@@ -214,5 +202,13 @@ public class GameEntity {
 
     public void setCardIds(List<Long> cardIds) {
         CardIds = cardIds;
+    }
+
+    public void setIsValidGuess(boolean validGuess) {
+        isValidGuess = validGuess;
+    }
+
+    public boolean getIsValidGuess(){
+        return this.isValidGuess;
     }
 }
