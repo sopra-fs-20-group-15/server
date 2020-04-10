@@ -50,7 +50,7 @@ public class GameService {
         //Check, if parameters are acceptable
         GameEntity newGameEntity = new GameEntity();
         if (game.getNumberOfPlayers() < 8 && game.getNumberOfPlayers() > 2) {
-            if (game.getNumberOfBots() > 0 && game.getNumberOfBots() < game.getNumberOfPlayers()){
+            if (game.getNumberOfBots() > -1 && game.getNumberOfBots() < game.getNumberOfPlayers()){
              if(game.getGameType().name().equals("PRIVATE")){
                 if(game.getPassword() != null && ! game.getPassword().isEmpty()){
                     GameEntity newGame = gameRepository.save(game);

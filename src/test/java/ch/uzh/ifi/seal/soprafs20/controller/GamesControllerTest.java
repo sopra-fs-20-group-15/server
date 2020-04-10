@@ -66,6 +66,7 @@ public class GamesControllerTest {
         game.setNumberOfBots(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
+        game.setHostId(1L);
         //a player
         PlayerEntity player = new PlayerEntity();
         player.setId(1L);

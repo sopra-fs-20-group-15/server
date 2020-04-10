@@ -32,27 +32,27 @@ public class GameEntity {
     @Column(nullable = false)
     private GameType gameType;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     @Column(nullable = false)
     private Long HostId;
-
-    @Column(nullable = false)
+/
+    @Column(nullable = true)
     private Long activeCardId;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String activeWord;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long activePlayerId;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Boolean rightGuess;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Boolean validClue;
-
+/**
     @ElementCollection
     List<Long> passivePlayerIds;
 
@@ -61,11 +61,9 @@ public class GameEntity {
 
     @ElementCollection
     Map<PlayerEntity,Integer> ScoreBoard;
+ */
 
-    @Column(nullable = false)
-    private Long Milliseconds;
-
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long nrOfDuplicates;
 
     public Long getHostId() {
@@ -107,6 +105,13 @@ public class GameEntity {
     public void setPassword(String password) {
         this.password = password;
     }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getActiveCardId() {
         return activeCardId;
@@ -136,25 +141,7 @@ public class GameEntity {
         return activePlayerId;
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public Map<PlayerEntity, Integer> getScoreBoard() {
-        return ScoreBoard;
-    }
-
-    public List<Long> getCardIds() {
-        return CardIds;
-    }
-
-    public List<Long> getPassivePlayerIds() {
-        return passivePlayerIds;
-    }
-
-    public Long getMilliseconds() {
-        return Milliseconds;
-    }
 
     public Long getNrOfDuplicates() {
         return nrOfDuplicates;
@@ -164,17 +151,8 @@ public class GameEntity {
         this.activePlayerId = activePlayerId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public void setCardIds(List<Long> cardIds) {
-        CardIds = cardIds;
-    }
 
-    public void setMilliseconds(Long milliseconds) {
-        Milliseconds = milliseconds;
-    }
 
     public void setRightGuess(Boolean rightGuess) {
         this.rightGuess = rightGuess;
@@ -187,6 +165,19 @@ public class GameEntity {
     public void setNrOfDuplicates(Long nrOfDuplicates) {
         this.nrOfDuplicates = nrOfDuplicates;
     }
+/**
+    public Map<PlayerEntity, Integer> getScoreBoard() {
+        return ScoreBoard;
+    }
+
+    public List<Long> getCardIds() {
+        return CardIds;
+    }
+
+    public List<Long> getPassivePlayerIds() {
+        return passivePlayerIds;
+    }
+
 
     public void setPassivePlayerIds(List<Long> passivePlayerIds) {
         this.passivePlayerIds = passivePlayerIds;
@@ -196,4 +187,7 @@ public class GameEntity {
         ScoreBoard = scoreBoard;
     }
 
+    public void setCardIds(List<Long> cardIds) {
+        CardIds = cardIds;
+    }*/
 }
