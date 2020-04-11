@@ -40,7 +40,7 @@ public class GameSetUpEntity {
 
     @Column(nullable = true)
     @ElementCollection
-    List<String> playerTokenList;
+    List<String> PlayerToken;
 
     /**Getters and Setters*/
     public Long getHostId() {
@@ -83,11 +83,11 @@ public class GameSetUpEntity {
         this.password = password;
     }
 
-    public List<String> getPlayerTokenList() {
-        return playerTokenList;
+    public List<String> getPlayerToken() {
+        return PlayerToken;
     }
 
-    public void setPlayerTokenList(List<String> playerTokenList) {
-        this.playerTokenList = playerTokenList;
+    public void setPlayerToken(List<String> playerToken) {
+        this.PlayerToken = playerToken;
     }
 }
