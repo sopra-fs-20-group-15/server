@@ -138,23 +138,6 @@ public class GamesControllerTest {
 
 
     /**
-     * Tests a get-Request to /games/{gameId}/activeWord/{playerToken}/
-     */
-    @Test
-    public void getRequestPassivePlayerGetWordSuccessful() throws Exception {
-        // given
-        CardPostDTO cardPostDTO = new CardPostDTO();
-        cardPostDTO.setPlayerToken("df");
-        cardPostDTO.setWordId(1L);
-        //Game
-        GameEntity game = new GameEntity();
-        game.setActiveMysteryWord("Eis");
-        //returns
-        WordPostDTO wordPostDTO = new WordPostDTO();
-        wordPostDTO.setWord("Eis");
-    }
-
-    /**
      * Helper Method to convert userPostDTO into a JSON string such that the input can be processed
      * <p>
      * Input will look like this: {"name": "Test User", "username": "testUsername"}

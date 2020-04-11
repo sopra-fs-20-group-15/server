@@ -4,41 +4,22 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 import static org.junit.jupiter.api.Assertions.*;
 
-import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
-import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
-import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.service.CardService;
-import ch.uzh.ifi.seal.soprafs20.service.GameService;
-import ch.uzh.ifi.seal.soprafs20.service.ValidationService;
 import ch.uzh.ifi.seal.soprafs20.constant.GameType;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumber;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumberbetweenOneAndFive;
-import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
-import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
-import org.junit.jupiter.api.Assertions;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 @WebAppConfiguration
 @SpringBootTest
-public class GameServiceIntegrationCreateGameTestGameServiceIntegrationCreateGameTest {
+public class GameServiceIntegrationCreateGameTest {
 
     @Qualifier("gameSetUpEntityRepository")
     @Autowired
@@ -185,4 +166,6 @@ public class GameServiceIntegrationCreateGameTestGameServiceIntegrationCreateGam
         assertEquals(newGame.getHostId(), game.getHostId());
 
     }
+
+
 }

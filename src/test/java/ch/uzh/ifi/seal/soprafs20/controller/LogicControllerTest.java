@@ -79,7 +79,7 @@ public class LogicControllerTest {
 
         // when/then -> do the request + validate the result
 
-        MockHttpServletRequestBuilder postRequest = post("/games/{gameId}/Cards/", "1")
+        MockHttpServletRequestBuilder postRequest = post("/games/{gameId}/cards/", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(cardPostDTO));
 

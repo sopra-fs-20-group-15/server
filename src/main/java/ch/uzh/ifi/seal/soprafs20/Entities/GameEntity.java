@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.Entities;
 
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Bot;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.ScoreCalculator;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
 
@@ -44,6 +45,9 @@ public class GameEntity {
 
     @ElementCollection
     List<PlayerEntity> players;
+
+    @ElementCollection
+    private List<Bot> bots;
 
     @ElementCollection
     List<Long> passivePlayerIds;
@@ -210,5 +214,13 @@ public class GameEntity {
 
     public boolean getIsValidGuess(){
         return this.isValidGuess;
+    }
+
+    public List<Bot> getBots() {
+        return bots;
+    }
+
+    public void setBots(List<Bot> bots) {
+        this.bots = bots;
     }
 }

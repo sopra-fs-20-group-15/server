@@ -1,10 +1,10 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
-import ch.uzh.ifi.seal.soprafs20.Entities.BotEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Bot;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
@@ -119,22 +119,23 @@ public class GameService {
         game.setPlayerTokens(playerTokens);
         return game;
     }    
-public ActiveGamePostDTO createActiveGame(Long gameSetupId) {
+    public ActiveGamePostDTO createActiveGame(Long gameSetupId) {
             GameSetUpEntity gameSetUpEntity =this.getGameSetupById(gameSetupId);
             if (gameSetUpEntity.getPlayerTokens().size()==gameSetUpEntity.getNumberOfPlayers()) {
                 GameEntity game = new GameEntity();
                 List<PlayerEntity> players = new ArrayList<>();
+                List<Bot> bots = new ArrayList<>();
                 for (String playerToken : gameSetUpEntity.getPlayerTokens()) {
                     players.add(playerRepository.findByToken(playerToken));
                 }
                 int numOfBots = gameSetUpEntity.getNumberOfBots().intValue();
                 for (int i = 1; i <= numOfBots; i++) {
-                    BotEntity bot = new BotEntity();
-                    bot.setUsername("Bot_Nr_" + String.valueOf(i));
-                    bot.setToken("Bot_" + String.valueOf(i));
-                    bot.setId((long) -i);
-                    players.add(bot);
+                    Bot bot = new Bot();
+                    bot.setBotName("Bot_Nr_" + String.valueOf(i));
+                    bot.setBotToken("Bot_" + String.valueOf(i));
+                    bots.add(bot);
                 }
+                game.setBots(bots);
                 game.setPlayers(players);
                 game.setValidCluesAreSet(false);
                 game.setClueList(new HashMap<>());
@@ -152,12 +153,11 @@ public ActiveGamePostDTO createActiveGame(Long gameSetupId) {
                 for (PlayerEntity player : activeGame.getPlayers()){
                     playerNames.add(player.getUsername());
                 }
+                for(Bot bot : activeGame.getBots()) playerNames.add(bot.getBotName());
                 activeGamePostDTO.setPlayerNames(playerNames);
-
-                return activeGamePostDTO;            
-		}
-            	else throw new ConflictException("Number of ready players is lower than number of desired players");
-
+                return activeGamePostDTO;
+		    }
+            else throw new ConflictException("Number of ready players is lower than number of desired players");
     }
 
 
