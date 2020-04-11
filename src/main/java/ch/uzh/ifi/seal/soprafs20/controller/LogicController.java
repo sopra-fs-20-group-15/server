@@ -1,17 +1,14 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
-import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
-import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
+import ch.uzh.ifi.seal.soprafs20.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -46,7 +43,7 @@ public class LogicController {
         return true;
     }
 
-    @PostMapping("/games/{gameId}/Cards")
+    @PostMapping("/games/{gameId}/cards")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public WordPostDTO setMysteryWord(@PathVariable String gameId, @RequestBody CardPostDTO cardPostDTO) {
@@ -140,7 +137,7 @@ public class LogicController {
     }
 
     //just to test if repository actually gets cards
-    @GetMapping("/games/cardtest")
+    @GetMapping("/games/cardTest")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CardGetDTO getCardTest() {
