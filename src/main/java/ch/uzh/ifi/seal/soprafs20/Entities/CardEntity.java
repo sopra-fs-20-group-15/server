@@ -27,7 +27,7 @@ import java.util.List;
 public class CardEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     protected Long id;
 
     @ElementCollection

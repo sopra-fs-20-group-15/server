@@ -20,7 +20,7 @@ import java.util.Queue;
 @Table(name = "GAMESETUP")
 public class GameSetUpEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -40,7 +40,7 @@ public class GameSetUpEntity {
 
     @Column(nullable = true)
     @ElementCollection
-    List<Long> CardIds;
+    List<String> playerTokenList;
 
     /**Getters and Setters*/
     public Long getHostId() {
@@ -81,5 +81,13 @@ public class GameSetUpEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<String> getPlayerTokenList() {
+        return playerTokenList;
+    }
+
+    public void setPlayerTokenList(List<String> playerTokenList) {
+        this.playerTokenList = playerTokenList;
     }
 }

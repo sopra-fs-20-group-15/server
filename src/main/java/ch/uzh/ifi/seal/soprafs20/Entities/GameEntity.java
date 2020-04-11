@@ -20,13 +20,13 @@ import java.util.Map;
 @Table(name = "GAME")
 public class GameEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = true)
     private Long activeCardId;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String activeMysteryWord;
 
     @Column(nullable = true)
@@ -38,7 +38,7 @@ public class GameEntity {
     @Column(nullable = true)
     private Boolean validClue;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Boolean validCluesAreSet = false;
 
 
@@ -60,7 +60,7 @@ public class GameEntity {
     @Embedded
     private Scoreboard scoreboard;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long Milliseconds;
 
     @Column

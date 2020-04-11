@@ -44,6 +44,10 @@ public class GameServiceIntegrationTest {
     @Autowired
     private GameSetUpRepository gameSetUpRepository;
 
+    @Qualifier("gameSetUpEntityRepository")
+    @Autowired
+    private GameSetUpRepository gameRepository;
+
     @Autowired
     private GameService gameService;
 
@@ -184,5 +188,5 @@ public class GameServiceIntegrationTest {
         assertEquals(newGame.getPassword(), game.getPassword());
         assertEquals(newGame.getHostId(), game.getHostId());
 
-    }
+     }
 }

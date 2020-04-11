@@ -6,8 +6,10 @@ import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.CardService;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.GameService;
+import ch.uzh.ifi.seal.soprafs20.exceptions.BadRequestException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.PlayerNotAvailable;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.ActiveGamePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CardPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GamePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.WordPostDTO;
@@ -15,6 +17,7 @@ import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import static java.lang.Long.parseLong;
 
@@ -34,6 +37,15 @@ public class GamesController {
         this.playerService = playerService;
     }
 
+    protected boolean stringIsALong(String str) {
+        try {
+            parseLong(str);
+        } catch(NumberFormatException | NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+
     /**Creates a game*/
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
@@ -49,5 +61,17 @@ public class GamesController {
         return gamePostDTOReturn;
     }
 
-
+    /**Creates an active game*/
+    @PostMapping("/games/{gameSetUpId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public ActiveGamePostDTO createActiveGame(@PathVariable String gameSetUpId) {
+        //Check that SetupEntity actually exists
+        if (stringIsALong(gameSetUpId)){
+            //Try to create active game
+            Long gsId = parseLong(gameSetUpId);
+            return gameService.createActiveGame(gsId);
+        }
+        else throw new BadRequestException("Game-Setup-ID has wrong format!");
+    }
 }

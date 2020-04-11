@@ -96,6 +96,48 @@ public class GamesControllerTest {
     }
 
     /**
+     * Tests a post-Request to /games/{gameSetupId}
+     */
+    @Test
+    public void POSTActiveGameCreation() throws Exception {
+
+        // given
+        //a game
+        GameSetUpEntity game = new GameSetUpEntity();
+        game.setNumberOfPlayers(3L);
+        game.setNumberOfBots(0L);
+        game.setGameType(PRIVATE);
+        game.setPassword("Cara");
+        game.setHostId(1L);
+
+
+        // mock the functions
+        given(gameService.getGameSetupById(Mockito.any())).willReturn(game);
+
+        // when
+        MockHttpServletRequestBuilder postRequest = post("/games/{gameSetupId}", 123);
+
+        // then
+        mockMvc.perform(postRequest).andExpect(status().isCreated());
+    }
+
+    @Test
+    public void POSTActiveGameCreationFailsBecauseWrongFormatOfGameSetupId() throws Exception {
+        MockHttpServletRequestBuilder postRequest = post("/games/{gameSetupId}", "abc");
+        mockMvc.perform(postRequest).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void POSTActiveGameCreationFailsBecauseGameSetupWithSpecifiedIdDoesNotExist() throws Exception {
+        given(gameService.createActiveGame(Mockito.any())).willThrow(new NotFoundException("Test"));
+
+        MockHttpServletRequestBuilder postRequest = post("/games/{gameSetupId}", 123);
+
+        mockMvc.perform(postRequest).andExpect(status().isNotFound());
+    }
+
+
+    /**
      * Tests a get-Request to /games/{gameId}/activeWord/{playerToken}/
      */
     @Test
