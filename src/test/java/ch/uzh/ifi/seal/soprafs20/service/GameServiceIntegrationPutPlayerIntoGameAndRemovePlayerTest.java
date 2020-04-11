@@ -161,14 +161,14 @@ public class GameServiceIntegrationPutPlayerIntoGameAndRemovePlayerTest {
     }
     /**The game does not exist*/
     @Test
-    public void GameIdDoesNotExistCreateGame() {
+    public void GameIdDoesNotExistPutPlayerIntoGame() {
         //Player to remove
         PlayerEntity player = new PlayerEntity();
         player.setToken("C");
 
 
         //Test itself
-        assertThrows(NotFoundException.class, () ->gameService.putPlayerIntoGame(13L,player, "ABC"));
+        assertThrows(NotFoundException.class, () ->gameService.putPlayerIntoGame(32L, player, "ABC"));
     }
 
     /**Successful removal of a player*/
