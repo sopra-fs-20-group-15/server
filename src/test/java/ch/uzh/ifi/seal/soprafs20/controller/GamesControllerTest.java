@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerIntoGameSetUpDTO;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CardPostDTO;
@@ -21,11 +22,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -126,7 +131,48 @@ public class GamesControllerTest {
             throw new SopraServiceException(String.format("The request body could not be created.%s", e.toString()));
         }
     }
+
+
+/**Test put player into game*/
+/**Works with valid player and valid password for private game*/
+@Test
+public void PUTaPlayerIntoPrivateGame() throws Exception {
+
+    // given
+    //a player
+    PlayerEntity player = new PlayerEntity();
+    player.setId(1L);
+    player.setToken("F");
+    //a game
+    GameSetUpEntity game = new GameSetUpEntity();
+    game.setNumberOfPlayers(3L);
+    game.setNumberOfBots(0L);
+    game.setGameType(PRIVATE);
+    game.setPassword("Cara");
+    game.setHostId(1L);
+    game.setId(1L);
+    List<String> playerTokens = new ArrayList<String>();
+    playerTokens.add(player.getToken());
+    game.setPlayerTokens(playerTokens);
+
+    //from Client through DTO
+    PlayerIntoGameSetUpDTO playerIntoGameSetUpDTO = new PlayerIntoGameSetUpDTO();
+    playerIntoGameSetUpDTO.setPlayerToken("A");
+    playerIntoGameSetUpDTO.setPassword("Cara");
+
+    // mock the functions
+    given(playerService.getPlayerByToken(Mockito.any())).willReturn(player);
+    given(gameService.putPlayerIntoGame(Mockito.any(), Mockito.any(), Mockito.any())).willReturn(game);
+    // when
+    MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/players", 1)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(playerIntoGameSetUpDTO));
+    // then
+    mockMvc.perform(putRequest).andExpect(status().isOk());
+    }
+
 }
+
 /**
  public void createUser_invalidInput_userExistsAlready() throws Exception {
 

@@ -19,7 +19,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 @WebAppConfiguration
 @SpringBootTest
-public class GameServiceIntegrationTest {
+public class GameServiceIntegrationCreateGameTest {
 
     @Qualifier("gameSetUpEntityRepository")
     @Autowired
@@ -166,4 +166,6 @@ public class GameServiceIntegrationTest {
         assertEquals(newGame.getHostId(), game.getHostId());
 
     }
+
+
 }

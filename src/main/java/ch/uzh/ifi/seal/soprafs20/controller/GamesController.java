@@ -65,7 +65,7 @@ public class GamesController {
         PlayerEntity player = playerService.getPlayerByToken(playerIntoGameSetUpDTO.getPlayerToken());
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
-        gameService.putPlayerIntoGame(gameIdLong, player);
+        gameService.putPlayerIntoGame(gameIdLong, player, playerIntoGameSetUpDTO.getPassword());
     }
 
 

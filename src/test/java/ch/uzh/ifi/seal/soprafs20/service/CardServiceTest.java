@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.GameLogic;
+package ch.uzh.ifi.seal.soprafs20.service;
 
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;

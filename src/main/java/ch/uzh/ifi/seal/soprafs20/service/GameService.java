@@ -5,8 +5,10 @@ import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 
+import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -80,10 +84,34 @@ public class GameService {
         }
     }
 
-    /**Puts a player into a gameSetUp if all the requirements for that are met*/
-    public void putPlayerIntoGame(Long gameId, PlayerEntity player){
-//Check if gameSetUpId exists
+    /**Puts a player into a gameSetUp if all the requirements for that are met
+     * @Returns GameSetUpEntity; for testing reasons*/
+    public GameSetUpEntity putPlayerIntoGame(Long gameId, PlayerEntity player, String password){
+        //Check if gameSetUpId exists
+        Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No gameEntity with specified ID exists.");
+        GameSetUpEntity game = gameOp.get();
+        //Check if player is already part of the game
+        if (game.getPlayerTokens().contains(player.getToken())){
+            throw new NoContentException("The player is already part of the game");
+        }
+        //Check that the game is not full yet
+        if (game.getNumberOfBots()+game.getPlayerTokens().size() >= game.getNumberOfPlayers()){
+            throw new UnauthorizedException("The game is already full!");
+        }
+        //Check if the game is private and if so, if the password is correct
+        if (game.getGameType().name().equals("PRIVATE")){
+            if (!game.getPassword().equals(password)){
+                throw new UnauthorizedException("The Password for joining a private game is not correct");
+            }
+        }
+        //Put player into game
+        List<String> playerTokens = game.getPlayerTokens();
+        playerTokens.add(player.getToken());
+        game.setPlayerTokens(playerTokens);
+        return game;
     }
+
     public void updateLeaderBoard(GameEntity game){
         for (PlayerEntity player : game.getScoreboard().getEndScore().keySet()){
             Optional<PlayerEntity> playerToBeUpdated = playerRepository.findById(player.getId());

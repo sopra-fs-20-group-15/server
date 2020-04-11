@@ -50,7 +50,17 @@ public class GameSetUpEntity {
         this.id = id;
     }
 
+    public List<String> getPlayerTokens() {
+        return playerTokens;
+    }
+
+    public void setPlayerTokens(List<String> playerTokens) {
+        this.playerTokens = playerTokens;
+    }
+
     /**Getters and Setters*/
+
+
 
 
     public Long getHostId() {
