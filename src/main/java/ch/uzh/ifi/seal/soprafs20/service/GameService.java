@@ -118,7 +118,25 @@ public class GameService {
         playerTokens.add(player.getToken());
         game.setPlayerTokens(playerTokens);
         return game;
-    }    
+    }
+    /**Removes player from game*/
+    public GameSetUpEntity removePlayerFromGame(Long gameId, PlayerEntity player){
+        //Check if gameSetUpId exists
+        Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No gameEntity with specified ID exists.");
+        GameSetUpEntity game = gameOp.get();
+        //Check that player is actually part of the game
+        List<String> playerTokensFromGame = game.getPlayerTokens();
+        if (!playerTokensFromGame.contains(player.getToken())){
+            throw new NotFoundException("This player is not part of the game");
+        }
+        //Remove Player from game
+        List<String> playerTokens = game.getPlayerTokens();
+        playerTokens.remove(player.getToken());
+        game.setPlayerTokens(playerTokens);
+        return game;
+    }
+
     public ActiveGamePostDTO createActiveGame(Long gameSetupId) {
             GameSetUpEntity gameSetUpEntity =this.getGameSetupById(gameSetupId);
             if (gameSetUpEntity.getPlayerTokens().size()==gameSetUpEntity.getNumberOfPlayers()) {

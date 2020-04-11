@@ -67,6 +67,20 @@ public class GamesController {
         Long gameIdLong = parseLong(gameId);
         gameService.putPlayerIntoGame(gameIdLong, player, playerIntoGameSetUpDTO.getPassword());
     }
+
+    /**Lets a player leave a GameSetUp*/
+
+    @DeleteMapping("/games/{gameId}/players")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void DeletePlayerFromGameSetUp(@PathVariable String gameId, @RequestBody PlayerTokenDTO playerTokenDTO) {
+        //Check that Player actually exists
+        PlayerEntity player = playerService.getPlayerByToken(playerTokenDTO.getToken());
+        stringIsALong(gameId);
+        Long gameIdLong = parseLong(gameId);
+        gameService.removePlayerFromGame(gameIdLong, player);
+    }
+    
     /**Creates an active game*/
     @PostMapping("/games/{gameSetUpId}")
     @ResponseStatus(HttpStatus.CREATED)
