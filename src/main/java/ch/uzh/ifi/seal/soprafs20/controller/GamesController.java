@@ -80,7 +80,7 @@ public class GamesController {
         Long gameIdLong = parseLong(gameId);
         gameService.removePlayerFromGame(gameIdLong, player);
     }
-    
+
     /**Creates an active game*/
     @PostMapping("/games/{gameSetUpId}")
     @ResponseStatus(HttpStatus.CREATED)
