@@ -8,9 +8,9 @@ import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.CardService;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.GameService;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.ValidationService;
+import ch.uzh.ifi.seal.soprafs20.service.CardService;
+import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.service.ValidationService;
 import ch.uzh.ifi.seal.soprafs20.constant.GameType;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumber;
@@ -38,7 +38,7 @@ import java.util.Optional;
 
 @WebAppConfiguration
 @SpringBootTest
-public class GameServiceIntegrationCreateGameTest {
+public class GameServiceIntegrationCreateGameTestGameServiceIntegrationCreateGameTest {
 
     @Qualifier("gameSetUpEntityRepository")
     @Autowired

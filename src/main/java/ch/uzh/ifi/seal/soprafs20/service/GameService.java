@@ -121,10 +121,10 @@ public class GameService {
     }    
 public ActiveGamePostDTO createActiveGame(Long gameSetupId) {
             GameSetUpEntity gameSetUpEntity =this.getGameSetupById(gameSetupId);
-            if (gameSetUpEntity.getPlayerTokenList().size()==gameSetUpEntity.getNumberOfPlayers()) {
+            if (gameSetUpEntity.getPlayerTokens().size()==gameSetUpEntity.getNumberOfPlayers()) {
                 GameEntity game = new GameEntity();
                 List<PlayerEntity> players = new ArrayList<>();
-                for (String playerToken : gameSetUpEntity.getPlayerTokenList()) {
+                for (String playerToken : gameSetUpEntity.getPlayerTokens()) {
                     players.add(playerRepository.findByToken(playerToken));
                 }
                 int numOfBots = gameSetUpEntity.getNumberOfBots().intValue();

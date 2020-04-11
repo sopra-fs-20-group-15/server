@@ -102,12 +102,4 @@ public class GameSetUpEntity {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public List<String> getPlayerToken() {
-        return PlayerToken;
-    }
-
-    public void setPlayerToken(List<String> playerToken) {
-        this.PlayerToken = playerToken;
-    }
 }
