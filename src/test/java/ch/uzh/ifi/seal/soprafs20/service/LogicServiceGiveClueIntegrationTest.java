@@ -4,23 +4,28 @@ import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
+import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 
+@Transactional
 @WebAppConfiguration
 @SpringBootTest
 public class LogicServiceGiveClueIntegrationTest {
@@ -94,17 +99,100 @@ public class LogicServiceGiveClueIntegrationTest {
         game.setPlayerTokens(playerTokens);
 
         game.setHostId(1L);
+        game.setGameName("GameName");
 
         createdGame =gameService.createGame(game);
+
         createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
     }
 
-//    @Test
-//    public void passivePlayerGivesClue(){
-//        createdActiveGame.setActiveMysteryWord("Test");
-//        CluePostDTO cluePostDTO = new CluePostDTO();
-//        cluePostDTO.setPlayerToken("Two");
-//        cluePostDTO.setClue("Clue");
-////        logicService.giveClue(p2.getUsername(),createdActiveGame,);
-//    }
+    @Test
+    public void passivePlayerGivesClue() {
+        createdActiveGame.setActiveMysteryWord("Test");
+        CluePostDTO cluePostDTO = new CluePostDTO();
+        cluePostDTO.setPlayerToken("Two");
+        cluePostDTO.setClue("Clue");
+        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+        assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
+        assertEquals(createdActiveGame.getClueMap().get("Two"), "Clue");
+        assertTrue(createdActiveGame.getValidClues().isEmpty());
+        assertFalse(createdActiveGame.getValidCluesAreSet());
+    }
+
+    @Test
+    public void passivePlayerGivesClueTwice() {
+        createdActiveGame.setActiveMysteryWord("Test");
+        CluePostDTO cluePostDTO = new CluePostDTO();
+        cluePostDTO.setPlayerToken("Two");
+        cluePostDTO.setClue("Clue");
+        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+        assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
+        assertEquals(createdActiveGame.getClueMap().get("Two"), "Clue");
+        assertThrows(UnauthorizedException.class, () -> {logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);});
+    }
+
+    @Test
+    public void allPassivePlayerGiveClues() {
+        createdActiveGame.setActiveMysteryWord("Test");
+        CluePostDTO cluePostDTO = new CluePostDTO();
+        cluePostDTO.setPlayerToken("Two");
+        cluePostDTO.setClue("Clue");
+        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+
+        cluePostDTO.setPlayerToken("Three");
+        cluePostDTO.setClue("Table");
+        logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
+
+        assertTrue(createdActiveGame.getValidCluesAreSet());
+        assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
+        assertEquals(createdActiveGame.getClueMap().get("Two"), "Clue");
+        assertTrue(createdActiveGame.getClueMap().containsKey("Three"));
+        assertEquals(createdActiveGame.getClueMap().get("Three"), "Table");
+        assertFalse(createdActiveGame.getValidClues().isEmpty());
+        assertTrue(createdActiveGame.getValidClues().contains("Clue") &&
+                createdActiveGame.getValidClues().contains("Table"));
+    }
+
+    @Test
+    public void cluesTooCloseToMysteryWordGetThrownOut() {
+        createdActiveGame.setActiveMysteryWord("Test");
+        CluePostDTO cluePostDTO = new CluePostDTO();
+        cluePostDTO.setPlayerToken("Two");
+        cluePostDTO.setClue("Testing");
+        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+
+        cluePostDTO.setPlayerToken("Three");
+        cluePostDTO.setClue("Table");
+        logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
+
+        assertTrue(createdActiveGame.getValidCluesAreSet());
+        assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
+        assertEquals(createdActiveGame.getClueMap().get("Two"), "Testing");
+        assertTrue(createdActiveGame.getClueMap().containsKey("Three"));
+        assertEquals(createdActiveGame.getClueMap().get("Three"), "Table");
+        assertFalse(createdActiveGame.getValidClues().isEmpty());
+        assertTrue(!createdActiveGame.getValidClues().contains("Testing") &&
+                createdActiveGame.getValidClues().contains("Table"));
+    }
+
+    @Test
+    public void cluesTooCloseToEachOtherGetThrownOut() {
+        createdActiveGame.setActiveMysteryWord("Test");
+        CluePostDTO cluePostDTO = new CluePostDTO();
+        cluePostDTO.setPlayerToken("Two");
+        cluePostDTO.setClue("House");
+        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+
+        cluePostDTO.setPlayerToken("Three");
+        cluePostDTO.setClue("House");
+        logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
+
+        assertTrue(createdActiveGame.getValidCluesAreSet());
+        assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
+        assertEquals(createdActiveGame.getClueMap().get("Two"), "House");
+        assertTrue(createdActiveGame.getClueMap().containsKey("Three"));
+        assertEquals(createdActiveGame.getClueMap().get("Three"), "House");
+        assertFalse(createdActiveGame.getValidClues().isEmpty());
+//        assertTrue(!createdActiveGame.getValidClues().contains("House"));
+    }
 }

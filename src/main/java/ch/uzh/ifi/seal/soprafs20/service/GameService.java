@@ -179,8 +179,10 @@ public class GameService {
                 game.setPlayers(players);
 //                further initialization
                 game.setValidCluesAreSet(false);
-                game.setClueList(new HashMap<>());
+                game.setClueMap(new HashMap<String,String>());
                 game.setActivePlayerId(gameSetUpEntity.getHostId());
+                List<String> validClues= new ArrayList<>();
+                game.setValidClues(validClues);
                 List<Long> passivePlayerIds=new ArrayList<>();
                 for (PlayerEntity player : game.getPlayers()){
                     if (!player.getId().equals(game.getActivePlayerId())) passivePlayerIds.add(player.getId());

@@ -58,7 +58,7 @@ public class GameEntity {
     List<Long> CardIds;
 
     @ElementCollection
-    Map<String, String> clueList;
+    Map<String, String> clueMap;
 
     @ElementCollection
     List<String> validClues;
@@ -91,12 +91,12 @@ public class GameEntity {
         return validClues;
     }
 
-    public void setClueList(Map<String, String> clueList) {
-        this.clueList = clueList;
+    public void setClueMap(Map<String, String> clueList) {
+        this.clueMap = clueList;
     }
 
-    public Map<String, String> getClueList() {
-        return clueList;
+    public Map<String, String> getClueMap() {
+        return clueMap;
     }
 
     public List<PlayerEntity> getPlayers() {
@@ -198,9 +198,9 @@ public class GameEntity {
     }
 
     private int getNumOfDuplicates(PlayerEntity player){
-        String  clue = clueList.get(player.getUsername()).toLowerCase();
+        String  clue = clueMap.get(player.getUsername()).toLowerCase();
         int cnt=-1;
-        for (String clue2: clueList.values()
+        for (String clue2: clueMap.values()
              ) {
             if (clue.equals(clue2.toLowerCase())) cnt++;
         }
@@ -212,7 +212,7 @@ public class GameEntity {
             if (activePlayerId.equals(player.getId())) scoreboard.updateScore(player,
                     ScoreCalculator.calculateScoreActivePlayer(player,isValidGuess, 33000 - getMilliseconds()));
             else if (passivePlayerIds.contains(player.getId())) {
-                if (validClues.contains(clueList.get(player.getUsername()))) scoreboard.updateScore(player,
+                if (validClues.contains(clueMap.get(player.getUsername()))) scoreboard.updateScore(player,
                         ScoreCalculator.calculateScorePassivePlayer(player,isValidGuess,true,
                                 33000 -getMilliseconds(), getNumOfDuplicates(player)));
                 else scoreboard.updateScore(player,

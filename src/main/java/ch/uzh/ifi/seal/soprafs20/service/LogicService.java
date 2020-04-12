@@ -10,7 +10,6 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
-import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,11 +50,15 @@ public class LogicService {
         game.setIsValidGuess(isValidGuess);
     }
 
-    public void giveClue(String playerName, GameEntity game, CluePostDTO cluePostDTO){
-        if (game.getClueList().get(playerName)==null) game.getClueList().put(playerName,cluePostDTO.getClue());
+    public void giveClue(String playerToken, GameEntity game, CluePostDTO cluePostDTO){
+        if (game.getClueMap().get(playerToken)==null) {
+            Map<String, String> clueMap =game.getClueMap();
+            clueMap.put(cluePostDTO.getPlayerToken(),cluePostDTO.getClue());
+            game.setClueMap(clueMap);
+        }
         else throw new UnauthorizedException("You have already submitted a clue for this round!");
-        if (game.getClueList().size()==game.getPlayers().size()+game.getNumOfBots()-1){
-            ArrayList<String> clues = new ArrayList<String>(game.getClueList().values());
+        if (game.getClueMap().size()==game.getPlayers().size()+game.getNumOfBots()-1){
+            ArrayList<String> clues = new ArrayList<String>(game.getClueMap().values());
             String mystery=game.getActiveMysteryWord();
             game.setValidClues(wordComparer.compareClues(clues, mystery));
             game.setValidCluesAreSet(true);
@@ -69,7 +72,7 @@ public class LogicService {
             for (String clue: game.getValidClues()) {
                 ClueGetDTO clueGetDTO =new ClueGetDTO();
                 clueGetDTO.setClue(clue);
-                for (Map.Entry<String, String> entry : game.getClueList().entrySet()) {
+                for (Map.Entry<String, String> entry : game.getClueMap().entrySet()) {
                     if (Objects.equals(clue.toLowerCase(), entry.getValue().toLowerCase())) {
                          clueGetDTO.setPlayerName(playerRepository.findByToken(entry.getKey()).getUsername());
                     }
