@@ -167,6 +167,8 @@ public class GameEntity {
 
 
 
+
+
     public void setPassivePlayerIds(List<Long> passivePlayerIds) {
         this.passivePlayerIds = passivePlayerIds;
     }

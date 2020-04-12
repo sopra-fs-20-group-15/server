@@ -129,6 +129,7 @@ public class GameService {
                     players.add(playerRepository.findByToken(playerToken));
                 }
                 int numOfBots = gameSetUpEntity.getNumberOfBots().intValue();
+                int
                 for (int i = 1; i <= numOfBots; i++) {
                     Bot bot = new Bot();
                     bot.setBotName("Bot_Nr_" + String.valueOf(i));
