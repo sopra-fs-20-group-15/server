@@ -44,8 +44,10 @@ public class GameServiceIntegrationPutPlayerIntoGameAndRemovePlayerTest {
         MockitoAnnotations.initMocks(this);
         gameSetUpRepository.deleteAll();
 
+        game.setGameName("ABC");
         game.setNumberOfPlayers(5L);
-        game.setNumberOfBots(2L);
+        game.setNumberOfAngles(2L);
+        game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
         List<String> playerTokens = new ArrayList<String>();

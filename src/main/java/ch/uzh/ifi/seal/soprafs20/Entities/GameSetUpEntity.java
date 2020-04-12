@@ -23,11 +23,18 @@ public class GameSetUpEntity {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
+
+    @Column(nullable = false)
+    private String gameName;
+
     @Column(nullable = false)
     private Long numberOfPlayers;
 
     @Column(nullable = false)
-    private Long numberOfBots;
+    private Long numberOfAngles;
+
+    @Column(nullable = false)
+    private Long numberOfDevils;
 
     @Column(nullable = false)
     private GameType gameType;
@@ -58,10 +65,15 @@ public class GameSetUpEntity {
         this.playerTokens = playerTokens;
     }
 
+    public String getGameName() {
+        return gameName;
+    }
+
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
+    }
+
     /**Getters and Setters*/
-
-
-
 
     public Long getHostId() {
         return hostId;
@@ -79,12 +91,20 @@ public class GameSetUpEntity {
         this.numberOfPlayers = numberOfPlayers;
     }
 
-    public Long getNumberOfBots() {
-        return numberOfBots;
+    public Long getNumberOfAngles() {
+        return numberOfAngles;
     }
 
-    public void setNumberOfBots(Long numberOfBots) {
-        this.numberOfBots = numberOfBots;
+    public void setNumberOfAngles(Long numberOfAngles) {
+        this.numberOfAngles = numberOfAngles;
+    }
+
+    public Long getNumberOfDevils() {
+        return numberOfDevils;
+    }
+
+    public void setNumberOfDevils(Long numberOfDevils) {
+        this.numberOfDevils = numberOfDevils;
     }
 
     public GameType getGameType() {

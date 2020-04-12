@@ -66,8 +66,10 @@ public class GameServiceIntegrationCreateActiveGameTest {
         playerRepository.deleteAll();
 
 
+        game.setGameName("GAME1");
         game.setNumberOfPlayers(3L);
-        game.setNumberOfBots(0L);
+        game.setNumberOfAngles(0L);
+        game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
         PlayerEntity playerOne= new PlayerEntity();
@@ -121,7 +123,8 @@ public class GameServiceIntegrationCreateActiveGameTest {
 
     @Test
     public void CreateActiveGameSuccessfullyWithBots() {
-        game.setNumberOfBots(2L);
+        game.setNumberOfAngles(1L);
+        game.setNumberOfDevils(1L);
         gameService.createGame(game);
 
         ActiveGamePostDTO activeGamePostDTO =gameService.createActiveGame(createdGame.getId());

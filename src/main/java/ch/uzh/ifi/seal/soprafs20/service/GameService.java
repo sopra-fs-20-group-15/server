@@ -65,31 +65,38 @@ public class GameService {
     public GameSetUpEntity createGame(GameSetUpEntity game) {
         //Check, if parameters are acceptable
         if (game.getNumberOfPlayers() < 8 && game.getNumberOfPlayers() > 2) {
-            if (game.getNumberOfBots() > -1 && game.getNumberOfBots() < game.getNumberOfPlayers()){
-             if(game.getGameType().name().equals("PRIVATE")){
-                if(game.getPassword() != null && ! game.getPassword().isEmpty()){
-                    GameSetUpEntity newGame = gameSetUpRepository.save(game);
-                    gameSetUpRepository.flush();
-                    return newGame;
+            //Check that number of Angels and Devils is bigger than one and does not exceed number of players
+            if ((game.getNumberOfAngles() > -1 && game.getNumberOfDevils() > -1) && game.getNumberOfAngles() + game.getNumberOfDevils() < game.getNumberOfPlayers()) {
+                if (game.getGameName() != null && !game.getGameName().isEmpty()) {
+                    if (game.getGameType().name().equals("PRIVATE")) {
+                        if (game.getPassword() != null && !game.getPassword().isEmpty()) {
+                            GameSetUpEntity newGame = gameSetUpRepository.save(game);
+                            gameSetUpRepository.flush();
+                            return newGame;
+                        }
+                        else {
+                            throw new ConflictException("The Password should not be empty or null!");
+                        }
+                    }
+                    // If it is a public game
+                    else {
+                        GameSetUpEntity newGame = gameSetUpRepository.save(game);
+                        gameSetUpRepository.flush();
+                        return newGame;
+                    }
+
                 }
-                else{
-                    throw new ConflictException("The Password should not be empty or null!");
+                else {
+                    throw new ConflictException("The Name should not be empty or null!");
                 }
-             }
-             // If it is a public game
-             else{
-                 GameSetUpEntity newGame = gameSetUpRepository.save(game);
-                 gameSetUpRepository.flush();
-                 return newGame;
-             }
             }
-            else{
-                throw new ConflictException("The number of Player should be smaller than the number of players and bigger than 0");
+            else {
+                throw new ConflictException("Something with the number of bots is wrong!");
             }
-        }
-        else{
-            throw new ConflictException("The number of Player should be smaller than 7 and bigger than 3");
-        }
+
+        }else {
+                throw new ConflictException("The number of Player should be smaller than 7 and bigger than 3");
+            }
     }
 
     /**Puts a player into a gameSetUp if all the requirements for that are met
@@ -104,7 +111,7 @@ public class GameService {
             throw new NoContentException("The player is already part of the game");
         }
         //Check that the game is not full yet
-        if (game.getNumberOfBots()+game.getPlayerTokens().size() >= game.getNumberOfPlayers()){
+        if (game.getNumberOfAngles()+game.getNumberOfDevils()+game.getPlayerTokens().size() >= game.getNumberOfPlayers()){
             throw new UnauthorizedException("The game is already full!");
         }
         //Check if the game is private and if so, if the password is correct
@@ -146,13 +153,13 @@ public class GameService {
                 for (String playerToken : gameSetUpEntity.getPlayerTokens()) {
                     players.add(playerRepository.findByToken(playerToken));
                 }
-                int numOfBots = gameSetUpEntity.getNumberOfBots().intValue();
+                /**int numOfBots = gameSetUpEntity.getNumberOfBots().intValue();
                 for (int i = 1; i <= numOfBots; i++) {
                     Bot bot = new Bot();
                     bot.setBotName("Bot_Nr_" + String.valueOf(i));
                     bot.setBotToken("Bot_" + String.valueOf(i));
                     bots.add(bot);
-                }
+                }*/
                 game.setBots(bots);
                 game.setPlayers(players);
                 game.setValidCluesAreSet(false);
