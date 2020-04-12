@@ -51,6 +51,9 @@ public class CardService {
     }
 
     public void addAllCards() throws IOException {
+        if (cardRepository.findAll().isEmpty()) {
+            return;
+        }
         BufferedReader bufReader = new BufferedReader(new FileReader("cardsEn.txt"));
         ArrayList<String> listOfLines = new ArrayList<>();
         String line = bufReader.readLine();

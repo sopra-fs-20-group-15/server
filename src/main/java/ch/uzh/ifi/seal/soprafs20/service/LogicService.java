@@ -56,7 +56,7 @@ public class LogicService {
         else throw new UnauthorizedException("You have already submitted a clue for this round!");
         if (game.getClueList().size()==game.getPlayers().size()+game.getBots().size()-1){
             ArrayList<String> clues = new ArrayList<String>(game.getClueList().values());
-            game.setValidClues(wordComparer.compareClues(clues));
+            game.setValidClues(wordComparer.compareClues(clues, game.getActiveMysteryWord()));
             game.setValidCluesAreSet(true);
         }
     }

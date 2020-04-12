@@ -5,12 +5,16 @@ import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.BadRequestException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
+import ch.uzh.ifi.seal.soprafs20.service.CardService;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 import static java.lang.Long.parseLong;
 
@@ -23,11 +27,13 @@ import static java.lang.Long.parseLong;
 public class GamesController {
 
     private final GameService gameService;
+    private final CardService cardService;
     private final PlayerService playerService;
 
-    GamesController(GameService gameService, PlayerService playerService) {
+    GamesController(GameService gameService, PlayerService playerService, CardService cardService) {
         this.gameService = gameService;
         this.playerService = playerService;
+        this.cardService = cardService;
     }
 
     protected boolean stringIsALong(String str) {
@@ -90,6 +96,11 @@ public class GamesController {
         if (stringIsALong(gameSetUpId)){
             //Try to create active game
             Long gsId = parseLong(gameSetUpId);
+            //add cards to repository
+            try {cardService.addAllCards();
+            } catch (IOException ex) {
+                throw new NoContentException("The CardDatabase couldn't be filled");
+            }
             return gameService.createActiveGame(gsId);
         }
         else throw new BadRequestException("Game-Setup-ID has wrong format!");
