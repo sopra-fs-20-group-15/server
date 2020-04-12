@@ -3,12 +3,9 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerIntoGameSetUpDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.CardPostDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.GamePostDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.WordPostDTO;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -113,13 +110,17 @@ public class GamesControllerTest {
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
         game.setHostId(1L);
+        PlayerTokenDTO playerTokenDTO=new PlayerTokenDTO();
+        playerTokenDTO.setToken("Test");
 
 
         // mock the functions
         given(gameService.getGameSetupById(Mockito.any())).willReturn(game);
 
         // when
-        MockHttpServletRequestBuilder postRequest = post("/games/{gameSetupId}", 123);
+        MockHttpServletRequestBuilder postRequest = post("/games/{gameSetupId}", 123)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(playerTokenDTO));
 
         // then
         mockMvc.perform(postRequest).andExpect(status().isCreated());
@@ -132,10 +133,20 @@ public class GamesControllerTest {
     }
 
     @Test
-    public void POSTActiveGameCreationFailsBecauseGameSetupWithSpecifiedIdDoesNotExist() throws Exception {
-        given(gameService.createActiveGame(Mockito.any())).willThrow(new NotFoundException("Test"));
+    public void POSTActiveGameCreationFailsBecauseOfMissingBody() throws Exception {
+        MockHttpServletRequestBuilder postRequest = post("/games/{gameSetupId}", "123");
+        mockMvc.perform(postRequest).andExpect(status().isBadRequest());
+    }
 
-        MockHttpServletRequestBuilder postRequest = post("/games/{gameSetupId}", 123);
+    @Test
+    public void POSTActiveGameCreationFailsBecauseGameSetupWithSpecifiedIdDoesNotExist() throws Exception {
+        given(gameService.createActiveGame(Mockito.any(),Mockito.anyString())).willThrow(new NotFoundException("Test"));
+        PlayerTokenDTO playerTokenDTO=new PlayerTokenDTO();
+        playerTokenDTO.setToken("Test");
+
+        MockHttpServletRequestBuilder postRequest = post("/games/{gameSetupId}", 123)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(playerTokenDTO));
 
         mockMvc.perform(postRequest).andExpect(status().isNotFound());
     }

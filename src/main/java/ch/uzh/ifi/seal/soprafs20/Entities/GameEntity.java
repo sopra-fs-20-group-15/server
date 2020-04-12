@@ -1,10 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.Entities;
 
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Bot;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.ScoreCalculator;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +46,10 @@ public class GameEntity {
     List<PlayerEntity> players;
 
     @ElementCollection
-    private List<Bot> bots;
+    private List<Angel> angels;
+
+    @ElementCollection
+    private List<Devil> devils;
 
     @ElementCollection
     List<Long> passivePlayerIds;
@@ -164,10 +166,32 @@ public class GameEntity {
         return scoreboard;
     }
 
+    public void setAngels(List<Angel> angels) {
+        this.angels = angels;
+    }
 
+    public List<Angel> getAngels() {
+        return angels;
+    }
 
+    public void setDevils(List<Devil> devils) {
+        this.devils = devils;
+    }
 
+    public List<Devil> getDevils() {
+        return devils;
+    }
 
+    public int getNumOfBots(){
+        return devils.size()+angels.size();
+    }
+
+    public List<Bot> getNamesOfBots(){
+        List<Bot> bots = new ArrayList<>();
+        bots.addAll(angels);
+        bots.addAll(devils);
+        return bots;
+    }
 
     public void setPassivePlayerIds(List<Long> passivePlayerIds) {
         this.passivePlayerIds = passivePlayerIds;
@@ -216,13 +240,5 @@ public class GameEntity {
 
     public boolean getIsValidGuess(){
         return this.isValidGuess;
-    }
-
-    public List<Bot> getBots() {
-        return bots;
-    }
-
-    public void setBots(List<Bot> bots) {
-        this.bots = bots;
     }
 }

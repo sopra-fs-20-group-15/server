@@ -59,7 +59,8 @@ public class LogicServiceGiveClueIntegrationTest {
 
 
         game.setNumberOfPlayers(3L);
-        game.setNumberOfBots(0L);
+        game.setNumberOfAngles(0L);
+        game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
         PlayerEntity playerOne= new PlayerEntity();
@@ -95,15 +96,15 @@ public class LogicServiceGiveClueIntegrationTest {
         game.setHostId(1L);
 
         createdGame =gameService.createGame(game);
-        createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId()).getId());
+        createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
     }
 
-    @Test
-    public void passivePlayerGivesClue(){
-        createdActiveGame.setActiveMysteryWord("Test");
-        CluePostDTO cluePostDTO = new CluePostDTO();
-        cluePostDTO.setPlayerToken("Two");
-        cluePostDTO.setClue("Clue");
-        logicService.giveClue(p2.getUsername(),createdActiveGame,);
-    }
+//    @Test
+//    public void passivePlayerGivesClue(){
+//        createdActiveGame.setActiveMysteryWord("Test");
+//        CluePostDTO cluePostDTO = new CluePostDTO();
+//        cluePostDTO.setPlayerToken("Two");
+//        cluePostDTO.setClue("Clue");
+////        logicService.giveClue(p2.getUsername(),createdActiveGame,);
+//    }
 }

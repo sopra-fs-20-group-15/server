@@ -54,9 +54,10 @@ public class LogicService {
     public void giveClue(String playerName, GameEntity game, CluePostDTO cluePostDTO){
         if (game.getClueList().get(playerName)==null) game.getClueList().put(playerName,cluePostDTO.getClue());
         else throw new UnauthorizedException("You have already submitted a clue for this round!");
-        if (game.getClueList().size()==game.getPlayers().size()+game.getBots().size()-1){
+        if (game.getClueList().size()==game.getPlayers().size()+game.getNumOfBots()-1){
             ArrayList<String> clues = new ArrayList<String>(game.getClueList().values());
-            game.setValidClues(wordComparer.compareClues(clues));
+            String mystery=game.getActiveMysteryWord();
+            game.setValidClues(wordComparer.compareClues(clues, mystery));
             game.setValidCluesAreSet(true);
         }
     }

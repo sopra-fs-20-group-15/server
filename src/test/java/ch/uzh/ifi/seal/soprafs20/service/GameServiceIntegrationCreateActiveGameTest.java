@@ -14,7 +14,8 @@ import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
         import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
-        import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
         import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
         import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 
@@ -58,6 +59,10 @@ public class GameServiceIntegrationCreateActiveGameTest {
 
     private GameSetUpEntity createdGame;
 
+    private PlayerEntity player1;
+
+    private PlayerEntity player2;
+
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -80,13 +85,13 @@ public class GameServiceIntegrationCreateActiveGameTest {
         playerOne.setPassword("One");
         playerOne.setToken("One");
         playerOne.setStatus(PlayerStatus.ONLINE);
-        playerRepository.save(playerOne);
+        player1=playerRepository.save(playerOne);
 
         playerTwo.setUsername("TwoName");
         playerTwo.setPassword("Two");
         playerTwo.setToken("Two");
         playerTwo.setStatus(PlayerStatus.ONLINE);
-        playerRepository.save(playerTwo);
+        player2=playerRepository.save(playerTwo);
 
         playerThree.setUsername("ThreeName");
         playerThree.setToken("Three");
@@ -102,7 +107,7 @@ public class GameServiceIntegrationCreateActiveGameTest {
 
         game.setPlayerTokens(playerTokens);
         //Valid host gets already checked beforehand
-        game.setHostId(1L);
+        game.setHostId(player1.getId());
         createdGame = gameService.createGame(game);
 
     }
@@ -110,9 +115,9 @@ public class GameServiceIntegrationCreateActiveGameTest {
     /**Successfully create active Game*/
     @Test
     public void CreateActiveGameSuccessfullyWithoutBots() {
-        ActiveGamePostDTO activeGamePostDTO =gameService.createActiveGame(createdGame.getId());
+        ActiveGamePostDTO activeGamePostDTO =gameService.createActiveGame(createdGame.getId(), "One");
 //        check if expected output matches actual output
-        assertEquals(activeGamePostDTO.getId(),1L);
+        assertNotNull(activeGamePostDTO.getId());
         assertEquals(activeGamePostDTO.getPlayerNames().size(), 3);
         List<String> list=new ArrayList<>();
         list.add("OneName");
@@ -125,16 +130,18 @@ public class GameServiceIntegrationCreateActiveGameTest {
     public void CreateActiveGameSuccessfullyWithBots() {
         game.setNumberOfAngles(1L);
         game.setNumberOfDevils(1L);
-        gameService.createGame(game);
+        createdGame = gameService.createGame(game);
 
-        ActiveGamePostDTO activeGamePostDTO =gameService.createActiveGame(createdGame.getId());
+        ActiveGamePostDTO activeGamePostDTO =gameService.createActiveGame(createdGame.getId(), "One");
 //        check if expected output matches actual output
-        assertEquals(activeGamePostDTO.getId(),2L);
+        assertNotNull(activeGamePostDTO.getId());
         assertEquals(activeGamePostDTO.getPlayerNames().size(), 5);
         List<String> list=new ArrayList<>();
         list.add("OneName");
         list.add("TwoName");
         list.add("ThreeName");
+        list.add("Angel_Nr_1");
+        list.add("Devil_Nr_1");
         assertTrue(activeGamePostDTO.getPlayerNames().containsAll(list));
     }
 
@@ -146,9 +153,19 @@ public class GameServiceIntegrationCreateActiveGameTest {
 
         game.setPlayerTokens(playerTokens);
 
-        gameService.createGame(game);
+        createdGame = gameService.createGame(game);
 
-        assertThrows(ConflictException.class, ()-> gameService.createActiveGame(1L));
+        assertThrows(ConflictException.class, ()-> gameService.createActiveGame(createdGame.getId(), "One"));
+    }
+
+    @Test
+    public void createActiveGameFailsBecauseOtherPlayerThanHostTriesToStartIt() {
+        assertThrows(UnauthorizedException.class, ()-> gameService.createActiveGame(createdGame.getId(), "Two"));
+    }
+
+    @Test
+    public void createActiveGameFailsBecauseNoGameSetupWithSpecifiedId() {
+        assertThrows(NotFoundException.class, ()-> gameService.createActiveGame(22000L, "Two"));
     }
 
 }

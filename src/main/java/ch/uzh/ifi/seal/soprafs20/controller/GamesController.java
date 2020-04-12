@@ -85,12 +85,12 @@ public class GamesController {
     @PostMapping("/games/{gameSetUpId}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ActiveGamePostDTO createActiveGame(@PathVariable String gameSetUpId) {
+    public ActiveGamePostDTO createActiveGame(@PathVariable String gameSetUpId, @RequestBody PlayerTokenDTO playerTokenDTO) {
         //Check that SetupEntity actually exists
         if (stringIsALong(gameSetUpId)){
             //Try to create active game
             Long gsId = parseLong(gameSetUpId);
-            return gameService.createActiveGame(gsId);
+            return gameService.createActiveGame(gsId, playerTokenDTO.getToken());
         }
         else throw new BadRequestException("Game-Setup-ID has wrong format!");
     }
