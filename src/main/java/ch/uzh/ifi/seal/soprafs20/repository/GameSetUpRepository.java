@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository("gameSetUpEntityRepository")
 public interface GameSetUpRepository extends JpaRepository<GameSetUpEntity, Long> {
-    GameSetUpEntity findByNumberOfBots(Long numberOfBots);
+    GameSetUpEntity findByGameName(String gameName);
 }

@@ -16,11 +16,18 @@ public class WordComparer {
         @param: List of clues
         @Return: List of validClued
      */
-    public ArrayList<String> compareClues(ArrayList<String> clues) {
+    public ArrayList<String> compareClues(ArrayList<String> clues, String mysteryWord) {
+        String mysteryStem;
+        try {
+            mysteryStem = this.getWordStem(mysteryWord.toLowerCase());
+        } catch(IOException ex) {
+            mysteryStem = mysteryWord.toLowerCase();
+        }
         ArrayList<String> okClues = new ArrayList<>();
         ArrayList<String> tmpClues = new ArrayList<>();
         ArrayList<String> wordStems = new ArrayList<>();
         ArrayList<String> duplicates = new ArrayList<>();
+
         for (String word : clues) {
             String stem;
             try {
@@ -46,7 +53,10 @@ public class WordComparer {
                 }
             }
             if (count < 2) {
-                okClues.add(okClue);
+                //check that it doesn't contain mysteryWord
+                if (!okClue.toLowerCase().contains(mysteryStem)) {
+                    okClues.add(okClue);
+                }
             }
         }
 

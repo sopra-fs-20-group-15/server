@@ -35,8 +35,10 @@ public class GameServiceIntegrationCreateGameTest {
         MockitoAnnotations.initMocks(this);
         gameSetUpRepository.deleteAll();
 
+        game.setGameName("GAME1");
         game.setNumberOfPlayers(3L);
-        game.setNumberOfBots(0L);
+        game.setNumberOfAngles(1L);
+        game.setNumberOfDevils(1L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
         //Valid host gets already checked beforehand
@@ -53,8 +55,10 @@ public class GameServiceIntegrationCreateGameTest {
         GameSetUpEntity newGame = gameService.createGame(game);
 
         //Test itself
+        assertEquals(newGame.getGameName(), game.getGameName());
         assertEquals(newGame.getNumberOfPlayers(), game.getNumberOfPlayers());
-        assertEquals(newGame.getNumberOfBots(), game.getNumberOfBots());
+        assertEquals(newGame.getNumberOfAngles(), game.getNumberOfAngles());
+        assertEquals(newGame.getNumberOfDevils(), game.getNumberOfDevils());
         assertEquals(newGame.getGameType(), game.getGameType());
         assertEquals(newGame.getPassword(), game.getPassword());
         assertEquals(newGame.getHostId(), game.getHostId());
@@ -68,8 +72,10 @@ public class GameServiceIntegrationCreateGameTest {
         GameSetUpEntity newGame = gameService.createGame(game);
 
         //Test itself
+        assertEquals(newGame.getGameName(), game.getGameName());
         assertEquals(newGame.getNumberOfPlayers(), game.getNumberOfPlayers());
-        assertEquals(newGame.getNumberOfBots(), game.getNumberOfBots());
+        assertEquals(newGame.getNumberOfAngles(), game.getNumberOfAngles());
+        assertEquals(newGame.getNumberOfDevils(), game.getNumberOfDevils());
         assertEquals(newGame.getGameType(), game.getGameType());
         assertEquals(newGame.getPassword(), game.getPassword());
         assertEquals(newGame.getHostId(), game.getHostId());
@@ -97,13 +103,16 @@ public class GameServiceIntegrationCreateGameTest {
     /**Test BotCreation*/
     @Test
     public void gameCreationWithZeroBots() {
-        game.setNumberOfBots(0L);
+        game.setNumberOfAngles(0L);
+        game.setNumberOfDevils(0L);
 
         GameSetUpEntity newGame = gameService.createGame(game);
 
         //Test itself
+        assertEquals(newGame.getGameName(), game.getGameName());
         assertEquals(newGame.getNumberOfPlayers(), game.getNumberOfPlayers());
-        assertEquals(newGame.getNumberOfBots(), game.getNumberOfBots());
+        assertEquals(newGame.getNumberOfAngles(), game.getNumberOfAngles());
+        assertEquals(newGame.getNumberOfDevils(), game.getNumberOfDevils());
         assertEquals(newGame.getGameType(), game.getGameType());
         assertEquals(newGame.getPassword(), game.getPassword());
         assertEquals(newGame.getHostId(), game.getHostId());
@@ -112,13 +121,14 @@ public class GameServiceIntegrationCreateGameTest {
 
     @Test
     public void gameCreationWithMaxBots() {
-        game.setNumberOfBots(2L);
 
         GameSetUpEntity newGame = gameService.createGame(game);
 
         //Test itself
+        assertEquals(newGame.getGameName(), game.getGameName());
         assertEquals(newGame.getNumberOfPlayers(), game.getNumberOfPlayers());
-        assertEquals(newGame.getNumberOfBots(), game.getNumberOfBots());
+        assertEquals(newGame.getNumberOfAngles(), game.getNumberOfAngles());
+        assertEquals(newGame.getNumberOfDevils(), game.getNumberOfDevils());
         assertEquals(newGame.getGameType(), game.getGameType());
         assertEquals(newGame.getPassword(), game.getPassword());
         assertEquals(newGame.getHostId(), game.getHostId());
@@ -129,7 +139,7 @@ public class GameServiceIntegrationCreateGameTest {
 
     @Test
     public void gameCreationWithNegativeNumberOfBots() {
-        game.setNumberOfBots(-1L);
+        game.setNumberOfAngles(-1L);
 
         //Test itself
         assertThrows(ConflictException.class, () -> gameService.createGame(game));
@@ -138,7 +148,7 @@ public class GameServiceIntegrationCreateGameTest {
 
     @Test
     public void gameCreationWithTooManyBots() {
-        game.setNumberOfBots(3L);
+        game.setNumberOfDevils(3L);
         assertThrows(ConflictException.class, () -> gameService.createGame(game));
 
     }
@@ -159,13 +169,22 @@ public class GameServiceIntegrationCreateGameTest {
         GameSetUpEntity newGame = gameService.createGame(game);
 
         //Test itself
+        assertEquals(newGame.getGameName(), game.getGameName());
         assertEquals(newGame.getNumberOfPlayers(), game.getNumberOfPlayers());
-        assertEquals(newGame.getNumberOfBots(), game.getNumberOfBots());
+        assertEquals(newGame.getNumberOfAngles(), game.getNumberOfAngles());
+        assertEquals(newGame.getNumberOfDevils(), game.getNumberOfDevils());
         assertEquals(newGame.getGameType(), game.getGameType());
         assertEquals(newGame.getPassword(), game.getPassword());
         assertEquals(newGame.getHostId(), game.getHostId());
 
     }
 
+    /**Empty Name Should Fail*/
+    @Test
+    public void gameCreationWithInvalidName() {
+        game.setGameName("");
+        assertThrows(ConflictException.class, () -> gameService.createGame(game));
+
+    }
 
 }

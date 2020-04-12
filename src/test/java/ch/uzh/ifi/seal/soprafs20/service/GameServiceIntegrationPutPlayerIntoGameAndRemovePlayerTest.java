@@ -10,6 +10,7 @@ import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.GameType;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 
@@ -26,7 +27,7 @@ import java.util.List;
 
 @WebAppConfiguration
 @SpringBootTest
-public class GameServiceIntegrationPutPlayerIntoGameTest {
+public class GameServiceIntegrationPutPlayerIntoGameAndRemovePlayerTest {
 
     @Qualifier("gameSetUpEntityRepository")
     @Autowired
@@ -43,8 +44,10 @@ public class GameServiceIntegrationPutPlayerIntoGameTest {
         MockitoAnnotations.initMocks(this);
         gameSetUpRepository.deleteAll();
 
+        game.setGameName("ABC");
         game.setNumberOfPlayers(5L);
-        game.setNumberOfBots(2L);
+        game.setNumberOfAngles(2L);
+        game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
         List<String> playerTokens = new ArrayList<String>();
@@ -158,6 +161,62 @@ public class GameServiceIntegrationPutPlayerIntoGameTest {
         assertThrows(UnauthorizedException.class, () ->gameService.putPlayerIntoGame(createdGame.getId(),player,createdGame.getPassword()));
 
     }
+    /**The game does not exist*/
+    @Test
+    public void GameIdDoesNotExistPutPlayerIntoGame() {
+        //Player to remove
+        PlayerEntity player = new PlayerEntity();
+        player.setToken("C");
 
+
+        //Test itself
+        assertThrows(NotFoundException.class, () ->gameService.putPlayerIntoGame(32L, player, "ABC"));
+    }
+
+    /**Successful removal of a player*/
+    @Test
+    public void RemovePlayerSuccessfully() {
+        //Player to remove
+        PlayerEntity player = new PlayerEntity();
+        player.setToken("B");
+        //PlayerTokens List
+        List<String> playerTokens = new ArrayList<String>();
+        playerTokens.add("A");
+
+        //Method call
+        GameSetUpEntity newGame = gameService.removePlayerFromGame(createdGame.getId(),player);
+
+        List<String> playerTokensFromGame = new ArrayList<String>();
+        playerTokensFromGame = newGame.getPlayerTokens();
+        //Test itself
+        //Player "A" is still there
+        assertEquals(playerTokensFromGame.get(0), playerTokens.get(0));
+        //Size of array is correct
+        assertEquals(playerTokensFromGame.size(), 1);
+    }
+
+    /**The player is not part of said game*/
+    @Test
+    public void PlayerNotInGame() {
+        //Player to remove
+        PlayerEntity player = new PlayerEntity();
+        player.setToken("C");
+
+
+        //Test itself
+        assertThrows(NotFoundException.class, () ->gameService.removePlayerFromGame(createdGame.getId(),player));
+    }
+
+    /**The game does not exist*/
+    @Test
+    public void GameIdDoesNotExist() {
+        //Player to remove
+        PlayerEntity player = new PlayerEntity();
+        player.setToken("C");
+
+
+        //Test itself
+        assertThrows(NotFoundException.class, () ->gameService.removePlayerFromGame(13L,player));
+    }
 
 }

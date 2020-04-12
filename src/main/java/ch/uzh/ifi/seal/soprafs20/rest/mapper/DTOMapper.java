@@ -26,15 +26,18 @@ public interface DTOMapper {
 
     DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
 
+    @Mapping(source = "gameName", target = "gameName")
     @Mapping(source = "numberOfPlayers", target = "numberOfPlayers")
-    @Mapping(source = "numberOfBots", target = "numberOfBots")
+    @Mapping(source = "numberOfAngles", target = "numberOfAngles")
+    @Mapping(source = "numberOfDevils", target = "numberOfDevils")
     @Mapping(source = "gameType", target = "gameType")
     @Mapping(source = "password", target = "password")
     GameSetUpEntity convertGameSetUpPostDTOtoEntity(GamePostDTO gamePostDTO);
 
     @Mapping(source = "id", target = "gameId")
     @Mapping(source = "numberOfPlayers", target = "numberOfPlayers")
-    @Mapping(source = "numberOfBots", target = "numberOfBots")
+    @Mapping(source = "numberOfAngles", target = "numberOfAngles")
+    @Mapping(source = "numberOfDevils", target = "numberOfDevils")
     @Mapping(source = "gameType", target = "gameType")
     CreatedGameSetUpDTO convertEntityToGameSetUpPostDTO(GameSetUpEntity gameSetUpEntity);
 

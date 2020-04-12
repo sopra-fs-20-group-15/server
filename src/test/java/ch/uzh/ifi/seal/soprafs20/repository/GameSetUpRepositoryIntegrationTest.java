@@ -27,8 +27,10 @@ public class GameSetUpRepositoryIntegrationTest {
     public void setGameSetup_success() {
         // given
         GameSetUpEntity gameSetUp = new GameSetUpEntity();
+        gameSetUp.setGameName("A");
         gameSetUp.setNumberOfPlayers(3L);
-        gameSetUp.setNumberOfBots(0L);
+        gameSetUp.setNumberOfAngles(0L);
+        gameSetUp.setNumberOfDevils(0L);
         gameSetUp.setGameType(GameType.PRIVATE);
         gameSetUp.setPassword("123");
         gameSetUp.setHostId(1L);
@@ -37,11 +39,15 @@ public class GameSetUpRepositoryIntegrationTest {
         entityManager.flush();
 
         // when
-        GameSetUpEntity found = gameSetUpEntityRepository.findByNumberOfBots(gameSetUp.getNumberOfBots());
+        GameSetUpEntity found = gameSetUpEntityRepository.findByGameName("A");
 
         // then
+        assertEquals(found.getGameName(), gameSetUp.getGameName());
         assertEquals(found.getNumberOfPlayers(), gameSetUp.getNumberOfPlayers());
-        assertEquals(found.getNumberOfBots(), gameSetUp.getNumberOfBots());
+        assertEquals(found.getNumberOfAngles(), gameSetUp.getNumberOfAngles());
+        assertEquals(found.getNumberOfDevils(), gameSetUp.getNumberOfDevils());
         assertEquals(found.getGameType(), gameSetUp.getGameType());
+        assertEquals(found.getPassword(), gameSetUp.getPassword());
+        assertEquals(found.getHostId(), gameSetUp.getHostId());
     }
 }
