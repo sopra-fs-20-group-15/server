@@ -10,7 +10,6 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
-import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,10 +57,16 @@ public class LogicService {
             game.setClueMap(clueMap);
         }
         else throw new UnauthorizedException("You have already submitted a clue for this round!");
+<<<<<<< HEAD
         if (game.getClueMap().size()==game.getPlayers().size()+game.getNumOfBots()-1){
             ArrayList<String> clues = new ArrayList<String>(game.getClueMap().values());
             String mystery=game.getActiveMysteryWord();
             game.setValidClues(wordComparer.compareClues(clues, mystery));
+=======
+        if (game.getClueList().size()==game.getPlayers().size()+game.getBots().size()-1){
+            ArrayList<String> clues = new ArrayList<String>(game.getClueList().values());
+            game.setValidClues(wordComparer.compareClues(clues, game.getActiveMysteryWord()));
+>>>>>>> master
             game.setValidCluesAreSet(true);
         }
     }
