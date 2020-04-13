@@ -84,8 +84,7 @@ public class LogicController {
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPassivePlayerOfGame(cluePostDTO.getPlayerToken(), gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
-        String playerName= playerService.getPlayerByToken(cluePostDTO.getPlayerToken()).getUsername();
-        logicService.giveClue(playerName,game,cluePostDTO);
+        logicService.giveClue(cluePostDTO.getPlayerToken(),game,cluePostDTO);
     }
 
     @GetMapping("/games/{gameId}/clues/{playerToken}")

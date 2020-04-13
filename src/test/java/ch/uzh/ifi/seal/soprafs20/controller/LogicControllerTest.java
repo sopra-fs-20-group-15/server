@@ -187,7 +187,7 @@ public class LogicControllerTest {
         GameEntity game = new GameEntity();
         Map<String, String> clueList= new HashMap<>();
         List<PlayerEntity> players= new ArrayList<>();
-        game.setClueList(clueList);
+        game.setClueMap(clueList);
         game.setPlayers(players);
 
         PlayerEntity player = new PlayerEntity();
@@ -220,7 +220,7 @@ public class LogicControllerTest {
         GameEntity game = new GameEntity();
         Map<String, String> clueList= new HashMap<>();
         List<PlayerEntity> players= new ArrayList<>();
-        game.setClueList(clueList);
+        game.setClueMap(clueList);
         game.setPlayers(players);
 
         PlayerEntity player = new PlayerEntity();
@@ -252,7 +252,7 @@ public class LogicControllerTest {
         GameEntity game = new GameEntity();
         Map<String, String> clueList= new HashMap<>();
         List<PlayerEntity> players= new ArrayList<>();
-        game.setClueList(clueList);
+        game.setClueMap(clueList);
         game.setPlayers(players);
 
         PlayerEntity player = new PlayerEntity();
@@ -285,7 +285,7 @@ public class LogicControllerTest {
         GameEntity game = new GameEntity();
         Map<String, String> clueList= new HashMap<>();
         List<PlayerEntity> players= new ArrayList<>();
-        game.setClueList(clueList);
+        game.setClueMap(clueList);
         game.setPlayers(players);
 
         PlayerEntity player = new PlayerEntity();

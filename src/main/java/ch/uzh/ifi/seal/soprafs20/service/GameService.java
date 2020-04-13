@@ -4,12 +4,12 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Bot;
-import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.PlayerNotAvailable;
 
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
@@ -26,12 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-/**
- * PlayerEntity Service
 
- * This class is the "worker" and responsible for all functionality related to the user
- * (e.g., it creates, modifies, deletes, finds). The result will be passed back to the caller.
- */
 @Service
 @Transactional
 public class GameService {
@@ -59,6 +54,12 @@ public class GameService {
         Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(id);
         if (gameOp.isEmpty()) throw new NotFoundException("No Game Setup with this id exists!");
         return gameOp.get();
+    }
+
+    public PlayerEntity getPlayerByToken(String playerToken){
+        PlayerEntity player = playerRepository.findByToken(playerToken);
+        if (player==null) throw new NotFoundException("No player with your Token exists");
+        return player;
     }
 
     /**Creates a game. GameToken should be checked beforehand so that player exists*/
@@ -95,8 +96,8 @@ public class GameService {
             }
 
         }else {
-                throw new ConflictException("The number of Player should be smaller than 7 and bigger than 3");
-            }
+            throw new ConflictException("The number of Player should be smaller than 7 and bigger than 3");
+        }
     }
 
     /**Puts a player into a gameSetUp if all the requirements for that are met
@@ -144,33 +145,50 @@ public class GameService {
         return game;
     }
 
-    public ActiveGamePostDTO createActiveGame(Long gameSetupId) {
+    public ActiveGamePostDTO createActiveGame(Long gameSetupId, String pt) {
+            if (!getGameSetupById(gameSetupId).getHostId().equals(getPlayerByToken(pt).getId()))
+                throw new UnauthorizedException("Player is not host and therefore not allowed to start the game");
             GameSetUpEntity gameSetUpEntity =this.getGameSetupById(gameSetupId);
+//            Check that enough players are in the lobby to start the game.
             if (gameSetUpEntity.getPlayerTokens().size()==gameSetUpEntity.getNumberOfPlayers()) {
+//                game initialization
                 GameEntity game = new GameEntity();
+//                adding human and not human players to the game
                 List<PlayerEntity> players = new ArrayList<>();
-                List<Bot> bots = new ArrayList<>();
+                List<Angel> angels=new ArrayList<>();
+                List<Devil> devils=new ArrayList<>();
                 for (String playerToken : gameSetUpEntity.getPlayerTokens()) {
                     players.add(playerRepository.findByToken(playerToken));
                 }
-                /**int numOfBots = gameSetUpEntity.getNumberOfBots().intValue();
-                for (int i = 1; i <= numOfBots; i++) {
-                    Bot bot = new Bot();
-                    bot.setBotName("Bot_Nr_" + String.valueOf(i));
-                    bot.setBotToken("Bot_" + String.valueOf(i));
-                    bots.add(bot);
-                }*/
-                game.setBots(bots);
+                int numOfAngels = gameSetUpEntity.getNumberOfAngles().intValue();
+                int numOfDevils = gameSetUpEntity.getNumberOfDevils().intValue();
+                for (int i = 1; i <= numOfAngels; i++) {
+                    Angel bot = new Angel();
+                    bot.setName("Angel_Nr_" + String.valueOf(i));
+                    bot.setToken("Angel_" + String.valueOf(i));
+                    angels.add(bot);
+                }
+                for (int i = 1; i <= numOfDevils; i++) {
+                    Devil bot = new Devil();
+                    bot.setName("Devil_Nr_" + String.valueOf(i));
+                    bot.setToken("Devil_" + String.valueOf(i));
+                    devils.add(bot);
+                }
+                game.setAngels(angels);
+                game.setDevils(devils);
                 game.setPlayers(players);
+//                further initialization
                 game.setValidCluesAreSet(false);
-                game.setClueList(new HashMap<>());
+                game.setClueMap(new HashMap<String,String>());
                 game.setActivePlayerId(gameSetUpEntity.getHostId());
+                List<String> validClues= new ArrayList<>();
+                game.setValidClues(validClues);
                 List<Long> passivePlayerIds=new ArrayList<>();
                 for (PlayerEntity player : game.getPlayers()){
                     if (!player.getId().equals(game.getActivePlayerId())) passivePlayerIds.add(player.getId());
                 }
                 game.setPassivePlayerIds(passivePlayerIds);
-
+//              setup of the DTO that needs to be returned
                 GameEntity activeGame= gameRepository.saveAndFlush(game);
                 ActiveGamePostDTO activeGamePostDTO=new ActiveGamePostDTO();
                 activeGamePostDTO.setId(activeGame.getId());
@@ -178,7 +196,7 @@ public class GameService {
                 for (PlayerEntity player : activeGame.getPlayers()){
                     playerNames.add(player.getUsername());
                 }
-                for(Bot bot : activeGame.getBots()) playerNames.add(bot.getBotName());
+                for(Bot bot : activeGame.getNamesOfBots()) playerNames.add(bot.getName());
                 activeGamePostDTO.setPlayerNames(playerNames);
                 return activeGamePostDTO;
 		    }

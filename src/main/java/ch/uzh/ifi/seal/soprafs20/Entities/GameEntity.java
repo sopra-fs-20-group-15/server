@@ -1,10 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.Entities;
 
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Bot;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.ScoreCalculator;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +46,10 @@ public class GameEntity {
     List<PlayerEntity> players;
 
     @ElementCollection
-    private List<Bot> bots;
+    private List<Angel> angels;
+
+    @ElementCollection
+    private List<Devil> devils;
 
     @ElementCollection
     List<Long> passivePlayerIds;
@@ -56,7 +58,7 @@ public class GameEntity {
     List<Long> CardIds;
 
     @ElementCollection
-    Map<String, String> clueList;
+    Map<String, String> clueMap;
 
     @ElementCollection
     List<String> validClues;
@@ -89,12 +91,12 @@ public class GameEntity {
         return validClues;
     }
 
-    public void setClueList(Map<String, String> clueList) {
-        this.clueList = clueList;
+    public void setClueMap(Map<String, String> clueList) {
+        this.clueMap = clueList;
     }
 
-    public Map<String, String> getClueList() {
-        return clueList;
+    public Map<String, String> getClueMap() {
+        return clueMap;
     }
 
     public List<PlayerEntity> getPlayers() {
@@ -164,17 +166,41 @@ public class GameEntity {
         return scoreboard;
     }
 
+    public void setAngels(List<Angel> angels) {
+        this.angels = angels;
+    }
 
+    public List<Angel> getAngels() {
+        return angels;
+    }
 
+    public void setDevils(List<Devil> devils) {
+        this.devils = devils;
+    }
+
+    public List<Devil> getDevils() {
+        return devils;
+    }
+
+    public int getNumOfBots(){
+        return devils.size()+angels.size();
+    }
+
+    public List<Bot> getNamesOfBots(){
+        List<Bot> bots = new ArrayList<>();
+        bots.addAll(angels);
+        bots.addAll(devils);
+        return bots;
+    }
 
     public void setPassivePlayerIds(List<Long> passivePlayerIds) {
         this.passivePlayerIds = passivePlayerIds;
     }
 
     private int getNumOfDuplicates(PlayerEntity player){
-        String  clue = clueList.get(player.getUsername()).toLowerCase();
+        String  clue = clueMap.get(player.getUsername()).toLowerCase();
         int cnt=-1;
-        for (String clue2: clueList.values()
+        for (String clue2: clueMap.values()
              ) {
             if (clue.equals(clue2.toLowerCase())) cnt++;
         }
@@ -186,7 +212,7 @@ public class GameEntity {
             if (activePlayerId.equals(player.getId())) scoreboard.updateScore(player,
                     ScoreCalculator.calculateScoreActivePlayer(player,isValidGuess, 33000 - getMilliseconds()));
             else if (passivePlayerIds.contains(player.getId())) {
-                if (validClues.contains(clueList.get(player.getUsername()))) scoreboard.updateScore(player,
+                if (validClues.contains(clueMap.get(player.getUsername()))) scoreboard.updateScore(player,
                         ScoreCalculator.calculateScorePassivePlayer(player,isValidGuess,true,
                                 33000 -getMilliseconds(), getNumOfDuplicates(player)));
                 else scoreboard.updateScore(player,
@@ -214,13 +240,5 @@ public class GameEntity {
 
     public boolean getIsValidGuess(){
         return this.isValidGuess;
-    }
-
-    public List<Bot> getBots() {
-        return bots;
-    }
-
-    public void setBots(List<Bot> bots) {
-        this.bots = bots;
     }
 }

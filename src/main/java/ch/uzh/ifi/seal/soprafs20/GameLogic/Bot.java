@@ -1,25 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
-import javax.persistence.Embeddable;
-
-@Embeddable
-public class Bot{
-    private String botName;
-    private String botToken;
-
-    public void setBotName(String botName) {
-        this.botName = botName;
-    }
-
-    public String getBotName() {
-        return botName;
-    }
-
-    public void setBotToken(String botToken) {
-        this.botToken = botToken;
-    }
-
-    public String getBotToken() {
-        return botToken;
-    }
+public interface Bot {
+    public void setName(String name);
+    public void setToken(String token);
+    public String getName();
+    public String getToken();
 }
