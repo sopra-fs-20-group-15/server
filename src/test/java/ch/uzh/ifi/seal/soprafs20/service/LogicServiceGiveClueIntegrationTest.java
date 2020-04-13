@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,6 @@ import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 @SpringBootTest
 public class LogicServiceGiveClueIntegrationTest {
 
-    @Qualifier("gameSetUpEntityRepository")
     @Autowired
     private GameSetUpRepository gameSetUpRepository;
 
@@ -56,13 +56,16 @@ public class LogicServiceGiveClueIntegrationTest {
     private PlayerEntity p1;
     private PlayerEntity p2;
     private PlayerEntity p3;
-    @BeforeEach
-    public void setup() {
+
+    @BeforeTransaction
+    public void clean(){
         gameSetUpRepository.deleteAll();
         gameRepository.deleteAll();
         playerRepository.deleteAll();
+    }
 
-
+    @BeforeEach
+    public void setup() {
         game.setNumberOfPlayers(3L);
         game.setNumberOfAngles(0L);
         game.setNumberOfDevils(0L);
@@ -98,7 +101,7 @@ public class LogicServiceGiveClueIntegrationTest {
 
         game.setPlayerTokens(playerTokens);
 
-        game.setHostId(1L);
+        game.setHostId(p1.getId());
         game.setGameName("GameName");
 
         createdGame =gameService.createGame(game);
@@ -176,23 +179,46 @@ public class LogicServiceGiveClueIntegrationTest {
     }
 
     @Test
-    public void cluesTooCloseToEachOtherGetThrownOut() {
+    public void identicalCluesGetThrownOut() {
         createdActiveGame.setActiveMysteryWord("Test");
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
-        cluePostDTO.setClue("House");
+        cluePostDTO.setClue("Table");
         logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
 
         cluePostDTO.setPlayerToken("Three");
-        cluePostDTO.setClue("House");
+        cluePostDTO.setClue("table");
         logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
 
         assertTrue(createdActiveGame.getValidCluesAreSet());
         assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
-        assertEquals(createdActiveGame.getClueMap().get("Two"), "House");
+        assertEquals(createdActiveGame.getClueMap().get("Two"), "Table");
         assertTrue(createdActiveGame.getClueMap().containsKey("Three"));
-        assertEquals(createdActiveGame.getClueMap().get("Three"), "House");
-        assertFalse(createdActiveGame.getValidClues().isEmpty());
-//        assertTrue(!createdActiveGame.getValidClues().contains("House"));
+        assertEquals(createdActiveGame.getClueMap().get("Three"), "table");
+        assertTrue(createdActiveGame.getValidClues().isEmpty());
+        assertTrue(!createdActiveGame.getValidClues().contains("Table")
+                && !createdActiveGame.getValidClues().contains("table"));
+    }
+
+    @Test
+    public void cluesWithSameStemGetThrownOut() {
+        createdActiveGame.setActiveMysteryWord("Test");
+        CluePostDTO cluePostDTO = new CluePostDTO();
+        cluePostDTO.setPlayerToken("Two");
+        cluePostDTO.setClue("Tower");
+        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+
+        cluePostDTO.setPlayerToken("Three");
+        cluePostDTO.setClue("towering");
+        logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
+
+        assertTrue(createdActiveGame.getValidCluesAreSet());
+        assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
+        assertEquals(createdActiveGame.getClueMap().get("Two"), "Tower");
+        assertTrue(createdActiveGame.getClueMap().containsKey("Three"));
+        assertEquals(createdActiveGame.getClueMap().get("Three"), "towering");
+        assertTrue(createdActiveGame.getValidClues().isEmpty());
+        assertTrue(!createdActiveGame.getValidClues().contains("Tower")
+                && !createdActiveGame.getValidClues().contains("towering"));
     }
 }

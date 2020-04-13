@@ -2,38 +2,31 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
-import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
-        import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PUBLIC;
-        import static org.junit.jupiter.api.Assertions.*;
-        import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-        import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-        import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
-        import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-        import ch.uzh.ifi.seal.soprafs20.constant.GameType;
+import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
+import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
-        import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
-        import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
-        import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
-
-        import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ActiveGamePostDTO;
 import org.junit.jupiter.api.BeforeEach;
-        import org.junit.jupiter.api.Test;
-        import org.mockito.MockitoAnnotations;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.beans.factory.annotation.Qualifier;
-        import org.springframework.boot.test.context.SpringBootTest;
-        import org.springframework.test.context.web.WebAppConfiguration;
-        import org.springframework.test.web.servlet.MockMvc;
-        import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.web.client.HttpClientErrorException;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.transaction.BeforeTransaction;
+import org.springframework.test.context.web.WebAppConfiguration;
+
 
 import java.util.ArrayList;
-        import java.util.List;
+import java.util.List;
+
+import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
+import static org.junit.jupiter.api.Assertions.*;
 
 @WebAppConfiguration
 @SpringBootTest
@@ -62,6 +55,13 @@ public class GameServiceIntegrationCreateActiveGameTest {
     private PlayerEntity player1;
 
     private PlayerEntity player2;
+
+    @BeforeTransaction
+    public void clean(){
+        gameSetUpRepository.deleteAll();
+        gameRepository.deleteAll();
+        playerRepository.deleteAll();
+    }
 
     @BeforeEach
     public void setup() {
