@@ -156,6 +156,77 @@ public class GamesControllerTest {
         mockMvc.perform(postRequest).andExpect(status().isNotFound());
     }
 
+    /**
+     * Tests a Get-Request to /games/lobbies/{gameSetupId}/{playerToken}
+     */
+
+    @Test
+    public void GETLobby() throws Exception {
+        LobbyGetDTO lobbyGetDTO = new LobbyGetDTO();
+        lobbyGetDTO.setHostName("Frederick");
+        List<String> playerNames= new ArrayList<>();
+        playerNames.add("Frederick");
+        playerNames.add("Khan");
+        lobbyGetDTO.setPlayerNames(playerNames);
+        lobbyGetDTO.setNumOfDesiredPlayers(5L);
+        lobbyGetDTO.setNumOfActualPlayers(2L);
+        lobbyGetDTO.setNumOfAngels(0L);
+        lobbyGetDTO.setNumOfDevils(0L);
+        lobbyGetDTO.setGameSetUpId(22L);
+        lobbyGetDTO.setGameName("game1");
+
+        // mock the functions
+        given(gameService.getLobbyInfo(Mockito.any(),Mockito.anyString())).willReturn(lobbyGetDTO);
+
+        // when
+        MockHttpServletRequestBuilder postRequest = get("/games/lobbies/{gameSetupId}/{playerToken}", 123, "hatooooooken");
+
+        // then
+        mockMvc.perform(postRequest).andExpect(status().isOk())
+                .andExpect(jsonPath("$.numOfDesiredPlayers", is(5)))
+                .andExpect(jsonPath("$.numOfActualPlayers", is(2)))
+                .andExpect(jsonPath("$.numOfAngels", is(0)))
+                .andExpect(jsonPath("$.numOfDevils", is(0)))
+                .andExpect(jsonPath("$.gameSetUpId", is(22)))
+                .andExpect(jsonPath("$.gameName", is("game1")))
+                .andExpect(jsonPath("$.hostName", is("Frederick")))
+                .andExpect(jsonPath("$.playerNames", contains("Frederick","Khan")));
+    }
+
+    @Test
+    public void GETLobbyFailsBecauseIdHasWrongFormat() throws Exception {
+        // when
+        MockHttpServletRequestBuilder postRequest = get("/games/lobbies/{gameSetupId}/{playerToken}",
+                "asdfa fdsf", "tik-token");
+
+        // then
+        mockMvc.perform(postRequest).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void GETLobbyFailsBecausePlayerTokenOrGameSetUpIdDoesNotExist() throws Exception {
+        given(gameService.getLobbyInfo(Mockito.any(),Mockito.anyString())).willThrow(new NotFoundException("Test"));
+
+        // when
+        MockHttpServletRequestBuilder postRequest = get("/games/lobbies/{gameSetupId}/{playerToken}",
+                "123", "tik-token");
+
+        // then
+        mockMvc.perform(postRequest).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void GETLobbyFailsBecausePlayerNotInLobby() throws Exception {
+        given(gameService.getLobbyInfo(Mockito.any(),Mockito.anyString())).willThrow(new UnauthorizedException("Test"));
+
+        // when
+        MockHttpServletRequestBuilder postRequest = get("/games/lobbies/{gameSetupId}/{playerToken}",
+                "123", "tik-token");
+
+        // then
+        mockMvc.perform(postRequest).andExpect(status().isUnauthorized());
+    }
+
 
     /**
      * Helper Method to convert userPostDTO into a JSON string such that the input can be processed
@@ -259,60 +330,3 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
     }
 
 }
-
-/**
- public void createUser_invalidInput_userExistsAlready() throws Exception {
-
- // given
-
- User user = new User();
-
- user.setId(1L);
-
- user.setName("Test User");
-
- user.setUsername("testUsername");
-
- user.setPassword("1234");
-
- user.setDate(1582974000903L);
-
- user.setToken("1");
-
- user.setStatus(UserStatus.ONLINE);
-
-
-
- UserPostDTO userPostDTO = new UserPostDTO();
-
- userPostDTO.setName("Test User");
-
- userPostDTO.setUsername("testUsername");
-
-
-
- String exceptionMessage = "The name provided is not unique. Therefore, the user could not be created!";
-
-
-
- when(userService.createUser(Mockito.any())).thenThrow(new ConflictException(exceptionMessage));
-
-
-
- // when/then -> do the request + validate the result
-
- MockHttpServletRequestBuilder postRequest = post("/users")
-
- .contentType(MediaType.APPLICATION_JSON)
-
- .content(asJsonString(userPostDTO));
-
-
-
- // then It should throw the right message
-
- mockMvc.perform(postRequest)
-
- .andExpect(status().isConflict());
-
- }*/

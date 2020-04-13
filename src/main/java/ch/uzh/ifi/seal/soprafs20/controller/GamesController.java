@@ -87,6 +87,21 @@ public class GamesController {
         gameService.removePlayerFromGame(gameIdLong, player);
     }
 
+    /**Allows player to refresh Lobby status while in one*/
+    @GetMapping("/games/lobbies/{gameSetUpId}/{playerToken}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public LobbyGetDTO getLobbyInfo(@PathVariable String gameSetUpId, @PathVariable String playerToken) {
+        //Check that SetupEntity actually exists
+        if (stringIsALong(gameSetUpId)){
+            //Try to create active game
+            Long gsId = parseLong(gameSetUpId);
+            //add cards to repository
+            return gameService.getLobbyInfo(gsId, playerToken);
+        }
+        else throw new BadRequestException("Game-Setup-ID has wrong format!");
+    }
+
     /**Creates an active game*/
     @PostMapping("/games/{gameSetUpId}")
     @ResponseStatus(HttpStatus.CREATED)

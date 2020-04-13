@@ -73,9 +73,4 @@ public interface DTOMapper {
     @Mapping(source = "username", target = "username")
     PlayerEntity convertUserPutUserIdDTOToEntity(PlayerPutUserIdDTO playerPutUserIdDTO);
 
-    @Mapping(source = "playerToken", target = "playerToken")
-    @Mapping(source = "clue", target = "clue")
-    Clue convertCluePostDTOToClue(CluePostDTO cluePostDTO);
-
-
 }

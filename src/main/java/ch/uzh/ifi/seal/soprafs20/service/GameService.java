@@ -16,6 +16,8 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ActiveGamePostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.LobbyGetDTOMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,6 +203,14 @@ public class GameService {
                 return activeGamePostDTO;
 		    }
             else throw new ConflictException("Number of ready players is lower than number of desired players");
+    }
+
+    public LobbyGetDTO getLobbyInfo (Long gameSetupId, String playerToken){
+        getPlayerByToken(playerToken);
+        if (!getGameSetupById(gameSetupId).getPlayerTokens().contains(playerToken))
+            throw new UnauthorizedException("Player has not joined the lobby and therefore can't access lobby information!");
+        LobbyGetDTO lobbyGetDTO = LobbyGetDTOMapper.convertGameSetUpEntityToLobbyGetDTO(getGameSetupById(gameSetupId), playerRepository);
+        return lobbyGetDTO;
     }
 
 
