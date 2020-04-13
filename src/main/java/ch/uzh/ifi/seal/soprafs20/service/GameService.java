@@ -87,6 +87,7 @@ public class GameService {
                     }
 
                 }
+
                 else {
                     throw new ConflictException("The Name should not be empty or null!");
                 }
@@ -146,7 +147,7 @@ public class GameService {
     }
 
     public ActiveGamePostDTO createActiveGame(Long gameSetupId, String pt) {
-            if (!getGameSetupById(gameSetupId).getHostId().equals(getPlayerByToken(pt).getId()))
+            if (!getGameSetupById(gameSetupId).getHostName().equals(getPlayerByToken(pt).getUsername()))
                 throw new UnauthorizedException("Player is not host and therefore not allowed to start the game");
             GameSetUpEntity gameSetUpEntity =this.getGameSetupById(gameSetupId);
 //            Check that enough players are in the lobby to start the game.
@@ -180,7 +181,7 @@ public class GameService {
 //                further initialization
                 game.setValidCluesAreSet(false);
                 game.setClueMap(new HashMap<String,String>());
-                game.setActivePlayerId(gameSetUpEntity.getHostId());
+                game.setActivePlayerId(getPlayerByToken(pt).getId());
                 List<String> validClues= new ArrayList<>();
                 game.setValidClues(validClues);
                 List<Long> passivePlayerIds=new ArrayList<>();

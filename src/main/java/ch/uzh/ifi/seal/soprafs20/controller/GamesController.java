@@ -47,7 +47,7 @@ public class GamesController {
         return true;
     }
 
-    /**Creates a game*/
+    /**Creates a game setUp*/
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -55,7 +55,22 @@ public class GamesController {
         //Check that Player actually exists
         PlayerEntity player = playerService.getPlayerByToken(gamePostDTO.getPlayerToken());
         GameSetUpEntity game = DTOMapper.INSTANCE.convertGameSetUpPostDTOtoEntity(gamePostDTO);
-        game.setHostId(player.getId());
+        game.setHostName(player.getUsername());
+        //Try to create Game
+        GameSetUpEntity newGame = gameService.createGame(game);
+        CreatedGameSetUpDTO gamePostDTOReturn = DTOMapper.INSTANCE.convertEntityToGameSetUpPostDTO(newGame);
+        return gamePostDTOReturn;
+    }
+
+    /**Deletes a gameSetUp (only Host)*/
+    @PostMapping("/gameSetUps/{gameSetUpId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public CreatedGameSetUpDTO deleteGameSetUp(@RequestBody GamePostDTO gamePostDTO, @PathVariable String gameSetUpId) {
+        //Check that Player actually exists
+        PlayerEntity player = playerService.getPlayerByToken(gamePostDTO.getPlayerToken());
+        GameSetUpEntity game = DTOMapper.INSTANCE.convertGameSetUpPostDTOtoEntity(gamePostDTO);
+        game.setHostName(player.getUsername());
         //Try to create Game
         GameSetUpEntity newGame = gameService.createGame(game);
         CreatedGameSetUpDTO gamePostDTOReturn = DTOMapper.INSTANCE.convertEntityToGameSetUpPostDTO(newGame);

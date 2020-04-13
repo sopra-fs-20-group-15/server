@@ -33,7 +33,7 @@ public class GameSetUpRepositoryIntegrationTest {
         gameSetUp.setNumberOfDevils(0L);
         gameSetUp.setGameType(GameType.PRIVATE);
         gameSetUp.setPassword("123");
-        gameSetUp.setHostId(1L);
+        gameSetUp.setHostName("Usher");
 
         entityManager.persist(gameSetUp);
         entityManager.flush();
@@ -48,6 +48,6 @@ public class GameSetUpRepositoryIntegrationTest {
         assertEquals(found.getNumberOfDevils(), gameSetUp.getNumberOfDevils());
         assertEquals(found.getGameType(), gameSetUp.getGameType());
         assertEquals(found.getPassword(), gameSetUp.getPassword());
-        assertEquals(found.getHostId(), gameSetUp.getHostId());
+        assertEquals(found.getHostName(), gameSetUp.getHostName());
     }
 }

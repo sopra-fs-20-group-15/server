@@ -9,6 +9,7 @@ public class CreatedGameSetUpDTO {
     private Long numberOfAngles;
     private Long numberOfDevils;
     private GameType gameType;
+    private String hostName;
 
     public Long getNumberOfPlayers() {
         return numberOfPlayers;
@@ -50,6 +51,13 @@ public class CreatedGameSetUpDTO {
         this.gameType = gameType;
     }
 
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
 
     public Long getGameId() {
         return gameId;

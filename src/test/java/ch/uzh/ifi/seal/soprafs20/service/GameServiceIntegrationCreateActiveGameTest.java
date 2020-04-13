@@ -107,7 +107,7 @@ public class GameServiceIntegrationCreateActiveGameTest {
 
         game.setPlayerTokens(playerTokens);
         //Valid host gets already checked beforehand
-        game.setHostId(player1.getId());
+        game.setHostName(player1.getUsername());
         createdGame = gameService.createGame(game);
 
     }

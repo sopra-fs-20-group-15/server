@@ -70,7 +70,7 @@ public class GamesControllerTest {
         game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
-        game.setHostId(1L);
+        game.setHostName("Peter");
         game.setId(1L);
         //a player
         PlayerEntity player = new PlayerEntity();
@@ -114,7 +114,7 @@ public class GamesControllerTest {
         game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
-        game.setHostId(1L);
+        game.setHostName("Peter");
         PlayerTokenDTO playerTokenDTO=new PlayerTokenDTO();
         playerTokenDTO.setToken("Test");
 
@@ -195,7 +195,7 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
     game.setNumberOfDevils(0L);
     game.setGameType(PRIVATE);
     game.setPassword("Cara");
-    game.setHostId(1L);
+    game.setHostName("L");
     game.setId(1L);
     List<String> playerTokens = new ArrayList<String>();
     playerTokens.add(player.getToken());
@@ -236,7 +236,7 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
         game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
-        game.setHostId(1L);
+        game.setHostName("Aba");
         game.setId(1L);
         List<String> playerTokens = new ArrayList<String>();
         playerTokens.add(player.getToken());

@@ -42,7 +42,7 @@ public class GameServiceIntegrationCreateGameTest {
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
         //Valid host gets already checked beforehand
-        game.setHostId(1L);
+        game.setHostName("Peter");
     }
 
     /**
@@ -61,7 +61,7 @@ public class GameServiceIntegrationCreateGameTest {
         assertEquals(newGame.getNumberOfDevils(), game.getNumberOfDevils());
         assertEquals(newGame.getGameType(), game.getGameType());
         assertEquals(newGame.getPassword(), game.getPassword());
-        assertEquals(newGame.getHostId(), game.getHostId());
+        assertEquals(newGame.getHostName(), game.getHostName());
 
     }
 
@@ -78,7 +78,7 @@ public class GameServiceIntegrationCreateGameTest {
         assertEquals(newGame.getNumberOfDevils(), game.getNumberOfDevils());
         assertEquals(newGame.getGameType(), game.getGameType());
         assertEquals(newGame.getPassword(), game.getPassword());
-        assertEquals(newGame.getHostId(), game.getHostId());
+        assertEquals(newGame.getHostName(), game.getHostName());
 
     }
 
@@ -115,7 +115,7 @@ public class GameServiceIntegrationCreateGameTest {
         assertEquals(newGame.getNumberOfDevils(), game.getNumberOfDevils());
         assertEquals(newGame.getGameType(), game.getGameType());
         assertEquals(newGame.getPassword(), game.getPassword());
-        assertEquals(newGame.getHostId(), game.getHostId());
+        assertEquals(newGame.getHostName(), game.getHostName());
 
     }
 
@@ -131,8 +131,7 @@ public class GameServiceIntegrationCreateGameTest {
         assertEquals(newGame.getNumberOfDevils(), game.getNumberOfDevils());
         assertEquals(newGame.getGameType(), game.getGameType());
         assertEquals(newGame.getPassword(), game.getPassword());
-        assertEquals(newGame.getHostId(), game.getHostId());
-
+        assertEquals(newGame.getHostName(), game.getHostName());
     }
 
     /**should fail: not enough or too many players*/
@@ -175,7 +174,7 @@ public class GameServiceIntegrationCreateGameTest {
         assertEquals(newGame.getNumberOfDevils(), game.getNumberOfDevils());
         assertEquals(newGame.getGameType(), game.getGameType());
         assertEquals(newGame.getPassword(), game.getPassword());
-        assertEquals(newGame.getHostId(), game.getHostId());
+        assertEquals(newGame.getHostName(), game.getHostName());
 
     }
 
