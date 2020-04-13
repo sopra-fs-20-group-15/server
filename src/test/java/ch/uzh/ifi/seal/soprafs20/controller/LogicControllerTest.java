@@ -310,7 +310,7 @@ public class LogicControllerTest {
 
     }
 
-    /**Tests a get-Request to /games/{gameId}/Clues/{playerToken}*/
+    /**Tests a get-Request to /games/{gameId}/clues/{playerToken}*/
     @Test
     public void playerGetsAllValidClues() throws Exception {
         GameEntity game=new GameEntity();
@@ -359,19 +359,15 @@ public class LogicControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
     public void validCluesNotSetYet() throws Exception {
         GameEntity game=new GameEntity();
         game.setValidCluesAreSet(false);
-        ClueGetDTO clue1= new ClueGetDTO();
-        ClueGetDTO clue2= new ClueGetDTO();
-        clue1.setPlayerName("joe");
-        clue1.setClue("test");
-        clue2.setPlayerName("charlotte");
-        clue2.setClue("toast");
-        List<ClueGetDTO> list =new ArrayList<>();
+
 
         given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
         given(gameService.getGameById(Mockito.any())).willReturn(game);
+        given(logicService.getClues(Mockito.any())).willThrow(new NoContentException("Test"));
 
         MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/clues/{playerToken}", "123","test");
         // then

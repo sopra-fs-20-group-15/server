@@ -3,6 +3,8 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.WordComparer;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
@@ -68,6 +70,7 @@ public class LogicService {
 
 
     public List<ClueGetDTO> getClues(GameEntity game) {
+//        check if clues have already been set for this round
         if (game.getValidCluesAreSet()) {
             List<ClueGetDTO> list = new ArrayList<>();
             for (String clue: game.getValidClues()) {
@@ -75,13 +78,24 @@ public class LogicService {
                 clueGetDTO.setClue(clue);
                 for (Map.Entry<String, String> entry : game.getClueMap().entrySet()) {
                     if (Objects.equals(clue.toLowerCase(), entry.getValue().toLowerCase())) {
-                         clueGetDTO.setPlayerName(playerRepository.findByToken(entry.getKey()).getUsername());
+//                        check if valid clue was given by bot, if so return bot name
+                        if (playerRepository.findByToken(entry.getKey())==null) {
+                            for (Angel angel : game.getAngels()){
+                                if (angel.getToken().equals(entry.getKey())) clueGetDTO.setPlayerName(angel.getName());
+                            }
+                            for (Devil devil : game.getDevils()){
+                                if (devil.getToken().equals(entry.getKey())) clueGetDTO.setPlayerName(devil.getName());
+                            }
+                        }
+//                        map playerName to DTO if human player
+                        else clueGetDTO.setPlayerName(playerRepository.findByToken(entry.getKey()).getUsername());
                     }
                 }
                 list.add(clueGetDTO);
             }
             return list;
         }
-        else throw new NoContentException("test");
+//        if clues have not been set throw NoContentException
+        else throw new NoContentException("Clues are not ready yet!");
     }
 }
