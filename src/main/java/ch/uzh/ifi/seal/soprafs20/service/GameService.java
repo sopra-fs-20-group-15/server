@@ -165,7 +165,8 @@ public class GameService {
                 throw new UnauthorizedException("Player is not host and therefore not allowed to start the game");
             GameSetUpEntity gameSetUpEntity =this.getGameSetupById(gameSetupId);
 //            Check that enough players are in the lobby to start the game.
-            if (gameSetUpEntity.getPlayerTokens().size()==gameSetUpEntity.getNumberOfPlayers()) {
+            if (gameSetUpEntity.getPlayerTokens().size()+gameSetUpEntity.getNumberOfDevils()+gameSetUpEntity.getNumberOfAngles()
+                >2 && gameSetUpEntity.getPlayerTokens().size()+gameSetUpEntity.getNumberOfDevils()+gameSetUpEntity.getNumberOfAngles()<8) {
 //                game initialization
                 GameEntity game = new GameEntity();
 //                adding human and not human players to the game
@@ -205,6 +206,7 @@ public class GameService {
                 game.setPassivePlayerIds(passivePlayerIds);
 //              setup of the DTO that needs to be returned
                 GameEntity activeGame= gameRepository.saveAndFlush(game);
+                getGameSetupById(gameSetupId).setActiveGameId(activeGame.getId());
                 ActiveGamePostDTO activeGamePostDTO=new ActiveGamePostDTO();
                 activeGamePostDTO.setId(activeGame.getId());
                 List<String> playerNames= new ArrayList<>();
@@ -215,15 +217,14 @@ public class GameService {
                 activeGamePostDTO.setPlayerNames(playerNames);
                 return activeGamePostDTO;
 		    }
-            else throw new ConflictException("Number of ready players is lower than number of desired players");
+            else throw new ConflictException("Not enough or too many players to start game!");
     }
 
     public LobbyGetDTO getLobbyInfo (Long gameSetupId, String playerToken){
         getPlayerByToken(playerToken);
         if (!getGameSetupById(gameSetupId).getPlayerTokens().contains(playerToken))
             throw new UnauthorizedException("Player has not joined the lobby and therefore can't access lobby information!");
-        LobbyGetDTO lobbyGetDTO = LobbyGetDTOMapper.convertGameSetUpEntityToLobbyGetDTO(getGameSetupById(gameSetupId), playerRepository);
-        return lobbyGetDTO;
+        return LobbyGetDTOMapper.convertGameSetUpEntityToLobbyGetDTO(getGameSetupById(gameSetupId), playerRepository);
     }
 
 

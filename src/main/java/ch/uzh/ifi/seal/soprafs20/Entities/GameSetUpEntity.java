@@ -42,6 +42,9 @@ public class GameSetUpEntity {
     @Column(nullable = true)
     private String password;
 
+    @Column
+    private Long activeGameId;
+
     @Column(nullable = false)
     private String hostName;
 
@@ -83,9 +86,13 @@ public class GameSetUpEntity {
         this.hostName = hostName;
     }
 
+    public void setActiveGameId(Long activeGameId) {
+        this.activeGameId = activeGameId;
+    }
 
-
-
+    public Long getActiveGameId() {
+        return activeGameId;
+    }
 
     public Long getNumberOfPlayers() {
         return numberOfPlayers;

@@ -110,7 +110,7 @@ public class GameServiceIntegrationGetLobbyTest {
 
         game.setPlayerTokens(playerTokens);
         //Valid host gets already checked beforehand
-        game.setHostId(1L);
+        game.setHostName(player1.getUsername());
         createdGame=gameSetUpRepository.save(game);
     }
 

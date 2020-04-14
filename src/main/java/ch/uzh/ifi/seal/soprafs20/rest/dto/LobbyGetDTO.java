@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.rest.dto;
 import java.util.List;
 
 public class LobbyGetDTO {
+    private Long activeGameId;
     private Long gameSetUpId;
     private String gameName;
     private String hostName;
@@ -74,5 +75,13 @@ public class LobbyGetDTO {
 
     public void setHostName(String hostName) {
         this.hostName = hostName;
+    }
+
+    public Long getActiveGameId() {
+        return activeGameId;
+    }
+
+    public void setActiveGameId(Long activeGameId) {
+        this.activeGameId = activeGameId;
     }
 }

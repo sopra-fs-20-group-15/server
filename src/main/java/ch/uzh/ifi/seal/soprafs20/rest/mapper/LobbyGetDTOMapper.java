@@ -23,9 +23,9 @@ public class LobbyGetDTOMapper {
         List<String> playerNames=new ArrayList<>();
         for (String token: gameSetUpEntity.getPlayerTokens()) {
             String playerName= playerRepository.findByToken(token).getUsername();
-            if (playerRepository.findByToken(token).getId()==gameSetUpEntity.getId()) lobbyGetDTO.setHostName(playerName);
             playerNames.add(playerName);
         }
+        lobbyGetDTO.setHostName(gameSetUpEntity.getHostName());
         for (int i = 1; i <= gameSetUpEntity.getNumberOfAngles(); i++) {
             playerNames.add("Angel_Nr_" + String.valueOf(i));
         }
@@ -33,6 +33,8 @@ public class LobbyGetDTOMapper {
             playerNames.add("Devil_Nr_" + String.valueOf(i));
         }
         lobbyGetDTO.setPlayerNames(playerNames);
+
+        if (gameSetUpEntity.getActiveGameId()!=null) lobbyGetDTO.setActiveGameId(gameSetUpEntity.getActiveGameId());
 
         return lobbyGetDTO;
     }
