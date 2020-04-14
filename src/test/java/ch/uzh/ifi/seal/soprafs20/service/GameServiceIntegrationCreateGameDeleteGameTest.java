@@ -5,8 +5,11 @@ import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 import static org.junit.jupiter.api.Assertions.*;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
+import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.GameType;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +22,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 @WebAppConfiguration
 @SpringBootTest
-public class GameServiceIntegrationCreateGameTest {
+public class GameServiceIntegrationCreateGameDeleteGameTest {
 
     @Qualifier("gameSetUpEntityRepository")
     @Autowired
@@ -183,6 +186,43 @@ public class GameServiceIntegrationCreateGameTest {
     public void gameCreationWithInvalidName() {
         game.setGameName("");
         assertThrows(ConflictException.class, () -> gameService.createGame(game));
+
+    }
+
+    /**Delete a game Successfully*/
+    @Test
+    public void gameDeletionValid() {
+        PlayerEntity player = new PlayerEntity();
+        player.setUsername("Peter");
+
+        //Create Game first
+        GameSetUpEntity newGame = gameService.createGame(game);
+        Boolean worked = gameService.deleteGameSetUpEntity(newGame.getId(), player);
+        assertTrue(worked);
+        assertNull(gameSetUpRepository.findByGameName("GAME1"));
+    }
+
+    /**HostName is wrong*/
+    @Test
+    public void gameDeletionHostInvalid() {
+        PlayerEntity player = new PlayerEntity();
+        player.setUsername("Petra");
+
+        //Create Game first
+        GameSetUpEntity newGame = gameService.createGame(game);
+        assertThrows(UnauthorizedException.class, () ->  gameService.deleteGameSetUpEntity(newGame.getId(), player));
+
+    }
+
+    /**GameId does not exist*/
+    @Test
+    public void gameNotFoundForDeletion() {
+        PlayerEntity player = new PlayerEntity();
+        player.setUsername("Petra");
+
+        //Create Game first
+        GameSetUpEntity newGame = gameService.createGame(game);
+        assertThrows(NotFoundException.class, () ->  gameService.deleteGameSetUpEntity(18732L, player));
 
     }
 

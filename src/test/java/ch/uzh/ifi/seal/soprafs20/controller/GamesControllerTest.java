@@ -258,6 +258,27 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
         mockMvc.perform(deleteRequest).andExpect(status().isOk());
     }
 
+    /**Test DeletionOfAGameSetUp*/
+    /**Works with valid player and valid password for private game*/
+    @Test
+    public void DELETEGameSetUpEntity() throws Exception {
+
+        // given
+        String playerToken = "ABC";
+        PlayerEntity player = new PlayerEntity();
+        player.setUsername("Anna");
+
+        // mock the functions
+        given(playerService.getPlayerByToken(Mockito.any())).willReturn(player);
+        given(gameService.deleteGameSetUpEntity(Mockito.any(), Mockito.any())).willReturn(true);
+        // when
+        MockHttpServletRequestBuilder deleteRequest = delete("/gameSetUps/{gameSetUpId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(playerToken));
+        // then
+        mockMvc.perform(deleteRequest).andExpect(status().isOk());
+    }
+
 }
 
 /**

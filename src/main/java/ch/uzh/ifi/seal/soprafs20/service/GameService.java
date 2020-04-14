@@ -101,6 +101,18 @@ public class GameService {
         }
     }
 
+    public boolean deleteGameSetUpEntity(Long gameId, PlayerEntity player){
+        gameSetUpRepository.findById(gameId);
+        Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No gameEntity with specified ID exists.");
+        GameSetUpEntity game = gameOp.get();
+        if (player.getUsername() != game.getHostName()){
+            throw new UnauthorizedException("This player is not the Host of the Game!");
+        }
+        gameSetUpRepository.delete(game);
+        return true;
+    }
+
     /**Puts a player into a gameSetUp if all the requirements for that are met
      * @Returns GameSetUpEntity; for testing reasons*/
     public GameSetUpEntity putPlayerIntoGame(Long gameId, PlayerEntity player, String password){

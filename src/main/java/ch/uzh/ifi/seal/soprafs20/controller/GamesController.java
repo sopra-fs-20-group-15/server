@@ -63,18 +63,16 @@ public class GamesController {
     }
 
     /**Deletes a gameSetUp (only Host)*/
-    @PostMapping("/gameSetUps/{gameSetUpId}")
+
+    @DeleteMapping("/gameSetUps/{gameSetUpId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public CreatedGameSetUpDTO deleteGameSetUp(@RequestBody GamePostDTO gamePostDTO, @PathVariable String gameSetUpId) {
+    public void deleteGameSetUp(@RequestBody String playerToken, @PathVariable String gameSetUpId) {
         //Check that Player actually exists
-        PlayerEntity player = playerService.getPlayerByToken(gamePostDTO.getPlayerToken());
-        GameSetUpEntity game = DTOMapper.INSTANCE.convertGameSetUpPostDTOtoEntity(gamePostDTO);
-        game.setHostName(player.getUsername());
-        //Try to create Game
-        GameSetUpEntity newGame = gameService.createGame(game);
-        CreatedGameSetUpDTO gamePostDTOReturn = DTOMapper.INSTANCE.convertEntityToGameSetUpPostDTO(newGame);
-        return gamePostDTOReturn;
+        PlayerEntity player = playerService.getPlayerByToken(playerToken);
+        stringIsALong(gameSetUpId);
+        Long gameSetUpIdLong = parseLong(gameSetUpId);
+        gameService.deleteGameSetUpEntity(gameSetUpIdLong, player);
     }
     /**Lets a player join a GameSetUp*/
 
