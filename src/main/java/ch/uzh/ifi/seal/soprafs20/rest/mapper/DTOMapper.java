@@ -39,6 +39,7 @@ public interface DTOMapper {
     @Mapping(source = "numberOfAngles", target = "numberOfAngles")
     @Mapping(source = "numberOfDevils", target = "numberOfDevils")
     @Mapping(source = "gameType", target = "gameType")
+    @Mapping(source = "hostName", target = "hostName")
     CreatedGameSetUpDTO convertEntityToGameSetUpPostDTO(GameSetUpEntity gameSetUpEntity);
 
     @Mapping(source = "username", target = "username")

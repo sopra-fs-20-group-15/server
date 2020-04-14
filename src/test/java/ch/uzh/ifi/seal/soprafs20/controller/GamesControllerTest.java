@@ -70,7 +70,7 @@ public class GamesControllerTest {
         game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
-        game.setHostId(1L);
+        game.setHostName("Peter");
         game.setId(1L);
         //a player
         PlayerEntity player = new PlayerEntity();
@@ -114,7 +114,7 @@ public class GamesControllerTest {
         game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
-        game.setHostId(1L);
+        game.setHostName("Peter");
         PlayerTokenDTO playerTokenDTO=new PlayerTokenDTO();
         playerTokenDTO.setToken("Test");
 
@@ -266,7 +266,7 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
     game.setNumberOfDevils(0L);
     game.setGameType(PRIVATE);
     game.setPassword("Cara");
-    game.setHostId(1L);
+    game.setHostName("L");
     game.setId(1L);
     List<String> playerTokens = new ArrayList<String>();
     playerTokens.add(player.getToken());
@@ -307,7 +307,7 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
         game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
-        game.setHostId(1L);
+        game.setHostName("Aba");
         game.setId(1L);
         List<String> playerTokens = new ArrayList<String>();
         playerTokens.add(player.getToken());
@@ -325,6 +325,27 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
         MockHttpServletRequestBuilder deleteRequest = delete("/games/{gameId}/players", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(playerIntoGameSetUpDTO));
+        // then
+        mockMvc.perform(deleteRequest).andExpect(status().isOk());
+    }
+
+    /**Test DeletionOfAGameSetUp*/
+    /**Works with valid player and valid password for private game*/
+    @Test
+    public void DELETEGameSetUpEntity() throws Exception {
+
+        // given
+        String playerToken = "ABC";
+        PlayerEntity player = new PlayerEntity();
+        player.setUsername("Anna");
+
+        // mock the functions
+        given(playerService.getPlayerByToken(Mockito.any())).willReturn(player);
+        given(gameService.deleteGameSetUpEntity(Mockito.any(), Mockito.any())).willReturn(true);
+        // when
+        MockHttpServletRequestBuilder deleteRequest = delete("/gameSetUps/{gameSetUpId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(playerToken));
         // then
         mockMvc.perform(deleteRequest).andExpect(status().isOk());
     }

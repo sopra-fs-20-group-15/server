@@ -43,7 +43,7 @@ public class GameSetUpEntity {
     private String password;
 
     @Column(nullable = false)
-    private Long hostId;
+    private String hostName;
 
     @Column(nullable = true)
     @ElementCollection
@@ -75,13 +75,17 @@ public class GameSetUpEntity {
 
     /**Getters and Setters*/
 
-    public Long getHostId() {
-        return hostId;
+    public String getHostName() {
+        return hostName;
     }
 
-    public void setHostId(Long hostId) {
-        this.hostId = hostId;
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
     }
+
+
+
+
 
     public Long getNumberOfPlayers() {
         return numberOfPlayers;

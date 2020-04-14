@@ -89,6 +89,7 @@ public class GameService {
                     }
 
                 }
+
                 else {
                     throw new ConflictException("The Name should not be empty or null!");
                 }
@@ -100,6 +101,18 @@ public class GameService {
         }else {
             throw new ConflictException("The number of Player should be smaller than 7 and bigger than 3");
         }
+    }
+
+    public boolean deleteGameSetUpEntity(Long gameId, PlayerEntity player){
+        gameSetUpRepository.findById(gameId);
+        Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No gameEntity with specified ID exists.");
+        GameSetUpEntity game = gameOp.get();
+        if (player.getUsername() != game.getHostName()){
+            throw new UnauthorizedException("This player is not the Host of the Game!");
+        }
+        gameSetUpRepository.delete(game);
+        return true;
     }
 
     /**Puts a player into a gameSetUp if all the requirements for that are met
@@ -148,7 +161,7 @@ public class GameService {
     }
 
     public ActiveGamePostDTO createActiveGame(Long gameSetupId, String pt) {
-            if (!getGameSetupById(gameSetupId).getHostId().equals(getPlayerByToken(pt).getId()))
+            if (!getGameSetupById(gameSetupId).getHostName().equals(getPlayerByToken(pt).getUsername()))
                 throw new UnauthorizedException("Player is not host and therefore not allowed to start the game");
             GameSetUpEntity gameSetUpEntity =this.getGameSetupById(gameSetupId);
 //            Check that enough players are in the lobby to start the game.
@@ -182,7 +195,7 @@ public class GameService {
 //                further initialization
                 game.setValidCluesAreSet(false);
                 game.setClueMap(new HashMap<String,String>());
-                game.setActivePlayerId(gameSetUpEntity.getHostId());
+                game.setActivePlayerId(getPlayerByToken(pt).getId());
                 List<String> validClues= new ArrayList<>();
                 game.setValidClues(validClues);
                 List<Long> passivePlayerIds=new ArrayList<>();

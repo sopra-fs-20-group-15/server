@@ -106,7 +106,7 @@ public class LogicServiceIntegrationTestGetClues {
 
         game.setPlayerTokens(playerTokens);
 
-        game.setHostId(p1.getId());
+        game.setHostName(p1.getUsername());
         game.setGameName("GameName");
 
         createdGame =gameService.createGame(game);
