@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import static java.lang.Long.parseLong;
 
@@ -98,6 +99,14 @@ public class GamesController {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         gameService.removePlayerFromGame(gameIdLong, player);
+    }
+
+    /**Allows player to get an overview of the existing game lobbies*/
+    @GetMapping("/games/lobbies")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<LobbyOverviewGetDTO> getLobbies() {
+        return gameService.getLobbies();
     }
 
     /**Allows player to refresh Lobby status while in one*/

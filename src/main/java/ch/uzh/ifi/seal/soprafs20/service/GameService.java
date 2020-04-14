@@ -17,7 +17,9 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ActiveGamePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyOverviewGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.LobbyGetDTOMapper;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.LobbyOverviewGetDTOMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -227,13 +229,15 @@ public class GameService {
         return LobbyGetDTOMapper.convertGameSetUpEntityToLobbyGetDTO(getGameSetupById(gameSetupId), playerRepository);
     }
 
-
-    public void updateLeaderBoard(GameEntity game){
-        for (PlayerEntity player : game.getScoreboard().getEndScore().keySet()){
-            Optional<PlayerEntity> playerToBeUpdated = playerRepository.findById(player.getId());
-            playerToBeUpdated.ifPresent(value -> value.setScore(value.getScore() + game.getScoreboard().getEndScore().get(player)));
+    public List<LobbyOverviewGetDTO> getLobbies() {
+        List<GameSetUpEntity> gameSetUpEntities=this.gameSetUpRepository.findAll();
+        List<LobbyOverviewGetDTO> lobbies=new ArrayList<>();
+        for (GameSetUpEntity entity: gameSetUpEntities) {
+            lobbies.add(LobbyOverviewGetDTOMapper.convertGameSetUpEntityToLobbyOverviewGetDTOMapper(entity));
         }
+        return lobbies;
     }
+
 
 
 }

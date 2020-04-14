@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
+import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
@@ -118,6 +119,7 @@ public class GameServiceIntegrationGetLobbyTest {
     /**Successfully retrieves info from Lobby*/
     @Test
     public void getLobbyInfoWorks() {
+        ActiveGamePostDTO activeGamePostDTO=gameService.createActiveGame(createdGame.getId(),"One");
         LobbyGetDTO lobbyGetDTO=gameService.getLobbyInfo(createdGame.getId(),"One");
 
         assertEquals(createdGame.getGameName(),lobbyGetDTO.getGameName());
@@ -131,6 +133,7 @@ public class GameServiceIntegrationGetLobbyTest {
         assertTrue(lobbyGetDTO.getPlayerNames().contains("OneName"));
         assertTrue(lobbyGetDTO.getPlayerNames().contains("TwoName"));
         assertTrue(lobbyGetDTO.getPlayerNames().contains("ThreeName"));
+        assertEquals(lobbyGetDTO.getActiveGameId(), activeGamePostDTO.getId());
         assertEquals(5, lobbyGetDTO.getPlayerNames().size());
     }
 
