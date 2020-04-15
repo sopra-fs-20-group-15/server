@@ -9,74 +9,91 @@ import java.util.ArrayList;
 
 class WordComparerTest {
 
-//    @Test
-//    void noDuplicateInClues() {
-//        WordComparer wordComparer = new WordComparer();
-//        ArrayList<String> words = new ArrayList<>();
-//        words.add("Tree");
-//        words.add("live");
-//        words.add("house");
-//        ArrayList<String> actual = wordComparer.compareClues(words);
-//        assertEquals(words, actual);
-//    }
-//
-//    @Test
-//    void OneDuplicateInClues() {
-//        WordComparer wordComparer = new WordComparer();
-//        ArrayList<String> words = new ArrayList<>();
-//        words.add("live");
-//        words.add("living");
-//        words.add("Tree");
-//        ArrayList<String> expected = new ArrayList<>();
-//        expected.add("Tree");
-//        ArrayList<String> actual = wordComparer.compareClues(words);
-//
-//        assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void TwoDuplicateInClues() {
-//        WordComparer wordComparer = new WordComparer();
-//        ArrayList<String> words = new ArrayList<>();
-//        words.add("live");
-//        words.add("living");
-//        words.add("Horse");
-//        words.add("horses");
-//        words.add("Tree");
-//        ArrayList<String> expected = new ArrayList<>();
-//        expected.add("Tree");
-//        ArrayList<String> actual = wordComparer.compareClues(words);
-//
-//        assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void TriplicateInClues() {
-//        WordComparer wordComparer = new WordComparer();
-//        ArrayList<String> words = new ArrayList<>();
-//        words.add("live");
-//        words.add("life");
-//        words.add("living");
-//        words.add("house");
-//        ArrayList<String> expected = new ArrayList<>();
-//        expected.add("house");
-//        ArrayList<String> actual = wordComparer.compareClues(words);
-//
-//        assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void OnlyDuplicatesInClues() {
-//        WordComparer wordComparer = new WordComparer();
-//        ArrayList<String> words = new ArrayList<>();
-//        words.add("lives");
-//        words.add("lifes");
-//        words.add("life");
-//        ArrayList<String> expected = new ArrayList<>();
-//        ArrayList<String> actual = wordComparer.compareClues(words);
-//
-//        assertEquals(expected, actual);
-//    }
+    @Test
+    void noDuplicateInClues() {
+        WordComparer wordComparer = new WordComparer();
+        ArrayList<String> words = new ArrayList<>();
+        words.add("Tree");
+        words.add("live");
+        words.add("house");
+        String mysteryWord = "Alcatraz";
+        ArrayList<String> actual = wordComparer.compareClues(words, mysteryWord);
+        assertEquals(words, actual);
+    }
+
+    @Test
+    void OneDuplicateInClues() {
+        WordComparer wordComparer = new WordComparer();
+        ArrayList<String> words = new ArrayList<>();
+        words.add("live");
+        words.add("living");
+        words.add("Tree");
+        ArrayList<String> expected = new ArrayList<>();
+        expected.add("Tree");
+        String mysteryWord = "Alcatraz";
+        ArrayList<String> actual = wordComparer.compareClues(words, mysteryWord);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void TwoDuplicateInClues() {
+        WordComparer wordComparer = new WordComparer();
+        ArrayList<String> words = new ArrayList<>();
+        words.add("live");
+        words.add("living");
+        words.add("Horse");
+        words.add("horses");
+        words.add("Tree");
+        ArrayList<String> expected = new ArrayList<>();
+        expected.add("Tree");
+        String mysteryWord = "Alcatraz";
+        ArrayList<String> actual = wordComparer.compareClues(words, mysteryWord);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void TriplicateInClues() {
+        WordComparer wordComparer = new WordComparer();
+        ArrayList<String> words = new ArrayList<>();
+        words.add("live");
+        words.add("life");
+        words.add("living");
+        words.add("house");
+        ArrayList<String> expected = new ArrayList<>();
+        expected.add("house");
+        String mysteryWord = "Alcatraz";
+        ArrayList<String> actual = wordComparer.compareClues(words, mysteryWord);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void OnlyDuplicatesInClues() {
+        WordComparer wordComparer = new WordComparer();
+        ArrayList<String> words = new ArrayList<>();
+        words.add("lives");
+        words.add("lifes");
+        words.add("life");
+        ArrayList<String> expected = new ArrayList<>();
+        String mysteryWord = "Alcatraz";
+        ArrayList<String> actual = wordComparer.compareClues(words, mysteryWord);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void ClueToCloseToMysteryWord() {
+        WordComparer wordComparer = new WordComparer();
+        ArrayList<String> words = new ArrayList<>();
+        words.add("living");
+        ArrayList<String> expected = new ArrayList<>();
+        String mysteryWord = "live";
+        ArrayList<String> actual = wordComparer.compareClues(words, mysteryWord);
+
+        assertEquals(expected, actual);
+    }
 
     @Test
     void TestStemAPI() {

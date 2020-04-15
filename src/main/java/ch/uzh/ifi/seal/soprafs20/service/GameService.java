@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -41,9 +42,11 @@ public class GameService {
     private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
     private final GameSetUpRepository gameSetUpRepository;
+    private final CardService cardService;
 
     @Autowired
-    public GameService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository,@Qualifier("gameRepository") GameRepository gameRepository) {
+    public GameService(@Qualifier("cardService") CardService cardService, @Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository,@Qualifier("gameRepository") GameRepository gameRepository) {
+        this.cardService = cardService;
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.gameSetUpRepository = gameSetUpRepository;
@@ -187,6 +190,11 @@ public class GameService {
         if (!playerTokensFromGame.contains(player.getToken())){
             throw new NotFoundException("This player is not part of the game");
         }
+        //If the host wants to leave the game, delete the game
+        if (game.getHostName().equals(player.getUsername())){
+            deleteGameSetUpEntity(gameId, player);
+            throw new NoContentException("Since the host wanted to leave the game, it was deleted!");
+        }
         //Remove Player from game
         List<String> playerTokens = game.getPlayerTokens();
         playerTokens.remove(player.getToken());
@@ -227,7 +235,13 @@ public class GameService {
                 game.setAngels(angels);
                 game.setDevils(devils);
                 game.setPlayers(players);
-//                further initialization
+//              Fill CardRepository and add 13 Cards to Game
+                try {cardService.addAllCards();
+                } catch (IOException ex) {
+                    throw new NoContentException("The CardDatabase couldn't be filled");
+                }
+                game.setCardIds(cardService.getFullStackOfCards());
+//              further initialization
                 game.setValidCluesAreSet(false);
                 game.setClueMap(new HashMap<String,String>());
                 game.setActivePlayerId(getPlayerByToken(pt).getId());
