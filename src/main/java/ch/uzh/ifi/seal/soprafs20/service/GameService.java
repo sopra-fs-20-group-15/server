@@ -89,8 +89,12 @@ public class GameService {
         }
         gameGetDTO.setPassivePlayerNames(playerNames);
         //Add the name of the active player to the list of the passive players and return list with all players
-        playerNames.add(gameGetDTO.getActivePlayerName());
-        gameGetDTO.setPlayerNames(playerNames);
+        List<String> playerNames2 = new ArrayList<String>();
+        for (Long id: game.getPassivePlayerIds()){
+            playerNames2.add(getPlayerById(id).getUsername());
+        }
+        playerNames2.add(gameGetDTO.getActivePlayerName());
+        gameGetDTO.setPlayerNames(playerNames2);
         return gameGetDTO;
     }
 

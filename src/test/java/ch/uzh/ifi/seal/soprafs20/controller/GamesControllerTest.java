@@ -371,14 +371,14 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
         gameGetDTO.setId(1L);
 
         // mock the functions
-        given(gameService.getGameInformationById(1L)).willReturn(gameGetDTO);
+        given(gameService.getGameInformationById(Mockito.any())).willReturn(gameGetDTO);
 
         // when
-        MockHttpServletRequestBuilder getRequest = get("/activeGames/{gameId}", 123);
+        MockHttpServletRequestBuilder getRequest = get("/activeGames/{gameId}", 1);
 
         // then
         mockMvc.perform(getRequest).andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id", is(1)));
+                .andExpect(jsonPath("$.id", is(1)));
     }
 
 }
