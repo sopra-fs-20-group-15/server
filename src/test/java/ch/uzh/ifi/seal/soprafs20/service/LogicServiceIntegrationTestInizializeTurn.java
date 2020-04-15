@@ -152,7 +152,7 @@ public class LogicServiceIntegrationTestInizializeTurn {
     public void InitializeTurnErrorBecauseGameHasNotEndedYet() {
         createdActiveGame.setHasBeenInitialized(true);
 
-        assertThrows(ConflictException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
+        assertThrows(NoContentException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
     }
 
 }
