@@ -16,6 +16,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ActiveGamePostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyOverviewGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.LobbyGetDTOMapper;
@@ -60,10 +61,37 @@ public class GameService {
         return gameOp.get();
     }
 
+    public PlayerEntity getPlayerById(long id){
+        Optional<PlayerEntity> playerOp = playerRepository.findById(id);
+        if (playerOp.isEmpty()) throw new NotFoundException("No Game Setup with this id exists!");
+        return playerOp.get();
+
+    }
+
     public PlayerEntity getPlayerByToken(String playerToken){
         PlayerEntity player = playerRepository.findByToken(playerToken);
         if (player==null) throw new NotFoundException("No player with your Token exists");
         return player;
+    }
+
+    /**Get the information about a game that is Important for the frontend*/
+
+    public GameGetDTO getGameInformationById(Long gameId){
+        GameGetDTO gameGetDTO = new GameGetDTO();
+        GameEntity game = getGameById(gameId);
+        gameGetDTO.setId(game.getId());
+        //Get the name of the active Player
+        gameGetDTO.setActivePlayerName(getPlayerById(game.getActivePlayerId()).getUsername());
+        //Get the name of the passive players, save them in a list
+        List<String> playerNames = new ArrayList<String>();
+        for (Long id: game.getPassivePlayerIds()){
+            playerNames.add(getPlayerById(id).getUsername());
+        }
+        gameGetDTO.setPassivePlayerNames(playerNames);
+        //Add the name of the active player to the list of the passive players and return list with all players
+        playerNames.add(gameGetDTO.getActivePlayerName());
+        gameGetDTO.setPlayerNames(playerNames);
+        return gameGetDTO;
     }
 
     /**Creates a game. GameToken should be checked beforehand so that player exists*/
