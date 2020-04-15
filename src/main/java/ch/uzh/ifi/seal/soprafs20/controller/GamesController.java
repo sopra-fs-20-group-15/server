@@ -133,11 +133,6 @@ public class GamesController {
         if (stringIsALong(gameSetUpId)){
             //Try to create active game
             Long gsId = parseLong(gameSetUpId);
-            //add cards to repository
-            try {cardService.addAllCards();
-            } catch (IOException ex) {
-                throw new NoContentException("The CardDatabase couldn't be filled");
-            }
             return gameService.createActiveGame(gsId, playerTokenDTO.getToken());
         }
         else throw new BadRequestException("Game-Setup-ID has wrong format!");
