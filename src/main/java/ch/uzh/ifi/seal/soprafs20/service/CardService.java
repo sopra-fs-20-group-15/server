@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 @Transactional
@@ -46,35 +45,13 @@ public class CardService {
         return cardOp.get();
     }
 
-    /*
-    Returns a List with 13 CardIds randomly chosen from the CardRepository
-     */
-    public List<Long> getFullStackOfCards(){
-        List<Long> cardIds = new ArrayList<>();
-        List<CardEntity> allCards = cardRepository.findAll();
-        Random rand = new Random();
-        int stackSize = 13;
-        for (int i = 0; i < stackSize; i++){
-            int randomIndex = rand.nextInt(allCards.size());
-            CardEntity randomCard = allCards.get(randomIndex);
-            Long randomCardId = randomCard.getId();
-            allCards.remove(randomIndex);
-            cardIds.add(randomCardId);
-        }
-        return cardIds;
-    }
-
     protected String chooseWordOnCardByNumber(Long number, CardEntity card){
         int i = number.intValue();
         return card.getWords().get(i-1);
     }
 
-    public Long getRepoSize() {
-        Long size = this.cardRepository.count();
-        return size;
-    }
     public void addAllCards() throws IOException {
-        if (!(cardRepository.findAll().isEmpty())) {
+        if (cardRepository.findAll().isEmpty()) {
             return;
         }
         BufferedReader bufReader = new BufferedReader(new FileReader("cardsEn.txt"));

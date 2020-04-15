@@ -1,7 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
-import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
@@ -9,7 +8,6 @@ import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.WordComparer;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
-import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
@@ -41,13 +39,11 @@ public class LogicService {
     private final WordComparer wordComparer;
     private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
-    private final CardRepository cardRepository;
 
     @Autowired
-    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository, @Qualifier("cardRepository") CardRepository cardRepository) {
+    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
-        this.cardRepository = cardRepository;
         this.wordComparer = new WordComparer();
     }
 
@@ -71,7 +67,6 @@ public class LogicService {
             game.setValidCluesAreSet(true);
         }
     }
-
 
 
     public List<ClueGetDTO> getClues(GameEntity game) {
