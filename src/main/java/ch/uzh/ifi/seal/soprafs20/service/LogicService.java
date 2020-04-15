@@ -3,10 +3,14 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 
+import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.WordComparer;
+import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
@@ -20,10 +24,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import javax.persistence.*;
+import java.util.*;
 
 /**
  * PlayerEntity Service
@@ -46,6 +48,52 @@ public class LogicService {
         this.gameRepository = gameRepository;
         this.wordComparer = new WordComparer();
     }
+
+    /**Puts the active player at the end of the passive Players List, takes the passive Player at 0 and make him the active player*/
+    protected GameEntity goOnePlayerFurther(GameEntity game){
+        List<Long> passivePlayerIds = game.getPassivePlayerIds();
+        passivePlayerIds.add(game.getActivePlayerId());
+        Long playerId = passivePlayerIds.remove(0);
+        game.setActivePlayerId(playerId);
+        game.setPassivePlayerIds(passivePlayerIds);
+        return game;
+    }
+
+    protected GameEntity drawCardFromStack(GameEntity game){
+        List<Long> cardIds = game.getCardIds();
+        game.setActiveCardId(cardIds.remove(cardIds.size()-1));
+        return game;
+    }
+
+    public GameEntity initializeTurn(Long gameId){
+        Optional<GameEntity> gameOp = gameRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
+        GameEntity game = gameOp.get();
+        if (!game.getHasBeenInitialized()){
+            if (game.getHasEnded()){
+            game.setActiveMysteryWord(null);
+            game.setHasEnded(false);
+            //Update the players
+            goOnePlayerFurther(game);
+            //Update Cards
+            drawCardFromStack(game);
+            game.getCardIds();
+            game.setRightGuess(false);
+            game.setValidClue(null);
+            game.setValidCluesAreSet(false);
+            game.setClueMap(new HashMap<String, String>());
+            game.setValidClues(new ArrayList<String>());
+            game.setGuess(null);
+            game.setIsValidGuess(false);
+            game.setHasBeenInitialized(true);
+            return game;
+/**Milliseconds?*/
+        }
+            else {throw new ConflictException("The game has not ended yet!");}}
+        else {throw new NoContentException("The Game has already been initialized!");}
+    }
+
+
 
     public void setGuess(GameEntity game, String guess){
         boolean isValidGuess = wordComparer.compareMysteryWords(game.getActiveMysteryWord(), guess);

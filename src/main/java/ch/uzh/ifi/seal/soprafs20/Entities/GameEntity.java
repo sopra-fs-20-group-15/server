@@ -24,10 +24,16 @@ public class GameEntity {
     private Long id;
 
     @Column(nullable = true)
+    private Boolean hasBeenInitialized;
+
+    @Column(nullable = true)
     private Long activeCardId;
 
     @Column(nullable = true)
     private String activeMysteryWord;
+
+    @Column(nullable = true)
+    private Boolean hasEnded;
 
     @Column(nullable = true)
     private Long activePlayerId;
@@ -137,6 +143,37 @@ public class GameEntity {
         return id;
     }
 
+    public Boolean getRightGuess() {
+        return rightGuess;
+    }
+
+    public void setRightGuess(Boolean rightGuess) {
+        this.rightGuess = rightGuess;
+    }
+
+    public Boolean getHasBeenInitialized() {
+        return hasBeenInitialized;
+    }
+
+    public void setHasBeenInitialized(Boolean hasBeenInitialized) {
+        this.hasBeenInitialized = hasBeenInitialized;
+    }
+
+    public void setValidClue(Boolean validClue) {
+        this.validClue = validClue;
+    }
+
+    public void setScoreboard(Scoreboard scoreboard) {
+        this.scoreboard = scoreboard;
+    }
+
+    public boolean isValidGuess() {
+        return isValidGuess;
+    }
+
+    public void setValidGuess(boolean validGuess) {
+        isValidGuess = validGuess;
+    }
 
     public List<Long> getCardIds() {
         return CardIds;
@@ -240,5 +277,13 @@ public class GameEntity {
 
     public boolean getIsValidGuess(){
         return this.isValidGuess;
+    }
+
+    public Boolean getHasEnded() {
+        return hasEnded;
+    }
+
+    public void setHasEnded(Boolean hasEnded) {
+        this.hasEnded = hasEnded;
     }
 }

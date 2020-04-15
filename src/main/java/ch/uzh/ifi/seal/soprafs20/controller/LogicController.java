@@ -43,6 +43,16 @@ public class LogicController {
         return true;
     }
 
+    @PutMapping("/games/{gameId}/initializations")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void initializeTurn(@PathVariable String gameId, @RequestBody String playerToken) {
+        stringIsALong(gameId);
+        Long gameIdLong = parseLong(gameId);
+        validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
+        logicService.initializeTurn(gameIdLong);
+    }
+
     @PostMapping("/games/{gameId}/cards")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody

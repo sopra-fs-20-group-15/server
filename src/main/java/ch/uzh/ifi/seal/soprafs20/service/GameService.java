@@ -196,6 +196,8 @@ public class GameService {
                 game.setDevils(devils);
                 game.setPlayers(players);
 //                further initialization
+                game.setHasBeenInitialized(false);
+                game.setHasEnded(false);
                 game.setValidCluesAreSet(false);
                 game.setClueMap(new HashMap<String,String>());
                 game.setActivePlayerId(getPlayerByToken(pt).getId());
