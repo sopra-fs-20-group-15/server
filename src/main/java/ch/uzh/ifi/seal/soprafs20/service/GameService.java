@@ -158,6 +158,11 @@ public class GameService {
         if (!playerTokensFromGame.contains(player.getToken())){
             throw new NotFoundException("This player is not part of the game");
         }
+        //If the host wants to leave the game, delete the game
+        if (game.getHostName().equals(player.getUsername())){
+            deleteGameSetUpEntity(gameId, player);
+            throw new NoContentException("Since the host wanted to leave the game, it was deleted!");
+        }
         //Remove Player from game
         List<String> playerTokens = game.getPlayerTokens();
         playerTokens.remove(player.getToken());
