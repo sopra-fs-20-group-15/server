@@ -128,15 +128,15 @@ public class LogicServiceIntegrationTestInizializeTurn {
 
         //ActiveCard, CardIds, ActivePlayerId and PassivePlayerIds get already tested in LogicServiceTestInitializeTurn by analysing the helper functions
         //Evaluation
-        assertEquals(initializedGame.getActiveMysteryWord(), null);
+        assertEquals(initializedGame.getActiveMysteryWord(), "");
         assertEquals(initializedGame.getHasEnded(), false);
         assertEquals(initializedGame.getRightGuess(), false);
         assertEquals(initializedGame.getRightGuess(), false);
-        assertEquals(initializedGame.getValidClue(), null);
+        assertEquals(initializedGame.getValidClue(), false);
         assertEquals(initializedGame.getValidCluesAreSet(), false);
         assertEquals(initializedGame.getClueMap(), new HashMap<String, String>());
         assertEquals(initializedGame.getValidClues(), new ArrayList<String>());
-        assertEquals(initializedGame.getGuess(), null);
+        assertEquals(initializedGame.getGuess(), "");
         assertEquals(initializedGame.getIsValidGuess(), false);
         assertEquals(initializedGame.getHasBeenInitialized(), true);
     }

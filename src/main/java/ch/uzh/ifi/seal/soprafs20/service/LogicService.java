@@ -71,22 +71,21 @@ public class LogicService {
         GameEntity game = gameOp.get();
         if (!game.getHasBeenInitialized()){
             if (game.getHasEnded()){
-            game.setActiveMysteryWord(null);
-            game.setHasEnded(false);
-            //Update the players
-            goOnePlayerFurther(game);
-            //Update Cards
-            drawCardFromStack(game);
-            game.getCardIds();
-            game.setRightGuess(false);
-            game.setValidClue(null);
-            game.setValidCluesAreSet(false);
-            game.setClueMap(new HashMap<String, String>());
-            game.setValidClues(new ArrayList<String>());
-            game.setGuess(null);
-            game.setIsValidGuess(false);
-            game.setHasBeenInitialized(true);
-            return game;
+                game.setHasBeenInitialized(true);
+                game.setActiveMysteryWord("");
+                game.setHasEnded(false);
+                //Update the players
+                goOnePlayerFurther(game);
+                //Update Cards
+                drawCardFromStack(game);
+                game.setRightGuess(false);
+                game.setValidClue(false);
+                game.setValidCluesAreSet(false);
+                game.setClueMap(new HashMap<String, String>());
+                game.setValidClues(new ArrayList<String>());
+                game.setGuess("");
+                game.setIsValidGuess(false);
+                return game;
 /**Milliseconds?*/
         }
             else {throw new ConflictException("The game has not ended yet!");}}
