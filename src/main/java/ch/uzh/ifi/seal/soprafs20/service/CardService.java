@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumberbetweenOneAndFive;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
@@ -50,6 +51,10 @@ public class CardService {
     Returns a List with 13 CardIds randomly chosen from the CardRepository
      */
     public List<Long> getFullStackOfCards(){
+        try {this.addAllCards();
+        } catch (IOException ex) {
+            throw new NoContentException("The CardDatabase couldn't be filled");
+        }
         List<Long> cardIds = new ArrayList<>();
         List<CardEntity> allCards = cardRepository.findAll();
         Random rand = new Random();

@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -198,7 +199,11 @@ public class GameService {
                 game.setAngels(angels);
                 game.setDevils(devils);
                 game.setPlayers(players);
-//              Add 13 Cards to Game
+//              Fill CardRepository and add 13 Cards to Game
+                try {cardService.addAllCards();
+                } catch (IOException ex) {
+                    throw new NoContentException("The CardDatabase couldn't be filled");
+                }
                 game.setCardIds(cardService.getFullStackOfCards());
 //              further initialization
                 game.setValidCluesAreSet(false);
