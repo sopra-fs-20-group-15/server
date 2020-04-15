@@ -120,8 +120,7 @@ public class LogicController {
     public CardGetDTO getCard(@PathVariable String gameId, @PathVariable String playerToken) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
-        validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
-
+        validationService.checkPlayerIsPassivePlayerOfGame(playerToken, gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
         long cardId = game.getActiveCardId();
         CardEntity cardEntity = cardService.getCardById(cardId);
@@ -131,7 +130,7 @@ public class LogicController {
         return cardGetDTO;
     }
 
-    //just to test if repository actually gets cards
+    //just to test if repository actually gets cards, remove later
     @GetMapping("/games/cardTest")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -145,7 +144,7 @@ public class LogicController {
         }
 
         //GameEntity game = gameService.getGameById(gameIdLong);
-        long cardId = 1;
+        long cardId = 1; //cardService.getRepoSize();
         CardEntity cardEntity = cardService.getCardById(cardId);
         CardGetDTO cardGetDTO = new CardGetDTO();
         cardGetDTO.setId(cardEntity.getId());

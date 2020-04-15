@@ -12,6 +12,7 @@ import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
+import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
@@ -40,12 +41,14 @@ public class GameService {
     private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
     private final GameSetUpRepository gameSetUpRepository;
+    private final CardService cardService;
 
     @Autowired
-    public GameService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository,@Qualifier("gameRepository") GameRepository gameRepository) {
+    public GameService(@Qualifier("cardService") CardService cardService, @Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("gameRepository") GameRepository gameRepository) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.gameSetUpRepository = gameSetUpRepository;
+        this.cardService = cardService;
     }
 
     public GameEntity getGameById(Long id){
@@ -195,7 +198,9 @@ public class GameService {
                 game.setAngels(angels);
                 game.setDevils(devils);
                 game.setPlayers(players);
-//                further initialization
+//              Add 13 Cards to Game
+                game.setCardIds(cardService.getFullStackOfCards());
+//              further initialization
                 game.setValidCluesAreSet(false);
                 game.setClueMap(new HashMap<String,String>());
                 game.setActivePlayerId(getPlayerByToken(pt).getId());
