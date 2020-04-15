@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumberbetweenOneAndFive;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @Transactional
@@ -45,13 +47,35 @@ public class CardService {
         return cardOp.get();
     }
 
+    /*
+    Returns a List with 13 CardIds randomly chosen from the CardRepository
+     */
+    public List<Long> getFullStackOfCards(){
+        try {this.addAllCards();
+        } catch (IOException ex) {
+            throw new NoContentException("The CardDatabase couldn't be filled");
+        }
+        List<Long> cardIds = new ArrayList<>();
+        List<CardEntity> allCards = cardRepository.findAll();
+        Random rand = new Random();
+        int stackSize = 13;
+        for (int i = 0; i < stackSize; i++){
+            int randomIndex = rand.nextInt(allCards.size());
+            CardEntity randomCard = allCards.get(randomIndex);
+            Long randomCardId = randomCard.getId();
+            allCards.remove(randomIndex);
+            cardIds.add(randomCardId);
+        }
+        return cardIds;
+    }
+
     protected String chooseWordOnCardByNumber(Long number, CardEntity card){
         int i = number.intValue();
         return card.getWords().get(i-1);
     }
 
     public void addAllCards() throws IOException {
-        if (cardRepository.findAll().isEmpty()) {
+        if (!(cardRepository.findAll().isEmpty())) {
             return;
         }
         BufferedReader bufReader = new BufferedReader(new FileReader("cardsEn.txt"));

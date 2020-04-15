@@ -8,6 +8,7 @@ import ch.uzh.ifi.seal.soprafs20.service.CardService;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
+import ch.uzh.ifi.seal.soprafs20.service.ValidationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,9 @@ public class GamesControllerTest {
 
     @MockBean
     private CardService cardService;
+
+    @MockBean
+    private ValidationService validationService;
 
     /**
      * Tests a post-Request to /games/
@@ -348,6 +352,33 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
                 .content(asJsonString(playerToken));
         // then
         mockMvc.perform(deleteRequest).andExpect(status().isOk());
+    }
+
+    /**Test getGameInformationAndItWorks*/
+    /**GetRequest at /activeGames/{gameId}*/
+    @Test
+    public void getGameInformationAndItWorks() throws Exception {
+        //given
+        GameGetDTO gameGetDTO = new GameGetDTO();
+        gameGetDTO.setActivePlayerName("Kirk");
+        List<String> names = new ArrayList<String>();
+        names.add("Spock");
+        names.add("Scotty");
+        names.add("Chekov");
+        gameGetDTO.setPassivePlayerNames(names);
+        names.add("Kirk");
+        gameGetDTO.setPlayerNames(names);
+        gameGetDTO.setId(1L);
+
+        // mock the functions
+        given(gameService.getGameInformationById(Mockito.any())).willReturn(gameGetDTO);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/activeGames/{gameId}", 1);
+
+        // then
+        mockMvc.perform(getRequest).andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)));
     }
 
 }

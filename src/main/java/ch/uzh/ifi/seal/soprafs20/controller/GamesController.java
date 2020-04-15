@@ -11,10 +11,12 @@ import ch.uzh.ifi.seal.soprafs20.service.CardService;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
+import ch.uzh.ifi.seal.soprafs20.service.ValidationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Long.parseLong;
@@ -30,11 +32,13 @@ public class GamesController {
     private final GameService gameService;
     private final CardService cardService;
     private final PlayerService playerService;
+    private final ValidationService validationService;
 
-    GamesController(GameService gameService, PlayerService playerService, CardService cardService) {
+    GamesController(GameService gameService, PlayerService playerService, CardService cardService, ValidationService validationService) {
         this.gameService = gameService;
         this.playerService = playerService;
         this.cardService = cardService;
+        this.validationService = validationService;
     }
 
     protected boolean stringIsALong(String str) {
@@ -57,6 +61,10 @@ public class GamesController {
         PlayerEntity player = playerService.getPlayerByToken(gamePostDTO.getPlayerToken());
         GameSetUpEntity game = DTOMapper.INSTANCE.convertGameSetUpPostDTOtoEntity(gamePostDTO);
         game.setHostName(player.getUsername());
+        game.setNumberOfPlayers(1L);
+        List<String> playerTokens = new ArrayList<String>();
+        playerTokens.add(player.getUsername());
+        game.setPlayerTokens(playerTokens);
         //Try to create Game
         GameSetUpEntity newGame = gameService.createGame(game);
         CreatedGameSetUpDTO gamePostDTOReturn = DTOMapper.INSTANCE.convertEntityToGameSetUpPostDTO(newGame);
@@ -64,7 +72,6 @@ public class GamesController {
     }
 
     /**Deletes a gameSetUp (only Host)*/
-
     @DeleteMapping("/gameSetUps/{gameSetUpId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -109,6 +116,19 @@ public class GamesController {
         return gameService.getLobbies();
     }
 
+
+    /**Allows player to get an overview of the existing game lobbies*/
+    @GetMapping("/activeGames/{gameId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameGetDTO getActiveGame(@PathVariable String gameId) {
+        stringIsALong(gameId);
+        Long gameIdLong = parseLong(gameId);
+        GameGetDTO game = gameService.getGameInformationById(gameIdLong);
+        return game;
+    }
+
+
     /**Allows player to refresh Lobby status while in one*/
     @GetMapping("/games/lobbies/{gameSetUpId}/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
@@ -133,11 +153,6 @@ public class GamesController {
         if (stringIsALong(gameSetUpId)){
             //Try to create active game
             Long gsId = parseLong(gameSetUpId);
-            //add cards to repository
-            try {cardService.addAllCards();
-            } catch (IOException ex) {
-                throw new NoContentException("The CardDatabase couldn't be filled");
-            }
             return gameService.createActiveGame(gsId, playerTokenDTO.getToken());
         }
         else throw new BadRequestException("Game-Setup-ID has wrong format!");

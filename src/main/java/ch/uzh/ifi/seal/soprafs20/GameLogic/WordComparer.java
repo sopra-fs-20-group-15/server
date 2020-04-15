@@ -27,7 +27,7 @@ public class WordComparer {
         ArrayList<String> tmpClues = new ArrayList<>();
         ArrayList<String> wordStems = new ArrayList<>();
         ArrayList<String> duplicates = new ArrayList<>();
-
+        duplicates.add(mysteryStem);
         for (String word : clues) {
             String stem;
             try {
