@@ -6,10 +6,11 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 class WordComparerTest {
 
-    /*
+
     @Test
     void noDuplicateInClues() {
         WordComparer wordComparer = new WordComparer();
@@ -18,8 +19,10 @@ class WordComparerTest {
         words.add("live");
         words.add("house");
         String mysteryWord = "Alcatraz";
-        ArrayList<String> actual = wordComparer.compareClues(words, mysteryWord);
-        assertEquals(words, actual);
+        Map<String, Integer> actual = wordComparer.compareClues(words, mysteryWord);
+        assertEquals(0, actual.get("Tree"));
+        assertEquals(0, actual.get("live"));
+        assertEquals(0, actual.get("house"));
     }
 
     @Test
@@ -29,13 +32,14 @@ class WordComparerTest {
         words.add("live");
         words.add("living");
         words.add("Tree");
-        ArrayList<String> expected = new ArrayList<>();
-        expected.add("Tree");
         String mysteryWord = "Alcatraz";
-        ArrayList<String> actual = wordComparer.compareClues(words, mysteryWord);
 
-        assertEquals(expected, actual);
+        Map<String, Integer> actual = wordComparer.compareClues(words, mysteryWord);
+        assertEquals(1, actual.get("living"));
+        assertEquals(1, actual.get("live"));
+        assertEquals(0, actual.get("Tree"));
     }
+
 
     @Test
     void TwoDuplicateInClues() {
@@ -46,12 +50,13 @@ class WordComparerTest {
         words.add("Horse");
         words.add("horses");
         words.add("Tree");
-        ArrayList<String> expected = new ArrayList<>();
-        expected.add("Tree");
         String mysteryWord = "Alcatraz";
-        ArrayList<String> actual = wordComparer.compareClues(words, mysteryWord);
-
-        assertEquals(expected, actual);
+        Map<String, Integer> actual = wordComparer.compareClues(words, mysteryWord);
+        assertEquals(1, actual.get("living"));
+        assertEquals(1, actual.get("live"));
+        assertEquals(0, actual.get("Tree"));
+        assertEquals(1, actual.get("Horse"));
+        assertEquals(1, actual.get("horses"));
     }
 
     @Test
@@ -59,45 +64,42 @@ class WordComparerTest {
         WordComparer wordComparer = new WordComparer();
         ArrayList<String> words = new ArrayList<>();
         words.add("live");
-        words.add("life");
+        words.add("live");
         words.add("living");
         words.add("house");
-        ArrayList<String> expected = new ArrayList<>();
-        expected.add("house");
         String mysteryWord = "Alcatraz";
-        ArrayList<String> actual = wordComparer.compareClues(words, mysteryWord);
-
-        assertEquals(expected, actual);
+        Map<String, Integer> actual = wordComparer.compareClues(words, mysteryWord);
+        assertEquals(2, actual.get("living"));
+        assertEquals(0, actual.get("house"));
+        assertEquals(2, actual.get("live"));
     }
+
 
     @Test
     void OnlyDuplicatesInClues() {
         WordComparer wordComparer = new WordComparer();
         ArrayList<String> words = new ArrayList<>();
+        words.add("live");
+        words.add("living");
         words.add("lives");
-        words.add("lifes");
-        words.add("life");
-        ArrayList<String> expected = new ArrayList<>();
         String mysteryWord = "Alcatraz";
-        ArrayList<String> actual = wordComparer.compareClues(words, mysteryWord);
-
-        assertEquals(expected, actual);
+        Map<String, Integer> actual = wordComparer.compareClues(words, mysteryWord);
+        assertEquals(2, actual.get("lives"));
+        assertEquals(2, actual.get("live"));
+        assertEquals(2, actual.get("living"));
     }
+
 
     @Test
     void ClueToCloseToMysteryWord() {
         WordComparer wordComparer = new WordComparer();
         ArrayList<String> words = new ArrayList<>();
         words.add("living");
-        ArrayList<String> expected = new ArrayList<>();
         String mysteryWord = "live";
-        ArrayList<String> actual = wordComparer.compareClues(words, mysteryWord);
-
-        assertEquals(expected, actual);
+        Map<String, Integer> actual = wordComparer.compareClues(words, mysteryWord);
+        assertEquals(1, actual.get("living"));
     }
 
-    */
-     
     @Test
     void TestStemAPI() {
         WordComparer wordComparer = new WordComparer();
