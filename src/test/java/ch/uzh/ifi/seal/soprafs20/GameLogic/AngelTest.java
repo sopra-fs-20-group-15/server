@@ -8,15 +8,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AngelTest {
 
-    @Test
-    void testApiPerformance(){
-        Angel angel = new Angel();
-        try {
-            angel.printCluesToAllmysteryWords();
-        } catch (IOException ex) {
-            return;
-        }
-    }
+//    @Test
+//    void testApiPerformance(){
+//        Angel angel = new Angel();
+//        try {
+//            angel.printCluesToAllmysteryWords();
+//        } catch (IOException ex) {
+//            return;
+//        }
+//    }
 
 
 }

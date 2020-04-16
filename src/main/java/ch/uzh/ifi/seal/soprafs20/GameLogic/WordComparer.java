@@ -9,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WordComparer {
 
@@ -16,18 +18,18 @@ public class WordComparer {
         @param: List of clues
         @Return: List of validClued
      */
-    public ArrayList<String> compareClues(ArrayList<String> clues, String mysteryWord) {
+    public Map<String, Integer> compareClues(ArrayList<String> clues, String mysteryWord) {
+        Map<String, Integer> returnMap = new HashMap<>();
+        for (String clue: clues) {
+            returnMap.put(clue, 0);
+        }
         String mysteryStem;
         try {
             mysteryStem = this.getWordStem(mysteryWord.toLowerCase());
         } catch(IOException ex) {
             mysteryStem = mysteryWord.toLowerCase();
         }
-        ArrayList<String> okClues = new ArrayList<>();
-        ArrayList<String> tmpClues = new ArrayList<>();
         ArrayList<String> wordStems = new ArrayList<>();
-        ArrayList<String> duplicates = new ArrayList<>();
-        duplicates.add(mysteryStem);
         for (String word : clues) {
             String stem;
             try {
@@ -35,33 +37,25 @@ public class WordComparer {
             } catch(IOException ex) {
                 stem = word.toLowerCase();
             }//get the word stem from API
-            if (wordStems.contains(stem)){duplicates.add(stem);} //if stem is already in wordStems, it's a duplicate
             wordStems.add(stem);    //add stem to stemList
         }
         for (int i = 0; i < clues.size(); i++) {
-
-            if (!duplicates.contains(wordStems.get(i))){    //only add words that are not duplicates
-                tmpClues.add(clues.get(i));
+            int count = -1;
+            //check that it doesn't contain mysteryWord
+            if (clues.get(i).toLowerCase().contains(mysteryStem) || wordStems.get(i).equals(mysteryStem)){
+                count++;
             }
-        }
-        //checks that none of the clues are to close
-        for (String okClue : tmpClues){
-            int count = 0;
-            for (String word : clues){
-                if (this.closeWords(okClue, word)){
+            for (int j = 0; j < clues.size(); j++) {
+                if (this.closeWords(clues.get(i), clues.get(j)) || wordStems.get(i).equals(wordStems.get(j))) {
                     count++;
                 }
             }
-            if (count < 2) {
-                //check that it doesn't contain mysteryWord
-                if (!okClue.toLowerCase().contains(mysteryStem)) {
-                    okClues.add(okClue);
-                }
-            }
+            returnMap.put(clues.get(i), count);
         }
 
-        return okClues;
+        return returnMap;
     }
+
 
     public boolean compareMysteryWords(String guess, String mysteryWord){
         return closeWords(guess, mysteryWord);
