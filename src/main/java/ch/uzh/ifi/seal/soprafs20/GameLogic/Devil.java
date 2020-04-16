@@ -7,6 +7,12 @@ public class Devil implements Bot {
     private String botName;
     private String botToken;
 
+
+    @Override
+    public String giveClue(String mysteryWord) {
+        return null;
+    }
+
     public void setName(String botName) {
         this.botName = botName;
     }

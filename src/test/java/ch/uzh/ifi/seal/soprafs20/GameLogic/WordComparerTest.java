@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 class WordComparerTest {
 
+    /*
     @Test
     void noDuplicateInClues() {
         WordComparer wordComparer = new WordComparer();
@@ -95,6 +96,8 @@ class WordComparerTest {
         assertEquals(expected, actual);
     }
 
+    */
+     
     @Test
     void TestStemAPI() {
         WordComparer wordComparer = new WordComparer();
