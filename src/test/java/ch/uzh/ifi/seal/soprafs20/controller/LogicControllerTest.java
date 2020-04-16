@@ -28,6 +28,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,7 +59,30 @@ public class LogicControllerTest {
     private LogicService logicService;
 
 
+    /**Tests a Put-Request to /games/{gameId}/initializations*/
+    @Test
+    public void putInitializesSuccessfully() throws Exception {
+        // given
+        String playerToken = "AAJKHS";
+        GameEntity game = new GameEntity();
+        //returns
 
+        given(validationService.checkPlayerIsActivePlayerOfGame(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
+        given(logicService.initializeTurn(Mockito.any())).willReturn(game);
+
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/initializations", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(playerToken));
+
+        // then
+
+        mockMvc.perform(putRequest)
+                .andExpect(status().isOk());
+
+
+    }
 
     /**Tests a post-Request to /games/{gameId}/Cards/*/
     @Test
