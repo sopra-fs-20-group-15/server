@@ -110,7 +110,7 @@ public class LogicService {
         if (game.getClueMap().size()==game.getPlayers().size()+game.getNumOfBots()-1){
             ArrayList<String> clues = new ArrayList<String>(game.getClueMap().values());
             String mystery=game.getActiveMysteryWord();
-            game.setValidClues(wordComparer.compareClues(clues, mystery));
+            //game.setValidClues(wordComparer.compareClues(clues, mystery));
             game.setValidCluesAreSet(true);
         }
     }
