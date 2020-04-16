@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,7 +26,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 
 
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -301,6 +302,39 @@ public class LogicControllerTest {
 
     }
 
+    @Test
+    public void passivePlayerCannotGiveClueBecauseTurnOrderViolated() throws Exception {
+        CluePostDTO clue=new CluePostDTO();
+        clue.setClue("clue");
+        clue.setPlayerToken("token");
+        GameEntity game = new GameEntity();
+        Map<String, String> clueList= new HashMap<>();
+        List<PlayerEntity> players= new ArrayList<>();
+        game.setClueMap(clueList);
+        game.setPlayers(players);
+        game.setActiveMysteryWord("");
+
+        PlayerEntity player = new PlayerEntity();
+        player.setUsername("playerName");
+        game.getPlayers().add(player);
+        game.getPlayers().add(new PlayerEntity());
+
+        given(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
+        given(gameService.getGameById(Mockito.any())).willReturn(game);
+        given(playerService.getPlayerByToken(Mockito.anyString())).willReturn(player);
+
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder postRequest = post("/games/{gameId}/clues/", "123")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(clue));
+
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isConflict());
+
+    }
     @Test
     public void playerNotInGameTriesToGiveClueOrGameDoesNotExistOrBoth() throws Exception {
         CluePostDTO clue=new CluePostDTO();

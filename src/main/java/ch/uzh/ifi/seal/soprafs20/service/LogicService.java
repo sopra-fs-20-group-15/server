@@ -82,7 +82,7 @@ public class LogicService {
                 game.setValidClue(false);
                 game.setValidCluesAreSet(false);
                 game.setClueMap(new HashMap<String, String>());
-                game.setValidClues(new ArrayList<String>());
+                game.setValidClues(new HashMap<String, String>());
                 game.setGuess("");
                 game.setIsValidGuess(false);
                 return game;
@@ -110,7 +110,23 @@ public class LogicService {
         if (game.getClueMap().size()==game.getPlayers().size()+game.getNumOfBots()-1){
             ArrayList<String> clues = new ArrayList<String>(game.getClueMap().values());
             String mystery=game.getActiveMysteryWord();
-            //game.setValidClues(wordComparer.compareClues(clues, mystery));
+            Map<String,Integer> analyzedClues=wordComparer.compareClues(clues, mystery);
+            Map<String,String> validClues = new HashMap<>();
+            for ( Map.Entry<String,String> entry: game.getClueMap().entrySet()){
+                if (playerRepository.findByToken(entry.getKey())!=null) {
+                    if (analyzedClues.get(entry.getValue())==0) validClues.put(playerRepository.findByToken(entry.getKey()).getUsername(),
+                        entry.getValue());
+                }
+                else {
+                    for (Angel angel : game.getAngels()){
+                        if (angel.getToken().equals(entry.getKey())) validClues.put(angel.getName(), entry.getValue());
+                    }
+                    for (Devil devil : game.getDevils()){
+                        if (devil.getToken().equals(entry.getKey())) validClues.put(devil.getName(), entry.getValue());
+                    }
+                }
+            }
+            game.setValidClues(validClues);
             game.setValidCluesAreSet(true);
         }
     }
@@ -120,24 +136,10 @@ public class LogicService {
 //        check if clues have already been set for this round
         if (game.getValidCluesAreSet()) {
             List<ClueGetDTO> list = new ArrayList<>();
-            for (String clue: game.getValidClues()) {
+            for (String playerName: game.getValidClues().keySet()) {
                 ClueGetDTO clueGetDTO =new ClueGetDTO();
-                clueGetDTO.setClue(clue);
-                for (Map.Entry<String, String> entry : game.getClueMap().entrySet()) {
-                    if (Objects.equals(clue.toLowerCase(), entry.getValue().toLowerCase())) {
-//                        check if valid clue was given by bot, if so return bot name
-                        if (playerRepository.findByToken(entry.getKey())==null) {
-                            for (Angel angel : game.getAngels()){
-                                if (angel.getToken().equals(entry.getKey())) clueGetDTO.setPlayerName(angel.getName());
-                            }
-                            for (Devil devil : game.getDevils()){
-                                if (devil.getToken().equals(entry.getKey())) clueGetDTO.setPlayerName(devil.getName());
-                            }
-                        }
-//                        map playerName to DTO if human player
-                        else clueGetDTO.setPlayerName(playerRepository.findByToken(entry.getKey()).getUsername());
-                    }
-                }
+                clueGetDTO.setClue(game.getValidClues().get(playerName));
+                clueGetDTO.setPlayerName(playerName);
                 list.add(clueGetDTO);
             }
             return list;

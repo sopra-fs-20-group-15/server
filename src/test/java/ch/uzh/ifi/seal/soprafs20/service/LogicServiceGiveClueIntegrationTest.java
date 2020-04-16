@@ -152,8 +152,9 @@ public class LogicServiceGiveClueIntegrationTest {
         assertTrue(createdActiveGame.getClueMap().containsKey("Three"));
         assertEquals(createdActiveGame.getClueMap().get("Three"), "Table");
         assertFalse(createdActiveGame.getValidClues().isEmpty());
-        assertTrue(createdActiveGame.getValidClues().contains("Clue") &&
-                createdActiveGame.getValidClues().contains("Table"));
+        for (String key :createdActiveGame.getValidClues().keySet()) System.out.println(key);
+        assertTrue(createdActiveGame.getValidClues().containsValue("Clue") &&
+                createdActiveGame.getValidClues().containsValue("Table"));
     }
 
     @Test
@@ -174,8 +175,8 @@ public class LogicServiceGiveClueIntegrationTest {
         assertTrue(createdActiveGame.getClueMap().containsKey("Three"));
         assertEquals(createdActiveGame.getClueMap().get("Three"), "Table");
         assertFalse(createdActiveGame.getValidClues().isEmpty());
-        assertTrue(!createdActiveGame.getValidClues().contains("Testing") &&
-                createdActiveGame.getValidClues().contains("Table"));
+        assertTrue(!createdActiveGame.getValidClues().containsValue("Testing") &&
+                createdActiveGame.getValidClues().containsValue("Table"));
     }
 
     @Test
@@ -196,8 +197,8 @@ public class LogicServiceGiveClueIntegrationTest {
         assertTrue(createdActiveGame.getClueMap().containsKey("Three"));
         assertEquals(createdActiveGame.getClueMap().get("Three"), "table");
         assertTrue(createdActiveGame.getValidClues().isEmpty());
-        assertTrue(!createdActiveGame.getValidClues().contains("Table")
-                && !createdActiveGame.getValidClues().contains("table"));
+        assertTrue(!createdActiveGame.getValidClues().containsValue("Table")
+                && !createdActiveGame.getValidClues().containsValue("table"));
     }
 
     @Test
@@ -218,7 +219,7 @@ public class LogicServiceGiveClueIntegrationTest {
         assertTrue(createdActiveGame.getClueMap().containsKey("Three"));
         assertEquals(createdActiveGame.getClueMap().get("Three"), "towering");
         assertTrue(createdActiveGame.getValidClues().isEmpty());
-        assertTrue(!createdActiveGame.getValidClues().contains("Tower")
-                && !createdActiveGame.getValidClues().contains("towering"));
+        assertTrue(!createdActiveGame.getValidClues().containsValue("Tower")
+                && !createdActiveGame.getValidClues().containsValue("towering"));
     }
 }

@@ -67,7 +67,7 @@ public class GameEntity {
     Map<String, String> clueMap;
 
     @ElementCollection
-    List<String> validClues;
+    Map<String,String> validClues;
 
     @Embedded
     private Scoreboard scoreboard;
@@ -89,11 +89,11 @@ public class GameEntity {
         return validCluesAreSet;
     }
 
-    public void setValidClues(List<String> validClues) {
+    public void setValidClues(Map<String, String> validClues) {
         this.validClues = validClues;
     }
 
-    public List<String> getValidClues() {
+    public Map<String, String> getValidClues() {
         return validClues;
     }
 
@@ -249,7 +249,7 @@ public class GameEntity {
             if (activePlayerId.equals(player.getId())) scoreboard.updateScore(player,
                     ScoreCalculator.calculateScoreActivePlayer(player,isValidGuess, 33000 - getMilliseconds()));
             else if (passivePlayerIds.contains(player.getId())) {
-                if (validClues.contains(clueMap.get(player.getUsername()))) scoreboard.updateScore(player,
+                if (validClues.containsKey(clueMap.get(player.getUsername()))) scoreboard.updateScore(player,
                         ScoreCalculator.calculateScorePassivePlayer(player,isValidGuess,true,
                                 33000 -getMilliseconds(), getNumOfDuplicates(player)));
                 else scoreboard.updateScore(player,

@@ -135,7 +135,7 @@ public class LogicServiceIntegrationTestInizializeTurn {
         assertEquals(initializedGame.getValidClue(), false);
         assertEquals(initializedGame.getValidCluesAreSet(), false);
         assertEquals(initializedGame.getClueMap(), new HashMap<String, String>());
-        assertEquals(initializedGame.getValidClues(), new ArrayList<String>());
+        assertEquals(initializedGame.getValidClues(), new HashMap<String, String>());
         assertEquals(initializedGame.getGuess(), "");
         assertEquals(initializedGame.getIsValidGuess(), false);
         assertEquals(initializedGame.getHasBeenInitialized(), true);

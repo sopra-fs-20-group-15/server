@@ -184,14 +184,14 @@ public class LogicServiceIntegrationTestGetClues {
         assertEquals("Devil", listOfClues.get(0).getClue());
         assertEquals(devil.getName(), listOfClues.get(0).getPlayerName());
 
-        assertEquals("Angel", listOfClues.get(1).getClue());
-        assertEquals(angel.getName(), listOfClues.get(1).getPlayerName());
+        assertEquals("Clue", listOfClues.get(1).getClue());
+        assertEquals(p2.getUsername(), listOfClues.get(1).getPlayerName());
 
-        assertEquals("Clue", listOfClues.get(2).getClue());
-        assertEquals(p2.getUsername(), listOfClues.get(2).getPlayerName());
+        assertEquals("Angel", listOfClues.get(3).getClue());
+        assertEquals(angel.getName(), listOfClues.get(3).getPlayerName());
 
-        assertEquals("Table", listOfClues.get(3).getClue());
-        assertEquals(p3.getUsername(), listOfClues.get(3).getPlayerName());
+        assertEquals("Table", listOfClues.get(2).getClue());
+        assertEquals(p3.getUsername(), listOfClues.get(2).getPlayerName());
     }
 
     @Test

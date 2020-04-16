@@ -253,7 +253,7 @@ public class GameService {
                 game.setActivePlayerId(getPlayerByToken(pt).getId());
                 game.setScoreboard(new Scoreboard());
                 game.getScoreboard().initializeMap(game.getPlayers());
-                List<String> validClues= new ArrayList<>();
+                Map<String, String> validClues= new HashMap<>();
                 game.setValidClues(validClues);
                 List<Long> passivePlayerIds=new ArrayList<>();
                 for (PlayerEntity player : game.getPlayers()){
