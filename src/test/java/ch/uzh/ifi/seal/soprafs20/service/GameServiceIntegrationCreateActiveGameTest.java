@@ -2,6 +2,7 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
+import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import java.util.List;
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Transactional
 @WebAppConfiguration
 @SpringBootTest
 public class GameServiceIntegrationCreateActiveGameTest {
@@ -123,7 +126,14 @@ public class GameServiceIntegrationCreateActiveGameTest {
         list.add("OneName");
         list.add("TwoName");
         list.add("ThreeName");
+        GameEntity createdActiveGame=gameService.getGameById(activeGamePostDTO.getId());
         assertTrue(activeGamePostDTO.getPlayerNames().containsAll(list));
+        assertNotNull(createdActiveGame.getScoreboard());
+//      Check if every human player is in ScoreBoard
+        for (PlayerEntity player: createdActiveGame.getPlayers()) {
+            assertTrue(createdActiveGame.getScoreboard().getEndScore().containsKey(player));
+        }
+
     }
 
     @Test

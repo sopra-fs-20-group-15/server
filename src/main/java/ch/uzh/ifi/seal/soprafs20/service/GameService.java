@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Bot;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
@@ -250,6 +251,8 @@ public class GameService {
                 game.setValidCluesAreSet(false);
                 game.setClueMap(new HashMap<String,String>());
                 game.setActivePlayerId(getPlayerByToken(pt).getId());
+                game.setScoreboard(new Scoreboard());
+                game.getScoreboard().initializeMap(game.getPlayers());
                 List<String> validClues= new ArrayList<>();
                 game.setValidClues(validClues);
                 List<Long> passivePlayerIds=new ArrayList<>();
