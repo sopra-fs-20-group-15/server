@@ -17,6 +17,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.WordPostDTO;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,6 +117,33 @@ public class LogicService {
         else {throw new NotFoundException("The active Card of this game has not been set yet!");}
     }
 
+
+    /**Set the MysteryWord*/
+
+    public String setMysteryWord(Long gameId, Long wordId){
+        Optional<GameEntity> gameOp = gameRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
+        GameEntity game = gameOp.get();
+        if (game.getActiveMysteryWord().isBlank()){
+            CardEntity card = cardService.getCardById(game.getActiveCardId());
+            String word = cardService.chooseWordOnCard(wordId, card);
+            game.setActiveMysteryWord(word);
+            return word;
+        }
+        else {throw new NoContentException("The MysteryWord has already been set");}
+    }
+
+    /**Get the MysteryWord*/
+
+    public String getMysteryWord(Long gameId){
+        Optional<GameEntity> gameOp = gameRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
+        GameEntity game = gameOp.get();
+        if (!game.getActiveMysteryWord().isBlank()){
+            return game.getActiveMysteryWord();
+        }
+        else {throw new NotFoundException("The MysteryWord not been set yet!");}
+    }
 
     public void setGuess(GameEntity game, String guess){
         boolean isValidGuess = wordComparer.compareMysteryWords(game.getActiveMysteryWord(), guess);

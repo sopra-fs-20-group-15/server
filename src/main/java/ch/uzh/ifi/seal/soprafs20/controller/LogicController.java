@@ -80,15 +80,10 @@ public class LogicController {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsActivePlayerOfGame(cardPostDTO.getPlayerToken(), gameIdLong);
-        GameEntity game = gameService.getGameById(gameIdLong);
-        CardEntity card = cardService.getCardById(game.getActiveCardId());
-        if (game.getActiveMysteryWord().isBlank()){
-        String word = cardService.chooseWordOnCard(cardPostDTO.getWordId(), card);
-        game.setActiveMysteryWord(word);
-            WordPostDTO wordPostDTO = new WordPostDTO();
-            wordPostDTO.setWord(word);
-            return wordPostDTO;}
-        else throw new NoContentException("The MysteryWord has already been set");
+        String word = logicService.setMysteryWord(gameIdLong, cardPostDTO.getWordId());
+        WordPostDTO wordPostDTO = new WordPostDTO();
+        wordPostDTO.setWord(word);
+        return wordPostDTO;
     }
 
     /**Gives back the chosen MysteryWord*/
@@ -99,8 +94,7 @@ public class LogicController {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
-        GameEntity game = gameService.getGameById(gameIdLong);
-        String word = game.getActiveMysteryWord();
+        String word = logicService.getMysteryWord(gameIdLong);
         WordPostDTO wordPostDTO = new WordPostDTO();
         wordPostDTO.setWord(word);
         return wordPostDTO;
