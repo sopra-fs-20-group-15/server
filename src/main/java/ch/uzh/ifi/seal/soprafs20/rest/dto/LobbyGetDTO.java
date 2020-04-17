@@ -9,7 +9,7 @@ public class LobbyGetDTO {
     private String hostName;
     private List<String> playerNames;
     private Long numOfDesiredPlayers;
-    private Long numOfActualPlayers;
+    private Long numOfHumanPlayers;
     private Long numOfAngels;
     private Long numOfDevils;
 
@@ -21,12 +21,12 @@ public class LobbyGetDTO {
         this.playerNames = playerNames;
     }
 
-    public Long getNumOfActualPlayers() {
-        return numOfActualPlayers;
+    public Long getNumOfHumanPlayers() {
+        return numOfHumanPlayers;
     }
 
-    public void setNumOfActualPlayers(Long numOfActualPlayers) {
-        this.numOfActualPlayers = numOfActualPlayers;
+    public void setNumOfHumanPlayers(Long numOfHumanPlayers) {
+        this.numOfHumanPlayers = numOfHumanPlayers;
     }
 
     public String getGameName() {

@@ -9,7 +9,7 @@ public class LobbyOverviewGetDTOMapper {
 
         lobbyOverviewGetDTO.setGameName(gameSetUpEntity.getGameName());
         lobbyOverviewGetDTO.setGameType(gameSetUpEntity.getGameType());
-        lobbyOverviewGetDTO.setNumOfActualPlayers((long) gameSetUpEntity.getPlayerTokens().size());
+        lobbyOverviewGetDTO.setNumOfHumanPlayers((long) gameSetUpEntity.getPlayerTokens().size());
         lobbyOverviewGetDTO.setNumOfDesiredPlayers(gameSetUpEntity.getNumberOfPlayers());
         lobbyOverviewGetDTO.setNumOfAngels(gameSetUpEntity.getNumberOfAngles());
         lobbyOverviewGetDTO.setNumOfDevils(gameSetUpEntity.getNumberOfDevils());

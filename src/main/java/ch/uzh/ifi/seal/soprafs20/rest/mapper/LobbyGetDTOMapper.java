@@ -1,9 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
 
@@ -18,7 +15,7 @@ public class LobbyGetDTOMapper {
         lobbyGetDTO.setNumOfDesiredPlayers(gameSetUpEntity.getNumberOfPlayers());
         lobbyGetDTO.setNumOfDevils(gameSetUpEntity.getNumberOfDevils());
         lobbyGetDTO.setNumOfAngels(gameSetUpEntity.getNumberOfAngles());
-        lobbyGetDTO.setNumOfActualPlayers((long) gameSetUpEntity.getPlayerTokens().size());
+        lobbyGetDTO.setNumOfHumanPlayers((long) gameSetUpEntity.getPlayerTokens().size());
 
         List<String> playerNames=new ArrayList<>();
         for (String token: gameSetUpEntity.getPlayerTokens()) {

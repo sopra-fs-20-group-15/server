@@ -1,11 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
-import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
-import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
@@ -13,21 +11,14 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ActiveGamePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,7 +114,7 @@ public class GameServiceIntegrationGetLobbyTest {
         LobbyGetDTO lobbyGetDTO=gameService.getLobbyInfo(createdGame.getId(),"One");
 
         assertEquals(createdGame.getGameName(),lobbyGetDTO.getGameName());
-        assertEquals(3,lobbyGetDTO.getNumOfActualPlayers());
+        assertEquals(3,lobbyGetDTO.getNumOfHumanPlayers());
         assertEquals(4,lobbyGetDTO.getNumOfDesiredPlayers());
         assertEquals(createdGame.getId(),lobbyGetDTO.getGameSetUpId());
         assertEquals(createdGame.getNumberOfAngles(),lobbyGetDTO.getNumOfAngels());

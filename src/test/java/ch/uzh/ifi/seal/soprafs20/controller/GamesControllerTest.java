@@ -1,6 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
@@ -173,7 +171,7 @@ public class GamesControllerTest {
         playerNames.add("Khan");
         lobbyGetDTO.setPlayerNames(playerNames);
         lobbyGetDTO.setNumOfDesiredPlayers(5L);
-        lobbyGetDTO.setNumOfActualPlayers(2L);
+        lobbyGetDTO.setNumOfHumanPlayers(2L);
         lobbyGetDTO.setNumOfAngels(0L);
         lobbyGetDTO.setNumOfDevils(0L);
         lobbyGetDTO.setGameSetUpId(22L);
