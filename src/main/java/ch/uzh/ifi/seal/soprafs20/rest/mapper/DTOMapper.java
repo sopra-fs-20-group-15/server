@@ -77,4 +77,7 @@ public interface DTOMapper {
     @Mapping(source = "username", target = "username")
     PlayerEntity convertUserPutUserIdDTOToEntity(PlayerPutUserIdDTO playerPutUserIdDTO);
 
+    @Mapping(source = "username", target = "playerName")
+    PlayerNameDTO convertPlayerEntityToPlayerNameDTO(PlayerEntity playerEntity);
+
 }

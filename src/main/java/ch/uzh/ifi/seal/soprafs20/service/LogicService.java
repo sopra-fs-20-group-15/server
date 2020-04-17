@@ -17,7 +17,9 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerNameDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.WordPostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -197,5 +199,32 @@ public class LogicService {
         }
 //        if clues have not been set throw NoContentException
         else throw new NoContentException("Clues are not ready yet!");
+    }
+
+    /**Returns the names of all the players that have already submitted a clue*/
+    public List<PlayerNameDTO> getCluePlayers(GameEntity game) {
+        List<PlayerNameDTO> list = new ArrayList<>();
+        for (String token: game.getClueMap().keySet()) {
+            if (playerRepository.findByToken(token)!=null){
+                list.add(DTOMapper.INSTANCE.convertPlayerEntityToPlayerNameDTO(playerRepository.findByToken(token)));
+            }
+            else {
+                for (Angel angel: game.getAngels()) {
+                    if (angel.getToken().equals(token)) {
+                        PlayerNameDTO playerNameDTO = new PlayerNameDTO();
+                        playerNameDTO.setPlayerName(angel.getName());
+                        list.add(playerNameDTO);
+                    }
+                }
+                for (Devil devil: game.getDevils()) {
+                    if (devil.getToken().equals(token)) {
+                        PlayerNameDTO playerNameDTO = new PlayerNameDTO();
+                        playerNameDTO.setPlayerName(devil.getName());
+                        list.add(playerNameDTO);
+                    }
+                }
+            }
+        }
+        return  list;
     }
 }

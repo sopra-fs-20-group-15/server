@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
+import ch.uzh.ifi.seal.soprafs20.exceptions.BadRequestException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
@@ -123,6 +124,18 @@ public class LogicController {
         validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
         return logicService.getClues(game);
+    }
+
+    /**get list with players that have already submitted clue*/
+    @GetMapping("/games/{gameId}/clues/players/{playerToken}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<PlayerNameDTO> getCluePlayers(@PathVariable String gameId, @PathVariable String playerToken) {
+        if(!stringIsALong(gameId)) throw new BadRequestException("Game-Id has wrong format.");
+        Long gameIdLong = parseLong(gameId);
+        validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
+        GameEntity game = gameService.getGameById(gameIdLong);
+        return logicService.getCluePlayers(game);
     }
 
     /**sets the guess and checks, if the guess was correct (set points based on that)*/
