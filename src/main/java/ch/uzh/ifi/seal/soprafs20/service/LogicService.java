@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
+import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
@@ -41,12 +42,14 @@ public class LogicService {
     private final WordComparer wordComparer;
     private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
+    private final CardService cardService;
 
     @Autowired
-    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository) {
+    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository, CardService cardService) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.wordComparer = new WordComparer();
+        this.cardService = cardService;
     }
 
     /**Puts the active player at the end of the passive Players List, takes the passive Player at 0 and make him the active player*/
@@ -60,9 +63,14 @@ public class LogicService {
     }
 
     protected GameEntity drawCardFromStack(GameEntity game){
-        List<Long> cardIds = game.getCardIds();
-        game.setActiveCardId(cardIds.remove(cardIds.size()-1));
-        return game;
+        if (game.getCardIds().size() > 0){
+            List<Long> cardIds = game.getCardIds();
+            game.setActiveCardId(cardIds.remove(cardIds.size()-1));
+            return game;
+        }
+        else{
+            throw new ConflictException("The CardStack is empty!The game should have ended already!");
+        }
     }
 
     public GameEntity initializeTurn(Long gameId){
@@ -92,6 +100,21 @@ public class LogicService {
         else {throw new NoContentException("The Game has already been initialized!");}
     }
 
+    /**Gets a gameId and gives back the active Card of that game*/
+    public CardEntity getCardFromGameById(Long gameId){
+        //Get Game
+        Optional<GameEntity> gameOp = gameRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
+        GameEntity game = gameOp.get();
+        //Check if activeCard has already been set and if so, get the Card
+        Long cardId = game.getActiveCardId();
+        CardEntity card;
+        if (cardId != null){
+            card = cardService.getCardById(cardId);
+            return card;
+        }
+        else {throw new NotFoundException("The active Card of this game has not been set yet!");}
+    }
 
 
     public void setGuess(GameEntity game, String guess){

@@ -62,10 +62,7 @@ public class LogicController {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
-
-        GameEntity game = gameService.getGameById(gameIdLong);
-        long cardId = game.getActiveCardId();
-        CardEntity cardEntity = cardService.getCardById(cardId);
+        CardEntity cardEntity = logicService.getCardFromGameById(gameIdLong);
         CardGetDTO cardGetDTO = new CardGetDTO();
         cardGetDTO.setId(cardEntity.getId());
         cardGetDTO.setWords(cardEntity.getWords());
