@@ -85,9 +85,9 @@ public class LogicControllerTest {
 
     }
 
-    /**Tests a post-Request to /games/{gameId}/Cards/*/
+    /**Tests a put-Request to /games/{gameId}/mysteryWord*/
     @Test
-    public void postRequestActivePlayerChoosesWordOnCardSuccessfully() throws Exception {
+    public void putRequestActivePlayerChoosesWordOnCardSuccessfully() throws Exception {
         // given
         GameEntity game = new GameEntity();
         CardPostDTO cardPostDTO = new CardPostDTO();
@@ -104,13 +104,13 @@ public class LogicControllerTest {
 
         // when/then -> do the request + validate the result
 
-        MockHttpServletRequestBuilder postRequest = post("/games/{gameId}/cards/", "1")
+        MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/mysteryWord", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(cardPostDTO));
 
         // then
 
-        mockMvc.perform(postRequest)
+        mockMvc.perform(putRequest)
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.word", is(wordPostDTO.getWord())));
 
