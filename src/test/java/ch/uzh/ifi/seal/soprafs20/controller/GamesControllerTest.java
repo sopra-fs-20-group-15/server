@@ -186,7 +186,7 @@ public class GamesControllerTest {
         // then
         mockMvc.perform(postRequest).andExpect(status().isOk())
                 .andExpect(jsonPath("$.numOfDesiredPlayers", is(5)))
-                .andExpect(jsonPath("$.numOfActualPlayers", is(2)))
+                .andExpect(jsonPath("$.numOfHumanPlayers", is(2)))
                 .andExpect(jsonPath("$.numOfAngels", is(0)))
                 .andExpect(jsonPath("$.numOfDevils", is(0)))
                 .andExpect(jsonPath("$.gameSetUpId", is(22)))
