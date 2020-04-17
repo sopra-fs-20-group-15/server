@@ -2,9 +2,11 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
+import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -48,14 +50,15 @@ public class LogicController {
     @PutMapping("/games/{gameId}/initializations")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void initializeTurn(@PathVariable String gameId, @RequestBody String playerToken) {
+    public void initializeTurn(@PathVariable String gameId, @RequestBody TokenDTO tokenDTO) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
-        validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
+        PlayerEntity playerToken = DTOMapper.INSTANCE.convertTokenDTOToEntity(tokenDTO);
+        validationService.checkPlayerIsPartOfGame(playerToken.getToken(), gameIdLong);
         logicService.initializeTurn(gameIdLong);
     }
 
-    @GetMapping("/games/{gameId}/cards/{playerToken}/")
+    @GetMapping("/games/{gameId}/cards/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CardGetDTO getCard(@PathVariable String gameId, @PathVariable String playerToken) {
@@ -79,8 +82,9 @@ public class LogicController {
         validationService.checkPlayerIsActivePlayerOfGame(cardPostDTO.getPlayerToken(), gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
         CardEntity card = cardService.getCardById(game.getActiveCardId());
-        if (game.getActiveMysteryWord() != ""){
+        if (game.getActiveMysteryWord().isBlank()){
         String word = cardService.chooseWordOnCard(cardPostDTO.getWordId(), card);
+        game.setActiveMysteryWord(word);
             WordPostDTO wordPostDTO = new WordPostDTO();
             wordPostDTO.setWord(word);
             return wordPostDTO;}
@@ -88,13 +92,13 @@ public class LogicController {
     }
 
     /**Gives back the chosen MysteryWord*/
-    @GetMapping("/games/{gameId}/activeWord/{playerToken}")
+    @GetMapping("/games/{gameId}/mysteryWord/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public WordPostDTO getMysteryWord(@PathVariable String gameId, @PathVariable String playerToken) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
-        validationService.checkPlayerIsPassivePlayerOfGame(playerToken, gameIdLong);
+        validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
         String word = game.getActiveMysteryWord();
         WordPostDTO wordPostDTO = new WordPostDTO();

@@ -249,6 +249,8 @@ public class GameService {
 //              further initialization
 
                 game.setValidCluesAreSet(false);
+                game.setHasEnded(true);
+                game.setHasBeenInitialized(false);
                 game.setClueMap(new HashMap<String,String>());
                 game.setActivePlayerId(getPlayerByToken(pt).getId());
                 game.setScoreboard(new Scoreboard());

@@ -70,6 +70,9 @@ public interface DTOMapper {
     @Mapping(source = "id", target = "id")
     PlayerEntity convertUserTokenDTOToEntity(PlayerTokenDTO playerTokenDTO);
 
+    @Mapping(source = "playerToken", target = "token")
+    PlayerEntity convertTokenDTOToEntity(TokenDTO tokenDTO);
+
     @Mapping(source = "token", target = "token")
     @Mapping(source = "username", target = "username")
     PlayerEntity convertUserPutUserIdDTOToEntity(PlayerPutUserIdDTO playerPutUserIdDTO);
