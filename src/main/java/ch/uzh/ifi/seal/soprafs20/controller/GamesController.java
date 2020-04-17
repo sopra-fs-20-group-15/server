@@ -62,7 +62,7 @@ public class GamesController {
         GameSetUpEntity game = DTOMapper.INSTANCE.convertGameSetUpPostDTOtoEntity(gamePostDTO);
         game.setHostName(player.getUsername());
         List<String> playerTokens = new ArrayList<String>();
-        playerTokens.add(player.getUsername());
+        playerTokens.add(player.getToken());
         game.setPlayerTokens(playerTokens);
         //Try to create Game
         GameSetUpEntity newGame = gameService.createGame(game);
