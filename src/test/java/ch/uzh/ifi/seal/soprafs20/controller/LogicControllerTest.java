@@ -435,6 +435,50 @@ public class LogicControllerTest {
 
     }
 
+    /**Tests a get-Request to /games/{gameId}/clues/players/{playerToken}*/
+    @Test
+    public void getCluePlayersWorks() throws Exception {
+        GameEntity game=new GameEntity();
+        List<PlayerNameDTO> list=new ArrayList<>();
+        PlayerNameDTO playerNameDTO= new PlayerNameDTO();
+        playerNameDTO.setPlayerName("Test");
+        list.add(playerNameDTO);
+
+        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
+        given(gameService.getGameById(Mockito.any())).willReturn(game);
+        given(logicService.getCluePlayers(Mockito.any())).willReturn(list);
+
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/clues/players/{playerToken}", "123","test");
+
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isOk());
+
+    }
+
+
+    @Test
+    public void getCluePlayersFailsBecausePlayerNotInGame() throws Exception {
+
+        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willThrow(new UnauthorizedException("Test"));
+
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/clues/players/{playerToken}", "123","test");
+
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    @Test
+    public void getCluePlayersFailsBecauseGameIdHasWrongFormat() throws Exception {
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/clues/players/{playerToken}", "abc","test");
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isBadRequest());
+
+    }
 
 }
 /**
