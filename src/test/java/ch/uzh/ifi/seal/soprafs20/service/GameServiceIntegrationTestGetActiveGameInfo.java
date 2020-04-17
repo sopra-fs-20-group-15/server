@@ -61,20 +61,20 @@ public class GameServiceIntegrationTestGetActiveGameInfo {
     private PlayerEntity p2;
     private PlayerEntity p3;
 
-    @BeforeTransaction
-    public void clean(){
+    /**Get successfully the information about a game*/
+    @Test
+    public void GetSuccessfullyInfoAboutAGame() {
+        //Preparations
         gameSetUpRepository.deleteAll();
         gameRepository.deleteAll();
         playerRepository.deleteAll();
-    }
 
-    @BeforeEach
-    public void setup() {
         game.setNumberOfPlayers(3L);
         game.setNumberOfAngles(0L);
         game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
+        game.setGameName("GAME");
         PlayerEntity playerOne= new PlayerEntity();
         PlayerEntity playerTwo= new PlayerEntity();
         PlayerEntity playerThree= new PlayerEntity();
@@ -112,11 +112,8 @@ public class GameServiceIntegrationTestGetActiveGameInfo {
 
         createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
 
-    }
 
-    /**Get successfully the information about a game*/
-    @Test
-    public void GetSuccessfullyInfoAboutAGame() {
+        /**Actual Test*/
         GameGetDTO gameGetDTO = gameService.getGameInformationById(createdActiveGame.getId());
 
         assertEquals(gameGetDTO.getId(), createdActiveGame.getId());
