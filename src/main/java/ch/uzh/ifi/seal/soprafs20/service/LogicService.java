@@ -241,6 +241,7 @@ public class LogicService {
             }
             rankScorePlayerNameList.set(j+1, current);
         }
+        return  rankScorePlayerNameList;
     }
 
 

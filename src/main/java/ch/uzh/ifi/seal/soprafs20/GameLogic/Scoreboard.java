@@ -40,9 +40,9 @@ public class Scoreboard {
     /**Transforms the internal statistics of the scoreboard into a format which is suitable for sending to the client*/
     public List<StatisticsGetDTO> transformIntoList(){
         List<StatisticsGetDTO> rankScorePlayerNameList = new ArrayList<StatisticsGetDTO>();
-        StatisticsGetDTO rankScorePlayerName = new StatisticsGetDTO();
         //Convert into a List of StatisticsGetDto which consists of the Rank, the Score and the playerName
         for (Map.Entry<PlayerEntity, Integer> entry : this.scoreboard.entrySet()){
+            StatisticsGetDTO rankScorePlayerName = new StatisticsGetDTO();
             PlayerEntity key = entry.getKey();
             rankScorePlayerName.setPlayerName(key.getUsername());
             rankScorePlayerName.setScore(entry.getValue());
