@@ -172,4 +172,18 @@ public class LogicController {
         return guessGetDTO;
     }
 
+    /**Check if the game has ended*/
+    @GetMapping("/games/{gameId}/ends/{playerToken}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameEndedDTO hasGameEnded(@PathVariable String gameId, @PathVariable String playerToken) {
+        stringIsALong(gameId);
+        Long gameIdLong = parseLong(gameId);
+        validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
+        Boolean hasGameEnded = logicService.hasGameEnded(gameIdLong);
+        GameEndedDTO gameEndedDTO = new GameEndedDTO();
+        gameEndedDTO.setHasGameEnded(hasGameEnded);
+        return gameEndedDTO;
+    }
+
 }

@@ -481,6 +481,32 @@ public class LogicControllerTest {
 
     }
 
+    /**Test the a Request to /games/{gameId}/ends/{playerToken} in order to see if the game has already ended*/
+    @Test
+    public void GetHasGameEndedWorks() throws Exception {
+        //given
+        GameEndedDTO gameEndedDTO = new GameEndedDTO();
+        gameEndedDTO.setHasGameEnded(false);
+
+
+        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
+        given(logicService.hasGameEnded(Mockito.any())).willReturn(false);
+
+
+
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder getRequest = get("/games/{gameId}/ends/{playerToken}", "123","test");
+        // then
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.hasGameEnded", is(gameEndedDTO.getHasGameEnded())));
+
+    }
+
+
+
 }
 /**
  public void createUser_invalidInput_userExistsAlready() throws Exception {
