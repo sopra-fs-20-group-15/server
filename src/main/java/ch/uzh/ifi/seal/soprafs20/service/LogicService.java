@@ -56,7 +56,7 @@ public class LogicService {
     }
 
     /**Puts the active player at the end of the passive Players List, takes the passive Player at 0 and make him the active player*/
-    protected GameEntity goOnePlayerFurther(GameEntity game){
+    public GameEntity goOnePlayerFurther(GameEntity game){
         List<Long> passivePlayerIds = game.getPassivePlayerIds();
         passivePlayerIds.add(game.getActivePlayerId());
         Long playerId = passivePlayerIds.remove(0);
@@ -65,7 +65,8 @@ public class LogicService {
         return game;
     }
 
-    protected GameEntity drawCardFromStack(GameEntity game){
+    /***/
+    public GameEntity drawCardFromStack(GameEntity game){
         if (game.getCardIds().size() > 0){
             List<Long> cardIds = game.getCardIds();
             game.setActiveCardId(cardIds.remove(cardIds.size()-1));
@@ -76,6 +77,7 @@ public class LogicService {
         }
     }
 
+    /**Initializes a turn*/
     public GameEntity initializeTurn(Long gameId){
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);
         if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
@@ -147,12 +149,14 @@ public class LogicService {
         else {throw new NotFoundException("The MysteryWord not been set yet!");}
     }
 
+    /**Set the Guess*/
     public void setGuess(GameEntity game, String guess){
         boolean isValidGuess = wordComparer.compareMysteryWords(game.getActiveMysteryWord(), guess);
         game.setGuess(guess);
         game.setIsValidGuess(isValidGuess);
     }
 
+    /**Lets players give clues and saves them into a list*/
     public void giveClue(String playerToken, GameEntity game, CluePostDTO cluePostDTO){
         if (game.getClueMap().get(playerToken)==null) {
             Map<String, String> clueMap =game.getClueMap();
@@ -184,7 +188,7 @@ public class LogicService {
         }
     }
 
-
+    /**Get full clue list*/
     public List<ClueGetDTO> getClues(GameEntity game) {
 //        check if clues have already been set for this round
         if (game.getValidCluesAreSet()) {

@@ -1,17 +1,19 @@
-package ch.uzh.ifi.seal.soprafs20.service;
+package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
-import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
+import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.service.LogicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +27,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 
 @Transactional
 @WebAppConfiguration
 @SpringBootTest
-public class LogicServiceIntegrationTestInizializeTurn {
+public class LogicServiceIntegrationTestGetClues {
+
     @Autowired
     private GameSetUpRepository gameSetUpRepository;
 
@@ -111,48 +114,90 @@ public class LogicServiceIntegrationTestInizializeTurn {
 
         createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
         createdActiveGame.setActiveMysteryWord("Test");
-        createdActiveGame.setHasEnded(true);
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Clue");
         logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
     }
- /**Initialize Turn works*/
- /**Initialize Turn does not work since the game has not ended yet*/
- /**Initialize Turn does not work since the game has already been initialized*/
+
     @Test
-    public void InitializeTurnWorks() {
+    public void cluesAreSetAndGetClueWorksWithOnlyHumanPlayers() {
+        createdActiveGame.setActiveMysteryWord("Test");
+        CluePostDTO cluePostDTO = new CluePostDTO();
 
+        cluePostDTO.setPlayerToken("Three");
+        cluePostDTO.setClue("Table");
+        logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
 
-        GameEntity initializedGame = logicService.initializeTurn(createdActiveGame.getId());
+        assertFalse(createdActiveGame.getValidClues().isEmpty());
+        List<ClueGetDTO> listOfClues = logicService.getClues(createdActiveGame);
 
-        //ActiveCard, CardIds, ActivePlayerId and PassivePlayerIds get already tested in LogicServiceTestInitializeTurn by analysing the helper functions
-        //Evaluation
-        assertEquals(initializedGame.getActiveMysteryWord(), "");
-        assertEquals(initializedGame.getHasEnded(), false);
-        assertEquals(initializedGame.getRightGuess(), false);
-        assertEquals(initializedGame.getRightGuess(), false);
-        assertEquals(initializedGame.getValidClue(), false);
-        assertEquals(initializedGame.getValidCluesAreSet(), false);
-        assertEquals(initializedGame.getClueMap(), new HashMap<String, String>());
-        assertEquals(initializedGame.getValidClues(), new HashMap<String, String>());
-        assertEquals(initializedGame.getGuess(), "");
-        assertEquals(initializedGame.getIsValidGuess(), false);
-        assertEquals(initializedGame.getHasBeenInitialized(), true);
+        assertEquals(2, listOfClues.size());
+
+        assertEquals("Clue", listOfClues.get(0).getClue());
+        assertEquals(p2.getUsername(), listOfClues.get(0).getPlayerName());
+
+        assertEquals("Table", listOfClues.get(1).getClue());
+        assertEquals(p3.getUsername(), listOfClues.get(1).getPlayerName());
     }
 
     @Test
-    public void InitializeTurnErrorBecauseGameHasAlreadyBeenInitialized() {
-        createdActiveGame.setHasBeenInitialized(true);
+    public void cluesAreSetAndGetClueWorksWithBots() {
+        createdActiveGame.setActiveMysteryWord("Test");
+//      add bots
+        Angel angel=new Angel();
+        angel.setName("Angelo_Merte");
+        angel.setToken("Merte");
 
-        assertThrows(NoContentException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
+        List<Angel> angels=new ArrayList<>();
+        angels.add(angel);
+
+        createdActiveGame.setAngels(angels);
+
+        Map<String, String> map=createdActiveGame.getClueMap();
+        map.put(angel.getToken(),"Angel");
+        createdActiveGame.setClueMap(map);
+
+        Devil devil=new Devil();
+        devil.setName("Lucius");
+        devil.setToken("Malfoy");
+
+        List<Devil> devils=new ArrayList<>();
+        devils.add(devil);
+
+        createdActiveGame.setDevils(devils);
+
+        map=createdActiveGame.getClueMap();
+        map.put(devil.getToken(),"Devil");
+        createdActiveGame.setClueMap(map);
+
+        CluePostDTO cluePostDTO = new CluePostDTO();
+
+        cluePostDTO.setPlayerToken("Three");
+        cluePostDTO.setClue("Table");
+        logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
+
+        assertFalse(createdActiveGame.getValidClues().isEmpty());
+        List<ClueGetDTO> listOfClues = logicService.getClues(createdActiveGame);
+
+        assertEquals(4, listOfClues.size());
+
+        assertEquals("Devil", listOfClues.get(0).getClue());
+        assertEquals(devil.getName(), listOfClues.get(0).getPlayerName());
+
+        assertEquals("Clue", listOfClues.get(1).getClue());
+        assertEquals(p2.getUsername(), listOfClues.get(1).getPlayerName());
+
+        assertEquals("Angel", listOfClues.get(3).getClue());
+        assertEquals(angel.getName(), listOfClues.get(3).getPlayerName());
+
+        assertEquals("Table", listOfClues.get(2).getClue());
+        assertEquals(p3.getUsername(), listOfClues.get(2).getPlayerName());
     }
 
     @Test
-    public void InitializeTurnErrorBecauseGameHasNotEndedYet() {
-        createdActiveGame.setHasBeenInitialized(true);
-
-        assertThrows(NoContentException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
+    public void validCluesHaveNotBeenSetYet() {
+        assertThrows(NoContentException.class, () -> {logicService.getClues(createdActiveGame); });
     }
 
 }

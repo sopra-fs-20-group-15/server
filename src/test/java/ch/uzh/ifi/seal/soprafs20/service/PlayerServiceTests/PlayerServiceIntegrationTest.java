@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.service;
+package ch.uzh.ifi.seal.soprafs20.service.PlayerServiceTests;
 
 /**
  * Test class for the UserResource REST resource.

@@ -64,7 +64,8 @@ public class LogicControllerTest {
     @Test
     public void putInitializesSuccessfully() throws Exception {
         // given
-        String playerToken = "AAJKHS";
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setPlayerToken("AAJKHS");
         GameEntity game = new GameEntity();
         //returns
 
@@ -75,7 +76,7 @@ public class LogicControllerTest {
 
         MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/initializations", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(playerToken));
+                .content(asJsonString(tokenDTO));
 
         // then
 
@@ -111,8 +112,7 @@ public class LogicControllerTest {
         // then
 
         mockMvc.perform(putRequest)
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.word", is(wordPostDTO.getWord())));
+                .andExpect(status().isCreated());
 
 
     }
@@ -172,10 +172,11 @@ public class LogicControllerTest {
          doReturn(game).when(gameService.getGameById(Mockito.any()));*/
         given(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.any(), Mockito.any())).willReturn(true);
         given(gameService.getGameById(Mockito.any())).willReturn(game);
+        given(logicService.getMysteryWord(Mockito.any())).willReturn("Eis");
 
         // when/then -> do the request + validate the result
 
-        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/activeWord/{playerToken}/", 1, "df")
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/mysteryWord/{playerToken}/", 1, "df")
                 .contentType(MediaType.APPLICATION_JSON);
 
         // then

@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.service;
+package ch.uzh.ifi.seal.soprafs20.service.PlayerServiceTests;
 
 /**
 public class PlayerServiceTest {
