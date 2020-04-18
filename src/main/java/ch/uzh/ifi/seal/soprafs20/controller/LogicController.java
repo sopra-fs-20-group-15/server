@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
@@ -77,14 +78,13 @@ public class LogicController {
     @PutMapping("/games/{gameId}/mysteryWord")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public WordPostDTO setMysteryWord(@PathVariable String gameId, @RequestBody CardPostDTO cardPostDTO) {
+    public void setMysteryWord(@PathVariable String gameId, @RequestBody CardPostDTO cardPostDTO) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsActivePlayerOfGame(cardPostDTO.getPlayerToken(), gameIdLong);
         String word = logicService.setMysteryWord(gameIdLong, cardPostDTO.getWordId());
         WordPostDTO wordPostDTO = new WordPostDTO();
         wordPostDTO.setWord(word);
-        return wordPostDTO;
     }
 
     /**Gives back the chosen MysteryWord*/
@@ -94,7 +94,7 @@ public class LogicController {
     public WordPostDTO getMysteryWord(@PathVariable String gameId, @PathVariable String playerToken) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
-        validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
+        validationService.checkPlayerIsPassivePlayerOfGame(playerToken, gameIdLong);
         String word = logicService.getMysteryWord(gameIdLong);
         WordPostDTO wordPostDTO = new WordPostDTO();
         wordPostDTO.setWord(word);
@@ -170,6 +170,17 @@ public class LogicController {
         guessGetDTO.setGuess(guess);
         guessGetDTO.setIsValidGuess(isValidGuess);
         return guessGetDTO;
+    }
+
+    /**Get the current scores of the players*/
+        @GetMapping("/games/{gameId}/statistics")
+        @ResponseStatus(HttpStatus.OK)
+        @ResponseBody
+        public List<StatisticsGetDTO> getScores(@PathVariable String gameId, @PathVariable String playerToken) {
+            stringIsALong(gameId);
+            Long gameIdLong = parseLong(gameId);
+            validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
+            return logicService.getStatistics(gameIdLong);
     }
 
 }

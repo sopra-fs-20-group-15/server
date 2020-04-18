@@ -15,10 +15,7 @@ import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerNameDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.WordPostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import org.slf4j.Logger;
@@ -231,4 +228,42 @@ public class LogicService {
         }
         return  list;
     }
+
+    /**Orders the items of a list*/
+    public List<StatisticsGetDTO> orderStatisticsGetDTOList(List<StatisticsGetDTO> rankScorePlayerNameList){
+        //Sort with insertion sort (since max. 7 human players, time complexity is not that important(if more players, quick sort would have been used))
+        for(int i = 1; i < rankScorePlayerNameList.size(); i++){
+            StatisticsGetDTO current = rankScorePlayerNameList.get(i);
+            int j = i -1;
+            while(j >= 0 && current.getScore() > rankScorePlayerNameList.get(j).getScore()){
+                rankScorePlayerNameList.set(j+1, rankScorePlayerNameList.get(j));
+                j--;
+            }
+            rankScorePlayerNameList.set(j+1, current);
+        }
+    }
+
+
+
+    /**Get the scores of the players in a game*/
+    public List<StatisticsGetDTO> getStatistics(Long gameId){
+        //Get a game by Id;
+        Optional<GameEntity> gameOp = gameRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
+        GameEntity game = gameOp.get();
+        Scoreboard scoreboard = game.getScoreboard();
+        //Convert into a List of StatisticsGetDto which consists of the Rank, the Score and the playerName
+        List<StatisticsGetDTO> rankScorePlayerNameList = new ArrayList<StatisticsGetDTO>();
+        rankScorePlayerNameList = scoreboard.transformIntoList();
+        //Order descending based on score
+        rankScorePlayerNameList = orderStatisticsGetDTOList(rankScorePlayerNameList);
+        //Set the placement
+        int i = 1;
+        for(StatisticsGetDTO elements : rankScorePlayerNameList){
+            elements.setPlacement(i);
+            i++;
+        }
+        return rankScorePlayerNameList;
+    }
+
 }
