@@ -113,10 +113,11 @@ public class LogicServiceIntegrationTestHasGameEnded {
 
         createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
         createdActiveGame.setActiveMysteryWord("Test");
+        createdActiveGame.setTimeStart(123L);
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Clue");
-        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue( createdActiveGame, cluePostDTO);
         logicService.initializeTurn(createdActiveGame.getId());
     }
 

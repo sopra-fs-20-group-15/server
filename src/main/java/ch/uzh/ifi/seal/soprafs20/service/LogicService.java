@@ -5,10 +5,7 @@ import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.WordComparer;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
@@ -46,13 +43,15 @@ public class LogicService {
     private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
     private final CardService cardService;
+    private final GameService gameService;
 
     @Autowired
-    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository, CardService cardService) {
+    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository, CardService cardService,GameService gameService) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.wordComparer = new WordComparer();
         this.cardService = cardService;
+        this.gameService= gameService;
     }
 
     /**Puts the active player at the end of the passive Players List, takes the passive Player at 0 and make him the active player*/
@@ -91,11 +90,16 @@ public class LogicService {
                 goOnePlayerFurther(game);
                 //Update Cards
                 drawCardFromStack(game);
+                for (PlayerEntity player: game.getPlayers()) {
+                    player.setTimePassed(null);
+                }
                 game.setRightGuess(false);
                 game.setValidClue(false);
                 game.setValidCluesAreSet(false);
                 game.setClueMap(new HashMap<String, String>());
                 game.setValidClues(new HashMap<String, String>());
+                game.setAnalyzedClues(new HashMap<String, Integer>());
+                game.setTimeStart(null);
                 game.setGuess("");
                 game.setIsValidGuess(false);
                 return game;
@@ -132,6 +136,7 @@ public class LogicService {
             CardEntity card = cardService.getCardById(game.getActiveCardId());
             String word = cardService.chooseWordOnCard(wordId, card);
             game.setActiveMysteryWord(word);
+            game.setTimeStart(System.currentTimeMillis());
             return word;
         }
         else {throw new NoContentException("The MysteryWord has already been set");}
@@ -154,20 +159,25 @@ public class LogicService {
         boolean isValidGuess = wordComparer.compareMysteryWords(game.getActiveMysteryWord(), guess);
         game.setGuess(guess);
         game.setIsValidGuess(isValidGuess);
+//        Time to dish out some points fam!
+        game.updateScoreboard();
     }
 
     /**Lets players give clues and saves them into a list*/
-    public void giveClue(String playerToken, GameEntity game, CluePostDTO cluePostDTO){
-        if (game.getClueMap().get(playerToken)==null) {
+    public void giveClue(GameEntity game, CluePostDTO cluePostDTO){
+        if (game.getClueMap().get(cluePostDTO.getPlayerToken())==null) {
             Map<String, String> clueMap =game.getClueMap();
             clueMap.put(cluePostDTO.getPlayerToken(),cluePostDTO.getClue());
             game.setClueMap(clueMap);
+            System.currentTimeMillis();
+            gameService.getPlayerByToken(cluePostDTO.getPlayerToken()).setTimePassed(System.currentTimeMillis()-game.getTimeStart());
         }
         else throw new UnauthorizedException("You have already submitted a clue for this round!");
         if (game.getClueMap().size()==game.getPlayers().size()+game.getNumOfBots()-1){
             ArrayList<String> clues = new ArrayList<String>(game.getClueMap().values());
             String mystery=game.getActiveMysteryWord();
             Map<String,Integer> analyzedClues=wordComparer.compareClues(clues, mystery);
+            game.setAnalyzedClues(analyzedClues);
             Map<String,String> validClues = new HashMap<>();
             for ( Map.Entry<String,String> entry: game.getClueMap().entrySet()){
                 if (playerRepository.findByToken(entry.getKey())!=null) {
@@ -185,6 +195,7 @@ public class LogicService {
             }
             game.setValidClues(validClues);
             game.setValidCluesAreSet(true);
+            game.setTimeStart(System.currentTimeMillis());
         }
     }
 
@@ -232,7 +243,7 @@ public class LogicService {
         return  list;
     }
 
-    /**Returns wheter the game has already ended or not*/
+    /**Returns whether the game has already ended or not*/
     public boolean hasGameEnded(Long gameId){
         //Get the game
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);

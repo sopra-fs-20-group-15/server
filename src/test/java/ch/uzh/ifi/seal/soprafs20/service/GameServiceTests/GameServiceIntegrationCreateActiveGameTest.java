@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
@@ -132,9 +133,12 @@ public class GameServiceIntegrationCreateActiveGameTest {
         assertNotNull(createdActiveGame.getScoreboard());
 //      Check if every human player is in ScoreBoard
         for (PlayerEntity player: createdActiveGame.getPlayers()) {
-            assertTrue(createdActiveGame.getScoreboard().getEndScore().containsKey(player));
+            assertTrue(createdActiveGame.getScoreboard().getScore().containsKey(player.getUsername()));
         }
-
+        assertNull(createdActiveGame.getTimeStart());
+        assertEquals(createdActiveGame.getAnalyzedClues(), new HashMap<String, Integer>());
+        assertEquals(createdActiveGame.getValidClues(), new HashMap<String, String>());
+        assertFalse(createdActiveGame.getHasBeenInitialized());
     }
 
     @Test

@@ -112,6 +112,7 @@ public class LogicServiceIntegrationTestGetCluePlayers {
 
         createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
         createdActiveGame.setActiveMysteryWord("Test");
+        createdActiveGame.setTimeStart(123L);
 
 
 
@@ -124,11 +125,11 @@ public class LogicServiceIntegrationTestGetCluePlayers {
 
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("TwoClue");
-        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
 
         cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("ThreeClue");
-        logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
         Map<String,String> test= createdActiveGame.getClueMap();
         test.put("Angel_1", "Test");
         createdActiveGame.setClueMap(test);

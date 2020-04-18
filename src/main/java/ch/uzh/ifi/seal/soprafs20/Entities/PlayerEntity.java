@@ -38,13 +38,23 @@ public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
     @Column(nullable = false)
     private int score;
 
-    @Override
+    @Column
+    private Long timePassed;
 
+    @Override
     public int compareTo(PlayerEntity other) {
         if (this.getScore() == other.getScore()) return 0;
         else if (this.getScore() > other.getScore()) return 1;
 
         else return -1;
+    }
+
+    public Long getTimePassed() {
+        return timePassed;
+    }
+
+    public void setTimePassed(Long timePassed) {
+        this.timePassed = timePassed;
     }
 
     public int getScore() {

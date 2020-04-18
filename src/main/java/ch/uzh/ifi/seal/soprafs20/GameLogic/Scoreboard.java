@@ -11,20 +11,20 @@ import java.util.Map;
 @Embeddable
 public class Scoreboard {
     @ElementCollection
-    private Map<PlayerEntity, Integer> scoreboard = new HashMap<>();
+    private Map<String, Integer> scoreboard = new HashMap<>();
 
     public void initializeMap(List<PlayerEntity> playerEntities) {
         for (PlayerEntity playerEntity : playerEntities) {
-            scoreboard.put(playerEntity, 0);
+            scoreboard.put(playerEntity.getUsername(), 0);
         }
     }
 
-    public Map<PlayerEntity, Integer> getEndScore() {
+    public Map<String, Integer> getScore() {
         return scoreboard;
     }
 
     public void updateScore(PlayerEntity playerEntity, int score) {
-        scoreboard.put(playerEntity, scoreboard.get(playerEntity) + score);
+        scoreboard.put(playerEntity.getUsername(), scoreboard.get(playerEntity.getUsername()) + score);
     }
 
 }

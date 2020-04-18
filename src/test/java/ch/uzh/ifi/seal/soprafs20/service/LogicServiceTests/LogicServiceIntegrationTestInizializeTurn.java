@@ -110,11 +110,12 @@ public class LogicServiceIntegrationTestInizializeTurn {
 
         createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
         createdActiveGame.setActiveMysteryWord("Test");
+        createdActiveGame.setTimeStart(123L);
         createdActiveGame.setHasEnded(true);
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Clue");
-        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
     }
  /**Initialize Turn works*/
  /**Initialize Turn does not work since the game has not ended yet*/
@@ -135,6 +136,8 @@ public class LogicServiceIntegrationTestInizializeTurn {
         assertEquals(initializedGame.getValidCluesAreSet(), false);
         assertEquals(initializedGame.getClueMap(), new HashMap<String, String>());
         assertEquals(initializedGame.getValidClues(), new HashMap<String, String>());
+        assertEquals(initializedGame.getAnalyzedClues(), new HashMap<String, Integer>());
+        assertNull(initializedGame.getTimeStart());
         assertEquals(initializedGame.getGuess(), "");
         assertEquals(initializedGame.getIsValidGuess(), false);
         assertEquals(initializedGame.getHasBeenInitialized(), true);

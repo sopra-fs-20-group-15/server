@@ -117,7 +117,8 @@ public class LogicServiceIntegrationTestGetClues {
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Clue");
-        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+        createdActiveGame.setTimeStart(123L);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
     }
 
     @Test
@@ -127,7 +128,7 @@ public class LogicServiceIntegrationTestGetClues {
 
         cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("Table");
-        logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
 
         assertFalse(createdActiveGame.getValidClues().isEmpty());
         List<ClueGetDTO> listOfClues = logicService.getClues(createdActiveGame);
@@ -175,7 +176,7 @@ public class LogicServiceIntegrationTestGetClues {
 
         cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("Table");
-        logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
 
         assertFalse(createdActiveGame.getValidClues().isEmpty());
         List<ClueGetDTO> listOfClues = logicService.getClues(createdActiveGame);

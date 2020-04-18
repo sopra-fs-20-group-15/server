@@ -220,6 +220,7 @@ public class LogicControllerTest {
         player.setUsername("playerName");
         game.getPlayers().add(player);
         game.getPlayers().add(new PlayerEntity());
+        game.setActiveMysteryWord("RandomThing");
 
         given(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
         given(gameService.getGameById(Mockito.any())).willReturn(game);
@@ -248,6 +249,7 @@ public class LogicControllerTest {
         List<PlayerEntity> players= new ArrayList<>();
         game.setClueMap(clueList);
         game.setPlayers(players);
+        game.setActiveMysteryWord("RandomThing");
 
         PlayerEntity player = new PlayerEntity();
         player.setUsername("playerName");
@@ -257,7 +259,7 @@ public class LogicControllerTest {
         given(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
         given(gameService.getGameById(Mockito.any())).willReturn(game);
         given(playerService.getPlayerByToken(Mockito.anyString())).willReturn(player);
-        doThrow(new UnauthorizedException("Test")).when(logicService).giveClue(Mockito.any(),Mockito.any(),Mockito.any());
+        doThrow(new UnauthorizedException("Test")).when(logicService).giveClue(Mockito.any(),Mockito.any());
 
         MockHttpServletRequestBuilder postRequest = post("/games/{gameId}/clues/", "123")
                 .contentType(MediaType.APPLICATION_JSON)

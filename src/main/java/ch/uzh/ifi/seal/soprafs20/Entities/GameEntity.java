@@ -69,6 +69,9 @@ public class GameEntity {
     @ElementCollection
     Map<String,String> validClues;
 
+    @ElementCollection
+    Map<String,Integer> analyzedClues;
+
     @Embedded
     private Scoreboard scoreboard;
 
@@ -80,6 +83,25 @@ public class GameEntity {
 
     @Column
     private boolean isValidGuess;
+
+    @Column
+    private Long timeStart;
+
+    public void setTimeStart(Long timeStart) {
+        this.timeStart = timeStart;
+    }
+
+    public Long getTimeStart() {
+        return timeStart;
+    }
+
+    public Map<String, Integer> getAnalyzedClues() {
+        return analyzedClues;
+    }
+
+    public void setAnalyzedClues(Map<String, Integer> analyzedClues) {
+        this.analyzedClues = analyzedClues;
+    }
 
     public void setValidCluesAreSet(Boolean validCluesAreSet) {
         this.validCluesAreSet = validCluesAreSet;
@@ -245,20 +267,22 @@ public class GameEntity {
     }
 
      public void updateScoreboard(){
-        for (PlayerEntity player: players) {
-            if (activePlayerId.equals(player.getId())) scoreboard.updateScore(player,
-                    ScoreCalculator.calculateScoreActivePlayer(player,isValidGuess, 33000 - getMilliseconds()));
-            else if (passivePlayerIds.contains(player.getId())) {
-                if (validClues.containsKey(clueMap.get(player.getUsername()))) scoreboard.updateScore(player,
-                        ScoreCalculator.calculateScorePassivePlayer(player,isValidGuess,true,
-                                33000 -getMilliseconds(), getNumOfDuplicates(player)));
-                else scoreboard.updateScore(player,
-                        ScoreCalculator.calculateScorePassivePlayer(player,isValidGuess,false,
-                                33000 -getMilliseconds(), getNumOfDuplicates(player)));
-            }
-        }
-
+         for (PlayerEntity player: this.getPlayers()) {
+             if (this.getActivePlayerId().equals(player.getId())) {
+                 Scoreboard sc =this.getScoreboard();
+                 sc.updateScore(player, ScoreCalculator.calculateScoreActivePlayer(player, this.getIsValidGuess()));
+                 this.setScoreboard(sc);
+             }
+             else {
+                 int numOfDuplicates = this.getAnalyzedClues().get(this.getClueMap().get(player.getToken()));
+                 boolean validClue = this.getValidClues().containsValue(player.getUsername());
+                 Scoreboard sc = this.getScoreboard();
+                 sc.updateScore(player, ScoreCalculator.calculateScorePassivePlayer(player, this.getIsValidGuess(), validClue, numOfDuplicates));
+                 this.setScoreboard(sc);
+             }
+         }
      }
+
       public String getGuess() {
         	return Guess;
       }

@@ -73,6 +73,7 @@ public class LogicServiceGiveClueIntegrationTest {
         game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
+
         PlayerEntity playerOne= new PlayerEntity();
         PlayerEntity playerTwo= new PlayerEntity();
         PlayerEntity playerThree= new PlayerEntity();
@@ -109,6 +110,8 @@ public class LogicServiceGiveClueIntegrationTest {
         createdGame =gameService.createGame(game);
 
         createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
+        createdActiveGame.setActiveMysteryWord("RandomMysteryWord");
+        createdActiveGame.setTimeStart(123L);
     }
 
     @Test
@@ -117,7 +120,9 @@ public class LogicServiceGiveClueIntegrationTest {
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Clue");
-        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+        p2.setTimePassed(123L);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
+        assertNotEquals(123L,p2.getTimePassed());
         assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
         assertEquals(createdActiveGame.getClueMap().get("Two"), "Clue");
         assertTrue(createdActiveGame.getValidClues().isEmpty());
@@ -130,10 +135,10 @@ public class LogicServiceGiveClueIntegrationTest {
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Clue");
-        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
         assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
         assertEquals(createdActiveGame.getClueMap().get("Two"), "Clue");
-        assertThrows(UnauthorizedException.class, () -> {logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);});
+        assertThrows(UnauthorizedException.class, () -> {logicService.giveClue(createdActiveGame, cluePostDTO);});
     }
 
     @Test
@@ -142,11 +147,11 @@ public class LogicServiceGiveClueIntegrationTest {
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Clue");
-        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
 
         cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("Table");
-        logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
 
         assertTrue(createdActiveGame.getValidCluesAreSet());
         assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
@@ -165,11 +170,11 @@ public class LogicServiceGiveClueIntegrationTest {
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Testing");
-        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
 
         cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("Table");
-        logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
 
         assertTrue(createdActiveGame.getValidCluesAreSet());
         assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
@@ -187,11 +192,11 @@ public class LogicServiceGiveClueIntegrationTest {
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Table");
-        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
 
         cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("table");
-        logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
 
         assertTrue(createdActiveGame.getValidCluesAreSet());
         assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
@@ -209,11 +214,11 @@ public class LogicServiceGiveClueIntegrationTest {
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Tower");
-        logicService.giveClue(p2.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
 
         cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("towering");
-        logicService.giveClue(p3.getToken(), createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame, cluePostDTO);
 
         assertTrue(createdActiveGame.getValidCluesAreSet());
         assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
