@@ -96,7 +96,7 @@ public class WordComparer {
         word1 = word1.toLowerCase();
         word2 = word2.toLowerCase();
         if ((word2.contains(word1) && word1.length() > 3)|| (word1.contains(word2) && word2.length() > 3)){
-            return false;
+            return true;
         }
         if (word1.length() != word2.length()){
             return false;
