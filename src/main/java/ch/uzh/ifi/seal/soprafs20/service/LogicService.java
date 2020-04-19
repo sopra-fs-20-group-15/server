@@ -229,6 +229,23 @@ public class LogicService {
         return  list;
     }
 
+
+    /**Returns wheter the game has already ended or not*/
+
+    public boolean hasGameEnded(Long gameId){
+        //Get the game
+        Optional<GameEntity> gameOp = gameRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
+        GameEntity game = gameOp.get();
+        //Check if the card stack is empty. If so, set gameHasEnded to true
+        if (game.getCardIds().size() == 0){
+            game.setHasEnded(true);
+            return true;
+
+        }
+        return false;
+    }
+
     /**Orders the items of a list*/
     public List<StatisticsGetDTO> orderStatisticsGetDTOList(List<StatisticsGetDTO> rankScorePlayerNameList){
         //Sort with insertion sort (since max. 7 human players, time complexity is not that important(if more players, quick sort would have been used))
