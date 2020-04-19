@@ -20,7 +20,7 @@ public class ScoreboardTest {
 
     @BeforeEach
     public void setup() {
-        Map<PlayerEntity, Integer> scores = new HashMap<PlayerEntity, Integer>();
+        Map<String, Integer> scores = new HashMap<String, Integer>();
         //players
         PlayerEntity player1 = new PlayerEntity();
         player1.setUsername("A");
@@ -31,10 +31,10 @@ public class ScoreboardTest {
         PlayerEntity player4 = new PlayerEntity();
         player1.setUsername("D");
         //put with scores into hash map
-        scores.put(player1,100);
-        scores.put(player2,200);
-        scores.put(player3,300);
-        scores.put(player4,400);
+        scores.put(player1.getUsername(),100);
+        scores.put(player2.getUsername(),200);
+        scores.put(player3.getUsername(),300);
+        scores.put(player4.getUsername(),400);
         scoreboard.setScoreboard(scores);
     }
 

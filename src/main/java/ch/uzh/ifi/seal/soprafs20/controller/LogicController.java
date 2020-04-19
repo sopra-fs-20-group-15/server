@@ -112,7 +112,7 @@ public class LogicController {
         validationService.checkPlayerIsPassivePlayerOfGame(cluePostDTO.getPlayerToken(), gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
         if(game.getActiveMysteryWord().isBlank()) throw new ConflictException("Turn order violated : Mystery Word has not been chosen yet!");
-        logicService.giveClue(cluePostDTO.getPlayerToken(),game,cluePostDTO);
+        logicService.giveClue(game,cluePostDTO);
     }
 
     /**get the valid clue list*/
@@ -148,6 +148,7 @@ public class LogicController {
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsActivePlayerOfGame(guessPostDTO.getPlayerToken(), gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
+        if (game.getValidClues().isEmpty()) throw new ConflictException("Turn order violated : No valid clues have been provided to you yet");
         if (!game.getActiveMysteryWord().isBlank()) {
             if (game.getGuess().isBlank()) {
                 logicService.setGuess(game, guessPostDTO.getGuess());

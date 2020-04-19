@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 
@@ -110,22 +111,36 @@ public class LogicServiceSetGuessIntegrationTest {
         createdGame = gameService.createGame(game);
 
         createdActiveGame = gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
+        logicService.initializeTurn(createdActiveGame.getId());
+        logicService.setMysteryWord(createdActiveGame.getId(),3L);
+        createdActiveGame.setActiveMysteryWord("Shoe");
+
+        CluePostDTO cluePostDTO=new CluePostDTO();
+        cluePostDTO.setPlayerToken("One");
+        cluePostDTO.setClue("Gremlin");
+        logicService.giveClue(createdActiveGame,cluePostDTO);
+
+        cluePostDTO.setPlayerToken("Three");
+        cluePostDTO.setClue("Nutcracker");
+        logicService.giveClue(createdActiveGame,cluePostDTO);
     }
 
     @Test
     public void activePlayerGivesCorrectGuess() {
-        createdActiveGame.setActiveMysteryWord("Test");
+        Map<String, Integer> scoresBefore= Map.copyOf(createdActiveGame.getScoreboard().getScore());
         GuessPostDTO guessPostDTO = new GuessPostDTO();
         guessPostDTO.setPlayerToken("Two");
-        guessPostDTO.setGuess("Test");
+        guessPostDTO.setGuess("Shoe");
         logicService.setGuess(createdActiveGame, guessPostDTO.getGuess());
-        assertEquals(createdActiveGame.getGuess(), "Test");
+        assertEquals(createdActiveGame.getGuess(), "Shoe");
         assertTrue(createdActiveGame.getIsValidGuess());
+        for (Map.Entry<String, Integer> entry: scoresBefore.entrySet()) {
+            assertNotEquals(entry.getValue(),createdActiveGame.getScoreboard().getScore().get(entry.getKey()));
+        }
     }
 
     @Test
     public void activePlayerGivesIncorrectGuess() {
-        createdActiveGame.setActiveMysteryWord("Test");
         GuessPostDTO guessPostDTO = new GuessPostDTO();
         guessPostDTO.setPlayerToken("Two");
         guessPostDTO.setGuess("Tree");

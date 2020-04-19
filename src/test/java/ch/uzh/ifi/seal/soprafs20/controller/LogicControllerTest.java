@@ -165,6 +165,9 @@ public class LogicControllerTest {
         GameEntity game = new GameEntity();
         game.setGuess("");
         game.setActiveMysteryWord("test");
+        Map<String, String> map= new HashMap<>();
+        map.put("Test", "Test");
+        game.setValidClues(map);
 
         /**
          doReturn(true).when(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.any(),Mockito.any()));

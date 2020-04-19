@@ -15,11 +15,11 @@ public class Scoreboard {
     @ElementCollection
     private Map<String, Integer> scoreboard = new HashMap<>();
 
-    public Map<PlayerEntity, Integer> getScoreboard() {
+    public Map<String, Integer> getScoreboard() {
         return scoreboard;
     }
 
-    public void setScoreboard(Map<PlayerEntity, Integer> scoreboard) {
+    public void setScoreboard(Map<String, Integer> scoreboard) {
         this.scoreboard = scoreboard;
     }
 
@@ -41,10 +41,9 @@ public class Scoreboard {
     public List<StatisticsGetDTO> transformIntoList(){
         List<StatisticsGetDTO> rankScorePlayerNameList = new ArrayList<StatisticsGetDTO>();
         //Convert into a List of StatisticsGetDto which consists of the Rank, the Score and the playerName
-        for (Map.Entry<PlayerEntity, Integer> entry : this.scoreboard.entrySet()){
+        for (Map.Entry<String, Integer> entry : this.scoreboard.entrySet()){
             StatisticsGetDTO rankScorePlayerName = new StatisticsGetDTO();
-            PlayerEntity key = entry.getKey();
-            rankScorePlayerName.setPlayerName(key.getUsername());
+            rankScorePlayerName.setPlayerName(entry.getKey());
             rankScorePlayerName.setScore(entry.getValue());
             rankScorePlayerNameList.add(rankScorePlayerName);
         }

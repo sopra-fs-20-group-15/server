@@ -168,6 +168,9 @@ public class LogicService {
         boolean isValidGuess = wordComparer.compareMysteryWords(game.getActiveMysteryWord(), guess);
         game.setGuess(guess);
         game.setIsValidGuess(isValidGuess);
+        for (PlayerEntity player:game.getPlayers()) {
+            if (player.getId().equals(game.getActivePlayerId())) player.setTimePassed(System.currentTimeMillis()-game.getTimeStart());
+        }
 //        Time to dish out some points fam!
         game.updateScoreboard();
     }
