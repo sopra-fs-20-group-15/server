@@ -129,6 +129,17 @@ public class LogicService {
             CardEntity card = cardService.getCardById(game.getActiveCardId());
             String word = cardService.chooseWordOnCard(wordId, card);
             game.setActiveMysteryWord(word);
+            Map<String, String> clueMap =game.getClueMap();
+            List<Angel> angels = game.getAngels();
+            for (int i = 0; i < angels.size(); i++){
+                String clue = angels.get(i).giveClue(word, i);
+                clueMap.put(angels.get(i).getToken(), clue);
+            }
+            List<Devil> devils = game.getDevils();
+            for (int j = 0; j < devils.size(); j++){
+                String clue = devils.get(j).giveClue(word, j);
+                clueMap.put(devils.get(j).getToken(), clue);
+            }
             return word;
         }
         else {throw new NoContentException("The MysteryWord has already been set");}

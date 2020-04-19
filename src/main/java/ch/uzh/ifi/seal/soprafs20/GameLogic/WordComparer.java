@@ -95,6 +95,9 @@ public class WordComparer {
     protected boolean closeWords(String word1, String word2){
         word1 = word1.toLowerCase();
         word2 = word2.toLowerCase();
+        if ((word2.contains(word1) && word1.length() > 3)|| (word1.contains(word2) && word2.length() > 3)){
+            return false;
+        }
         if (word1.length() != word2.length()){
             return false;
         }
