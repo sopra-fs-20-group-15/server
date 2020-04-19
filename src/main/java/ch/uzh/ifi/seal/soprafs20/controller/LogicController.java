@@ -110,7 +110,7 @@ public class LogicController {
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPassivePlayerOfGame(cluePostDTO.getPlayerToken(), gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
-        if(game.getActiveMysteryWord()=="") throw new ConflictException("Turn order violated : Mystery Word has not been chosen yet!");
+        if(game.getActiveMysteryWord().isBlank()) throw new ConflictException("Turn order violated : Mystery Word has not been chosen yet!");
         logicService.giveClue(cluePostDTO.getPlayerToken(),game,cluePostDTO);
     }
 
@@ -147,16 +147,16 @@ public class LogicController {
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsActivePlayerOfGame(guessPostDTO.getPlayerToken(), gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
-        if (game.getActiveMysteryWord() != "") {
-            if (game.getGuess() != "") {
+        if (!game.getActiveMysteryWord().isBlank()) {
+            if (game.getGuess().isBlank()) {
                 logicService.setGuess(game, guessPostDTO.getGuess());
             } else throw new NoContentException("The Guess has already been set");
         }
-        else throw new NoContentException("The MysteryWord has already been set");
+        else throw new NoContentException("The MysteryWord has not been set yet");
     }
 
     /**Get the clue and check, if it was valid*/
-    @GetMapping("/games/{gameId}/guesses/{playerToken}/")
+    @GetMapping("/games/{gameId}/guesses/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public GuessGetDTO getGuess(@PathVariable String gameId, @PathVariable String playerToken) {
