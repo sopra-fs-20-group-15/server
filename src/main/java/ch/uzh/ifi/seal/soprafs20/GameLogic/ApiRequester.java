@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
+import javax.persistence.Embeddable;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+@Embeddable
 public class ApiRequester {
 
 

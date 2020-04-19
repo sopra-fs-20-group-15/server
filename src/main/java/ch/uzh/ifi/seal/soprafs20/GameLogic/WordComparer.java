@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 
+import javax.persistence.Embeddable;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,21 +14,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Embeddable
 public class WordComparer {
-    private ApiRequester apiRequester = new ApiRequester();
 
     /*
         @param: List of clues
         @Return: List of validClued
      */
     public Map<String, Integer> compareClues(ArrayList<String> clues, String mysteryWord) {
+        ApiRequester apiRequester = new ApiRequester();
+
         Map<String, Integer> returnMap = new HashMap<>();
         for (String clue: clues) {
             returnMap.put(clue, 0);
         }
         String mysteryStem;
         try {
-            mysteryStem = this.apiRequester.getWordStem(mysteryWord.toLowerCase());
+            mysteryStem = apiRequester.getWordStem(mysteryWord.toLowerCase());
         } catch(IOException ex) {
             mysteryStem = mysteryWord.toLowerCase();
         }
@@ -35,7 +38,7 @@ public class WordComparer {
         for (String word : clues) {
             String stem;
             try {
-                stem = this.apiRequester.getWordStem(word.toLowerCase());
+                stem = apiRequester.getWordStem(word.toLowerCase());
             } catch(IOException ex) {
                 stem = word.toLowerCase();
             }//get the word stem from API
@@ -59,17 +62,19 @@ public class WordComparer {
     }
 
     public List<String> notSuitableBotClue(List<String> words, String mysteryWord){
+        ApiRequester apiRequester = new ApiRequester();
+
         List<String> okWords = new ArrayList<>();
         String mysteryStem;
         try {
-            mysteryStem = this.apiRequester.getWordStem(mysteryWord.toLowerCase());
+            mysteryStem = apiRequester.getWordStem(mysteryWord.toLowerCase());
         } catch(IOException ex) {
             mysteryStem = mysteryWord.toLowerCase();
         }
         for(String word: words){
             String stem;
             try {
-                stem = this.apiRequester.getWordStem(word.toLowerCase());
+                stem = apiRequester.getWordStem(word.toLowerCase());
             } catch(IOException ex) {
                 stem = word.toLowerCase();
             }//get the word stem from API

@@ -11,12 +11,12 @@ import java.util.Random;
 public class Devil implements Bot {
     private String botName;
     private String botToken;
-    private ApiRequester apiRequester = new ApiRequester();
-    private WordComparer wordComparer = new WordComparer();
 
 
     @Override
     public String giveClue(String mysteryWord, int n) {
+        ApiRequester apiRequester = new ApiRequester();
+        WordComparer wordComparer = new WordComparer();
         String returnClue = this.randomWord();
         List<String> relWords = new ArrayList<>();
         try {
@@ -34,7 +34,7 @@ public class Devil implements Bot {
         } catch (IOException ex) {
             return returnClue;
         }
-        relWords = this.wordComparer.notSuitableBotClue(relRelWords, mysteryWord);
+        relWords = wordComparer.notSuitableBotClue(relRelWords, mysteryWord);
         if (n+1 < relWords.size()) {
             return relWords.get(n+1);
         }

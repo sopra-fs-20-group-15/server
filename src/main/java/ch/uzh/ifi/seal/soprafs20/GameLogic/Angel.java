@@ -9,11 +9,12 @@ import java.util.List;
 public class Angel implements Bot {
     private String botName;
     private String botToken;
-    private ApiRequester apiRequester = new ApiRequester();
-    private WordComparer wordComparer = new WordComparer();
+
 
     @Override
     public String giveClue(String mysteryWord, int n) {
+        ApiRequester apiRequester = new ApiRequester();
+        WordComparer wordComparer = new WordComparer();
         String returnClue = "Earth";
         List<String> clues = new ArrayList<>();
         try { clues = apiRequester.getFiveWordsFromDatamuseApi(mysteryWord, "rel_trg");
@@ -27,7 +28,7 @@ public class Angel implements Bot {
                 returnClue = "USA";
             }
         }
-        clues = this.wordComparer.notSuitableBotClue(clues, mysteryWord);
+        clues = wordComparer.notSuitableBotClue(clues, mysteryWord);
         if (n < clues.size()) {
             return clues.get(n);
         }
