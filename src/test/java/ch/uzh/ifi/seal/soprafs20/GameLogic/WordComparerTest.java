@@ -155,23 +155,6 @@ class WordComparerTest {
     }
 
     @Test
-    void TestStemAPI() {
-        WordComparer wordComparer = new WordComparer();
-        String expected = "live";
-        String actual1;
-        String actual2;
-        try {
-            actual1 = wordComparer.getWordStem("live");
-            actual2 = wordComparer.getWordStem("living");
-        } catch(IOException ex) {
-            actual1 = "";
-            actual2 = "";
-        }
-        assertEquals(expected, actual1);
-        assertEquals(expected, actual2);
-    }
-
-    @Test
     void TestCloseWordsNoMistakes() {
         WordComparer wordComparer = new WordComparer();
         String word1 = "Azkaban";

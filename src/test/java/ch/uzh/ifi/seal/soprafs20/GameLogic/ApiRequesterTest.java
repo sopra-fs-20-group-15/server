@@ -34,4 +34,21 @@ class ApiRequesterTest {
         assertTrue(actual.contains("inhalation"));
     }
 
+    @Test
+    void TestStemAPI() {
+        ApiRequester apiRequester = new ApiRequester();
+        String expected = "live";
+        String actual1;
+        String actual2;
+        try {
+            actual1 = apiRequester.getWordStem("live");
+            actual2 = apiRequester.getWordStem("living");
+        } catch(IOException ex) {
+            actual1 = "";
+            actual2 = "";
+        }
+        assertEquals(expected, actual1);
+        assertEquals(expected, actual2);
+    }
+
 }

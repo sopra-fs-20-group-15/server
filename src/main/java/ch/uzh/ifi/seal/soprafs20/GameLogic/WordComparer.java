@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class WordComparer {
+    private ApiRequester apiRequester = new ApiRequester();
 
     /*
         @param: List of clues
@@ -26,7 +27,7 @@ public class WordComparer {
         }
         String mysteryStem;
         try {
-            mysteryStem = this.getWordStem(mysteryWord.toLowerCase());
+            mysteryStem = this.apiRequester.getWordStem(mysteryWord.toLowerCase());
         } catch(IOException ex) {
             mysteryStem = mysteryWord.toLowerCase();
         }
@@ -34,7 +35,7 @@ public class WordComparer {
         for (String word : clues) {
             String stem;
             try {
-                stem = this.getWordStem(word.toLowerCase());
+                stem = this.apiRequester.getWordStem(word.toLowerCase());
             } catch(IOException ex) {
                 stem = word.toLowerCase();
             }//get the word stem from API
@@ -61,14 +62,14 @@ public class WordComparer {
         List<String> okWords = new ArrayList<>();
         String mysteryStem;
         try {
-            mysteryStem = this.getWordStem(mysteryWord.toLowerCase());
+            mysteryStem = this.apiRequester.getWordStem(mysteryWord.toLowerCase());
         } catch(IOException ex) {
             mysteryStem = mysteryWord.toLowerCase();
         }
         for(String word: words){
             String stem;
             try {
-                stem = this.getWordStem(word.toLowerCase());
+                stem = this.apiRequester.getWordStem(word.toLowerCase());
             } catch(IOException ex) {
                 stem = word.toLowerCase();
             }//get the word stem from API
@@ -108,46 +109,6 @@ public class WordComparer {
         return count >= word1.length()-2;
     }
 
-    protected String getWordStem(String r) throws IOException {
-        String s = r.toLowerCase();
-        String apiAnswer;
 
-        String urlParameters = "text=" + s;
-        byte[] postData = urlParameters.getBytes( StandardCharsets.UTF_8 );
-        int postDataLength = postData.length;
-        String request = "http://text-processing.com/api/stem/";
-        URL url = new URL( request );
-        HttpURLConnection conn= (HttpURLConnection) url.openConnection();
-        conn.setDoOutput(true);
-        conn.setInstanceFollowRedirects(false);
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        conn.setRequestProperty("charset", "utf-8");
-        conn.setRequestProperty("Content-Length", Integer.toString(postDataLength ));
-        conn.setUseCaches(false);
-        try(DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
-            wr.write(postData);
-            //int responseCode = conn.getResponseCode();
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            apiAnswer = response.toString();
-        }
-        return convertApiAnswer(apiAnswer);
-    }
-
-    /**
-     * @param s the string StemApiForm
-     * @return  word Stem
-     */
-    private String convertApiAnswer(String s){
-        int middle = s.indexOf(":");
-        return s.substring(middle+3, s.length()-2);
-
-    }
 
 }
