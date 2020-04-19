@@ -51,7 +51,8 @@ public class WordComparer {
                 count++;
             }
             for (int j = 0; j < clues.size(); j++) {
-                if (this.closeWords(clues.get(i), clues.get(j)) || wordStems.get(i).equals(wordStems.get(j))) {
+                if (this.closeWords(clues.get(i), clues.get(j)) || wordStems.get(i).equals(wordStems.get(j)) ||
+                        (clues.get(j).contains(clues.get(i)) && clues.get(i).length() > 3)|| (clues.get(i).contains(clues.get(j)) && clues.get(j).length() > 3)) {
                     count++;
                 }
             }
@@ -86,6 +87,7 @@ public class WordComparer {
     }
 
     public boolean compareMysteryWords(String guess, String mysteryWord){
+
         return closeWords(guess, mysteryWord);
     }
 
@@ -95,9 +97,6 @@ public class WordComparer {
     protected boolean closeWords(String word1, String word2){
         word1 = word1.toLowerCase();
         word2 = word2.toLowerCase();
-        if ((word2.contains(word1) && word1.length() > 3)|| (word1.contains(word2) && word2.length() > 3)){
-            return true;
-        }
         if (word1.length() != word2.length()){
             return false;
         }
