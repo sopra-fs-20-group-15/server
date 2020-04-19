@@ -143,28 +143,6 @@ public class LogicController {
         return cardGetDTO;
     }
 
-    //just to test if repository actually gets cards
-    @GetMapping("/games/cardTest")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public CardGetDTO getCardTest() {
-        /*stringIsALong(gameId);
-        Long gameIdLong = parseLong(gameId);
-        validationService.checkPlaygrIsPartOfGame(playerToken, gameIdLong);*/
-        try {cardService.addAllCards();
-        } catch (IOException ex) {
-            throw new NoContentException("The CardDatabase couldn't be filled");
-        }
-
-        //GameEntity game = gameService.getGameById(gameIdLong);
-        long cardId = 1;
-        CardEntity cardEntity = cardService.getCardById(cardId);
-        CardGetDTO cardGetDTO = new CardGetDTO();
-        cardGetDTO.setId(cardEntity.getId());
-        cardGetDTO.setWords(cardEntity.getWords());
-        return cardGetDTO;
-    }
-
     /**Gives back the chosen MysteryWord*/
     @GetMapping("/games/{gameId}/activeWord/{playerToken}")
     @ResponseStatus(HttpStatus.OK)

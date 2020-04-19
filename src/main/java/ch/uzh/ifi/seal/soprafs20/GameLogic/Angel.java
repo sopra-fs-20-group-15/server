@@ -2,8 +2,6 @@ package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 import javax.persistence.Embeddable;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,60 +9,29 @@ import java.util.List;
 public class Angel implements Bot {
     private String botName;
     private String botToken;
+    private ApiRequester apiRequester = new ApiRequester();
+    private WordComparer wordComparer = new WordComparer();
 
     @Override
-    public String giveClue(String mysteryWord) {
-        return null;
-    }
-
-    public void printCluesToAllmysteryWords() throws IOException {
-        BufferedReader bufReader = new BufferedReader(new FileReader("cardsEn.txt"));
-        ArrayList<String> listOfLines = new ArrayList<>();
-        String line = bufReader.readLine();
-        while (line != null) {
-            listOfLines.add(line);
-            line = bufReader.readLine();
+    public String giveClue(String mysteryWord, int n) {
+        String returnClue = "Earth";
+        List<String> clues = new ArrayList<>();
+        try { clues = apiRequester.getFiveWordsFromDatamuseApi(mysteryWord, "rel_trg");
+        } catch (IOException ex) {
+            returnClue = "USA";
         }
-        bufReader.close();
-        for (String word : listOfLines){
-            if (!word.isBlank()){
-                System.out.print(word + ": ");
-                List<String> clues = this.getFiveCluesFromApi(word);
-                for (String clue : clues){
-                    System.out.print(clue + ", ");
-                }
-                System.out.print("\n");
+        //if api didn't give back usefull words
+        if (clues.size() < 2) {
+            try { clues = apiRequester.getFiveWordsFromDatamuseApi(mysteryWord, "ml");
+            } catch (IOException ex) {
+                returnClue = "USA";
             }
         }
-    }
-
-    protected List<String> getFiveCluesFromApi(String mysteryWord) throws IOException {
-        String transformedWord = this.transformWordForApi(mysteryWord);
-        String url = "https://api.datamuse.com/words?rel_trg=" + transformedWord + "&max=5";
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+        clues = this.wordComparer.notSuitableBotClue(clues, mysteryWord);
+        if (n < clues.size()) {
+            return clues.get(n);
         }
-        in.close();
-
-        List<String> clues = new ArrayList<>();
-        while (response.indexOf("word") >= 0){
-            int indexStartOfCLue = response.indexOf("word") + 7;
-            response = response.delete(0, indexStartOfCLue);
-            int indexEndOfClue = response.indexOf(",") -1;
-            clues.add(response.substring(0, indexEndOfClue));
-        }
-        return clues;
-    }
-
-    protected String transformWordForApi(String word){
-        return word.replace(" ", "+");
+        return returnClue;
     }
 
 

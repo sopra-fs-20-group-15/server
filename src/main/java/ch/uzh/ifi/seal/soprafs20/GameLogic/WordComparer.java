@@ -10,6 +10,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class WordComparer {
@@ -56,6 +57,27 @@ public class WordComparer {
         return returnMap;
     }
 
+    public List<String> notSuitableBotClue(List<String> words, String mysteryWord){
+        List<String> okWords = new ArrayList<>();
+        String mysteryStem;
+        try {
+            mysteryStem = this.getWordStem(mysteryWord.toLowerCase());
+        } catch(IOException ex) {
+            mysteryStem = mysteryWord.toLowerCase();
+        }
+        for(String word: words){
+            String stem;
+            try {
+                stem = this.getWordStem(word.toLowerCase());
+            } catch(IOException ex) {
+                stem = word.toLowerCase();
+            }//get the word stem from API
+            if (!(word.toLowerCase().contains(mysteryStem) || mysteryWord.toLowerCase().contains(stem) || stem.equals(mysteryStem) ||word.contains(" "))) {
+                okWords.add(word);
+            }
+        }
+        return okWords;
+    }
 
     public boolean compareMysteryWords(String guess, String mysteryWord){
         return closeWords(guess, mysteryWord);
@@ -86,7 +108,8 @@ public class WordComparer {
         return count >= word1.length()-2;
     }
 
-    protected String getWordStem(String s) throws IOException {
+    protected String getWordStem(String r) throws IOException {
+        String s = r.toLowerCase();
         String apiAnswer;
 
         String urlParameters = "text=" + s;
