@@ -94,38 +94,5 @@ public class LogicServiceTestGetScoresOrdered {
         assertEquals(scores.get(5).getScore(), 100);
 
     }
-
-    /**Is the algorithm assigning the right ranks to the players of a list that was sorted in descending order? -> Get stats*/
-    @Test
-    public void HighestPointCountBestPlacement(){
-        Map<String, Integer> playerNamesScoreHashMap = new HashMap<String, Integer>();
-        List<StatisticsGetDTO> rankScorePlayerNameList = new ArrayList<StatisticsGetDTO>();
-        for (int i = 0; i < 6; i++){
-            StatisticsGetDTO statisticsGetDTO = new StatisticsGetDTO();
-            int score = 1000 - i*100;
-            statisticsGetDTO.setScore(score);
-            char userName = (char)(i +65);
-            statisticsGetDTO.setPlayerName(String.valueOf(userName));
-            rankScorePlayerNameList.add(statisticsGetDTO);
-        }
-
-
-        List<StatisticsGetDTO> scores = logicService.orderStatisticsGetDTOList(rankScorePlayerNameList);
-
-        //Check scores
-        assertEquals(scores.get(0).getScore(), 600);
-        assertEquals(scores.get(1).getScore(), 500);
-        assertEquals(scores.get(2).getScore(), 400);
-        assertEquals(scores.get(3).getScore(), 300);
-        assertEquals(scores.get(4).getScore(), 200);
-        assertEquals(scores.get(5).getScore(), 100);
-
-        //Check names
-        assertEquals(scores.get(0).getPlayerName(), "F");
-        assertEquals(scores.get(1).getPlayerName(), "E");
-        assertEquals(scores.get(2).getPlayerName(), "D");
-        assertEquals(scores.get(3).getPlayerName(), "C");
-        assertEquals(scores.get(4).getPlayerName(), "B");
-        assertEquals(scores.get(5).getPlayerName(), "A");
-    }
+    
 }
