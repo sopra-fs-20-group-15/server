@@ -481,6 +481,21 @@ public class LogicControllerTest {
 
     }
 
+    /**Tests get Request to /games/{gameId}/statistics*/
+    @Test
+    public void getStatistics() throws Exception {
+
+
+        given(logicService.getStatistics(Mockito.any())).willReturn(new ArrayList<StatisticsGetDTO>());
+
+        MockHttpServletRequestBuilder getRequest = get("/games/{gameId}/statistics", "1");
+        // then
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk());
+
+    }
+
 }
 /**
  public void createUser_invalidInput_userExistsAlready() throws Exception {

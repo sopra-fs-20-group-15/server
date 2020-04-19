@@ -176,10 +176,9 @@ public class LogicController {
         @GetMapping("/games/{gameId}/statistics")
         @ResponseStatus(HttpStatus.OK)
         @ResponseBody
-        public List<StatisticsGetDTO> getScores(@PathVariable String gameId, @PathVariable String playerToken) {
+        public List<StatisticsGetDTO> getScores(@PathVariable String gameId) {
             stringIsALong(gameId);
             Long gameIdLong = parseLong(gameId);
-            validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
             return logicService.getStatistics(gameIdLong);
     }
 
