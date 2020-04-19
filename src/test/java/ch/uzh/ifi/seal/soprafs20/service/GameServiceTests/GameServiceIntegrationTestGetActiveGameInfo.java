@@ -1,31 +1,24 @@
-package ch.uzh.ifi.seal.soprafs20.service;
+package ch.uzh.ifi.seal.soprafs20.service.GameServiceTests;
 
 
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
-import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PUBLIC;
 import static org.junit.jupiter.api.Assertions.*;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.constant.GameType;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
-import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
-import org.junit.jupiter.api.BeforeEach;
+import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.service.LogicService;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
@@ -61,20 +54,20 @@ public class GameServiceIntegrationTestGetActiveGameInfo {
     private PlayerEntity p2;
     private PlayerEntity p3;
 
-    @BeforeTransaction
-    public void clean(){
+    /**Get successfully the information about a game*/
+    @Test
+    public void GetSuccessfullyInfoAboutAGame() {
+        //Preparations
         gameSetUpRepository.deleteAll();
         gameRepository.deleteAll();
         playerRepository.deleteAll();
-    }
 
-    @BeforeEach
-    public void setup() {
         game.setNumberOfPlayers(3L);
         game.setNumberOfAngles(0L);
         game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
+        game.setGameName("GAME");
         PlayerEntity playerOne= new PlayerEntity();
         PlayerEntity playerTwo= new PlayerEntity();
         PlayerEntity playerThree= new PlayerEntity();
@@ -112,11 +105,8 @@ public class GameServiceIntegrationTestGetActiveGameInfo {
 
         createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
 
-    }
 
-    /**Get successfully the information about a game*/
-    @Test
-    public void GetSuccessfullyInfoAboutAGame() {
+        /**Actual Test*/
         GameGetDTO gameGetDTO = gameService.getGameInformationById(createdActiveGame.getId());
 
         assertEquals(gameGetDTO.getId(), createdActiveGame.getId());

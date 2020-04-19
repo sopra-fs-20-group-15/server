@@ -64,7 +64,8 @@ public class LogicControllerTest {
     @Test
     public void putInitializesSuccessfully() throws Exception {
         // given
-        String playerToken = "AAJKHS";
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setPlayerToken("AAJKHS");
         GameEntity game = new GameEntity();
         //returns
 
@@ -75,7 +76,7 @@ public class LogicControllerTest {
 
         MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/initializations", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(playerToken));
+                .content(asJsonString(tokenDTO));
 
         // then
 
@@ -85,9 +86,9 @@ public class LogicControllerTest {
 
     }
 
-    /**Tests a post-Request to /games/{gameId}/Cards/*/
+    /**Tests a put-Request to /games/{gameId}/mysteryWord*/
     @Test
-    public void postRequestActivePlayerChoosesWordOnCardSuccessfully() throws Exception {
+    public void putRequestActivePlayerChoosesWordOnCardSuccessfully() throws Exception {
         // given
         GameEntity game = new GameEntity();
         CardPostDTO cardPostDTO = new CardPostDTO();
@@ -104,15 +105,14 @@ public class LogicControllerTest {
 
         // when/then -> do the request + validate the result
 
-        MockHttpServletRequestBuilder postRequest = post("/games/{gameId}/cards/", "1")
+        MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/mysteryWord", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(cardPostDTO));
 
         // then
 
-        mockMvc.perform(postRequest)
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.word", is(wordPostDTO.getWord())));
+        mockMvc.perform(putRequest)
+                .andExpect(status().isCreated());
 
 
     }
@@ -172,10 +172,11 @@ public class LogicControllerTest {
          doReturn(game).when(gameService.getGameById(Mockito.any()));*/
         given(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.any(), Mockito.any())).willReturn(true);
         given(gameService.getGameById(Mockito.any())).willReturn(game);
+        given(logicService.getMysteryWord(Mockito.any())).willReturn("Eis");
 
         // when/then -> do the request + validate the result
 
-        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/activeWord/{playerToken}/", 1, "df")
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/mysteryWord/{playerToken}/", 1, "df")
                 .contentType(MediaType.APPLICATION_JSON);
 
         // then
@@ -435,6 +436,65 @@ public class LogicControllerTest {
 
     }
 
+    /**Tests a get-Request to /games/{gameId}/clues/players/{playerToken}*/
+    @Test
+    public void getCluePlayersWorks() throws Exception {
+        GameEntity game=new GameEntity();
+        List<PlayerNameDTO> list=new ArrayList<>();
+        PlayerNameDTO playerNameDTO= new PlayerNameDTO();
+        playerNameDTO.setPlayerName("Test");
+        list.add(playerNameDTO);
+
+        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
+        given(gameService.getGameById(Mockito.any())).willReturn(game);
+        given(logicService.getCluePlayers(Mockito.any())).willReturn(list);
+
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/clues/players/{playerToken}", "123","test");
+
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isOk());
+
+    }
+
+
+    @Test
+    public void getCluePlayersFailsBecausePlayerNotInGame() throws Exception {
+
+        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willThrow(new UnauthorizedException("Test"));
+
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/clues/players/{playerToken}", "123","test");
+
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    @Test
+    public void getCluePlayersFailsBecauseGameIdHasWrongFormat() throws Exception {
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/clues/players/{playerToken}", "abc","test");
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**Tests get Request to /games/{gameId}/statistics*/
+    @Test
+    public void getStatistics() throws Exception {
+
+
+        given(logicService.getStatistics(Mockito.any())).willReturn(new ArrayList<StatisticsGetDTO>());
+
+        MockHttpServletRequestBuilder getRequest = get("/games/{gameId}/statistics", "1");
+        // then
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk());
+
+    }
 
 }
 /**

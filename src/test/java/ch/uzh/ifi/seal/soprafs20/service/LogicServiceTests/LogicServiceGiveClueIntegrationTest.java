@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.service;
+package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
@@ -9,6 +9,8 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
+import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.service.LogicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

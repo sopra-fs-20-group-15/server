@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
+import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
@@ -14,8 +15,8 @@ import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,16 +42,18 @@ public class LogicService {
     private final WordComparer wordComparer;
     private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
+    private final CardService cardService;
 
     @Autowired
-    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository) {
+    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository, CardService cardService) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.wordComparer = new WordComparer();
+        this.cardService = cardService;
     }
 
     /**Puts the active player at the end of the passive Players List, takes the passive Player at 0 and make him the active player*/
-    protected GameEntity goOnePlayerFurther(GameEntity game){
+    public GameEntity goOnePlayerFurther(GameEntity game){
         List<Long> passivePlayerIds = game.getPassivePlayerIds();
         passivePlayerIds.add(game.getActivePlayerId());
         Long playerId = passivePlayerIds.remove(0);
@@ -59,12 +62,19 @@ public class LogicService {
         return game;
     }
 
-    protected GameEntity drawCardFromStack(GameEntity game){
-        List<Long> cardIds = game.getCardIds();
-        game.setActiveCardId(cardIds.remove(cardIds.size()-1));
-        return game;
+    /***/
+    public GameEntity drawCardFromStack(GameEntity game){
+        if (game.getCardIds().size() > 0){
+            List<Long> cardIds = game.getCardIds();
+            game.setActiveCardId(cardIds.remove(cardIds.size()-1));
+            return game;
+        }
+        else{
+            throw new ConflictException("The CardStack is empty!The game should have ended already!");
+        }
     }
 
+    /**Initializes a turn*/
     public GameEntity initializeTurn(Long gameId){
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);
         if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
@@ -92,14 +102,58 @@ public class LogicService {
         else {throw new NoContentException("The Game has already been initialized!");}
     }
 
+    /**Gets a gameId and gives back the active Card of that game*/
+    public CardEntity getCardFromGameById(Long gameId){
+        //Get Game
+        Optional<GameEntity> gameOp = gameRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
+        GameEntity game = gameOp.get();
+        //Check if activeCard has already been set and if so, get the Card
+        Long cardId = game.getActiveCardId();
+        CardEntity card;
+        if (cardId != null){
+            card = cardService.getCardById(cardId);
+            return card;
+        }
+        else {throw new NotFoundException("The active Card of this game has not been set yet!");}
+    }
 
 
+    /**Set the MysteryWord*/
+
+    public String setMysteryWord(Long gameId, Long wordId){
+        Optional<GameEntity> gameOp = gameRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
+        GameEntity game = gameOp.get();
+        if (game.getActiveMysteryWord().isBlank()){
+            CardEntity card = cardService.getCardById(game.getActiveCardId());
+            String word = cardService.chooseWordOnCard(wordId, card);
+            game.setActiveMysteryWord(word);
+            return word;
+        }
+        else {throw new NoContentException("The MysteryWord has already been set");}
+    }
+
+    /**Get the MysteryWord*/
+
+    public String getMysteryWord(Long gameId){
+        Optional<GameEntity> gameOp = gameRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
+        GameEntity game = gameOp.get();
+        if (!game.getActiveMysteryWord().isBlank()){
+            return game.getActiveMysteryWord();
+        }
+        else {throw new NotFoundException("The MysteryWord not been set yet!");}
+    }
+
+    /**Set the Guess*/
     public void setGuess(GameEntity game, String guess){
         boolean isValidGuess = wordComparer.compareMysteryWords(game.getActiveMysteryWord(), guess);
         game.setGuess(guess);
         game.setIsValidGuess(isValidGuess);
     }
 
+    /**Lets players give clues and saves them into a list*/
     public void giveClue(String playerToken, GameEntity game, CluePostDTO cluePostDTO){
         if (game.getClueMap().get(playerToken)==null) {
             Map<String, String> clueMap =game.getClueMap();
@@ -131,7 +185,7 @@ public class LogicService {
         }
     }
 
-
+    /**Get full clue list*/
     public List<ClueGetDTO> getClues(GameEntity game) {
 //        check if clues have already been set for this round
         if (game.getValidCluesAreSet()) {
@@ -147,4 +201,87 @@ public class LogicService {
 //        if clues have not been set throw NoContentException
         else throw new NoContentException("Clues are not ready yet!");
     }
+
+    /**Returns the names of all the players that have already submitted a clue*/
+    public List<PlayerNameDTO> getCluePlayers(GameEntity game) {
+        List<PlayerNameDTO> list = new ArrayList<>();
+        for (String token: game.getClueMap().keySet()) {
+            if (playerRepository.findByToken(token)!=null){
+                list.add(DTOMapper.INSTANCE.convertPlayerEntityToPlayerNameDTO(playerRepository.findByToken(token)));
+            }
+            else {
+                for (Angel angel: game.getAngels()) {
+                    if (angel.getToken().equals(token)) {
+                        PlayerNameDTO playerNameDTO = new PlayerNameDTO();
+                        playerNameDTO.setPlayerName(angel.getName());
+                        list.add(playerNameDTO);
+                    }
+                }
+                for (Devil devil: game.getDevils()) {
+                    if (devil.getToken().equals(token)) {
+                        PlayerNameDTO playerNameDTO = new PlayerNameDTO();
+                        playerNameDTO.setPlayerName(devil.getName());
+                        list.add(playerNameDTO);
+                    }
+                }
+            }
+        }
+        return  list;
+    }
+
+
+    /**Returns wheter the game has already ended or not*/
+
+    public boolean hasGameEnded(Long gameId){
+        //Get the game
+        Optional<GameEntity> gameOp = gameRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
+        GameEntity game = gameOp.get();
+        //Check if the card stack is empty. If so, set gameHasEnded to true
+        if (game.getCardIds().size() == 0){
+            game.setHasEnded(true);
+            return true;
+
+        }
+        return false;
+    }
+
+    /**Orders the items of a list*/
+    public List<StatisticsGetDTO> orderStatisticsGetDTOList(List<StatisticsGetDTO> rankScorePlayerNameList){
+        //Sort with insertion sort (since max. 7 human players, time complexity is not that important(if more players, quick sort would have been used))
+        for(int i = 1; i < rankScorePlayerNameList.size(); i++){
+            StatisticsGetDTO current = rankScorePlayerNameList.get(i);
+            int j = i -1;
+            while(j >= 0 && current.getScore() > rankScorePlayerNameList.get(j).getScore()){
+                rankScorePlayerNameList.set(j+1, rankScorePlayerNameList.get(j));
+                j--;
+            }
+            rankScorePlayerNameList.set(j+1, current);
+        }
+        return  rankScorePlayerNameList;
+    }
+
+
+
+    /**Get the scores of the players in a game*/
+    public List<StatisticsGetDTO> getStatistics(Long gameId){
+        //Get a game by Id;
+        Optional<GameEntity> gameOp = gameRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
+        GameEntity game = gameOp.get();
+        Scoreboard scoreboard = game.getScoreboard();
+        //Convert into a List of StatisticsGetDto which consists of the Rank, the Score and the playerName
+        List<StatisticsGetDTO> rankScorePlayerNameList = new ArrayList<StatisticsGetDTO>();
+        rankScorePlayerNameList = scoreboard.transformIntoList();
+        //Order descending based on score
+        rankScorePlayerNameList = orderStatisticsGetDTOList(rankScorePlayerNameList);
+        //Set the placement
+        int i = 1;
+        for(StatisticsGetDTO elements : rankScorePlayerNameList){
+            elements.setPlacement(i);
+            i++;
+        }
+        return rankScorePlayerNameList;
+    }
+
 }

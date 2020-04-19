@@ -52,7 +52,7 @@ public class GameService {
         this.gameRepository = gameRepository;
         this.gameSetUpRepository = gameSetUpRepository;
     }
-
+    /**Getters*/
     public GameEntity getGameById(Long id){
         Optional<GameEntity> gameOp = gameRepository.findById(id);
         if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
@@ -79,7 +79,6 @@ public class GameService {
     }
 
     /**Get the information about a game that is Important for the frontend*/
-
     public GameGetDTO getGameInformationById(Long gameId){
         GameGetDTO gameGetDTO = new GameGetDTO();
         GameEntity game = getGameById(gameId);
@@ -141,6 +140,7 @@ public class GameService {
         }
     }
 
+    /**Delete a gameSetUpEntity*/
     public boolean deleteGameSetUpEntity(Long gameId, PlayerEntity player){
         gameSetUpRepository.findById(gameId);
         Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(gameId);
@@ -180,6 +180,7 @@ public class GameService {
         game.setPlayerTokens(playerTokens);
         return game;
     }
+
     /**Removes player from game*/
     public GameSetUpEntity removePlayerFromGame(Long gameId, PlayerEntity player){
         //Check if gameSetUpId exists
@@ -203,6 +204,7 @@ public class GameService {
         return game;
     }
 
+    /**Create a an active game from a gameSetUpEntity*/
     public ActiveGamePostDTO createActiveGame(Long gameSetupId, String pt) {
             if (!getGameSetupById(gameSetupId).getHostName().equals(getPlayerByToken(pt).getUsername()))
                 throw new UnauthorizedException("Player is not host and therefore not allowed to start the game");
@@ -249,6 +251,8 @@ public class GameService {
 //              further initialization
 
                 game.setValidCluesAreSet(false);
+                game.setHasEnded(true);
+                game.setHasBeenInitialized(false);
                 game.setClueMap(new HashMap<String,String>());
                 game.setActivePlayerId(getPlayerByToken(pt).getId());
                 game.setScoreboard(new Scoreboard());
@@ -276,6 +280,7 @@ public class GameService {
             else throw new ConflictException("Not enough or too many players to start game!");
     }
 
+    /**Get Information about a GameSetUp*/
     public LobbyGetDTO getLobbyInfo (Long gameSetupId, String playerToken){
         getPlayerByToken(playerToken);
         if (!getGameSetupById(gameSetupId).getPlayerTokens().contains(playerToken))
@@ -283,6 +288,7 @@ public class GameService {
         return LobbyGetDTOMapper.convertGameSetUpEntityToLobbyGetDTO(getGameSetupById(gameSetupId), playerRepository);
     }
 
+    /**Get all gameSetUpEntities*/
     public List<LobbyOverviewGetDTO> getLobbies() {
         List<GameSetUpEntity> gameSetUpEntities=this.gameSetUpRepository.findAll();
         List<LobbyOverviewGetDTO> lobbies=new ArrayList<>();

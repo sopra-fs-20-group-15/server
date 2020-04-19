@@ -62,7 +62,7 @@ public class GamesController {
         GameSetUpEntity game = DTOMapper.INSTANCE.convertGameSetUpPostDTOtoEntity(gamePostDTO);
         game.setHostName(player.getUsername());
         List<String> playerTokens = new ArrayList<String>();
-        playerTokens.add(player.getUsername());
+        playerTokens.add(player.getToken());
         game.setPlayerTokens(playerTokens);
         //Try to create Game
         GameSetUpEntity newGame = gameService.createGame(game);
@@ -116,18 +116,6 @@ public class GamesController {
     }
 
 
-    /**Allows player to get an overview of the existing game lobbies*/
-    @GetMapping("/activeGames/{gameId}")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public GameGetDTO getActiveGame(@PathVariable String gameId) {
-        stringIsALong(gameId);
-        Long gameIdLong = parseLong(gameId);
-        GameGetDTO game = gameService.getGameInformationById(gameIdLong);
-        return game;
-    }
-
-
     /**Allows player to refresh Lobby status while in one*/
     @GetMapping("/games/lobbies/{gameSetUpId}/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
@@ -155,6 +143,18 @@ public class GamesController {
             return gameService.createActiveGame(gsId, playerTokenDTO.getToken());
         }
         else throw new BadRequestException("Game-Setup-ID has wrong format!");
+    }
+
+
+    /**Allows player to get an overview of the existing active games*/
+    @GetMapping("/activeGames/{gameId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameGetDTO getActiveGame(@PathVariable String gameId) {
+        stringIsALong(gameId);
+        Long gameIdLong = parseLong(gameId);
+        GameGetDTO game = gameService.getGameInformationById(gameIdLong);
+        return game;
     }
 
 

@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.service;
+package ch.uzh.ifi.seal.soprafs20.service.GameServiceTests;
 
 
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
@@ -12,6 +12,7 @@ import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 
+import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;

@@ -1,5 +1,5 @@
 
-package ch.uzh.ifi.seal.soprafs20.service;
+package ch.uzh.ifi.seal.soprafs20.service.GameServiceTests;
 
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
@@ -13,6 +13,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ActiveGamePostDTO;
+import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
