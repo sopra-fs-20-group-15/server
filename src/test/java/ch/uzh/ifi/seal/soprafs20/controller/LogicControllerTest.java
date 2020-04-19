@@ -152,6 +152,39 @@ public class LogicControllerTest {
     }
 
     /**
+     * Tests a get-Request to /games/{gameId}/guesses/{playerToken}/
+     */
+    @Test
+    public void setGuessRequestActivePlayerWorksSuccessful() throws Exception {
+        // given
+        GuessPostDTO guessPostDTO = new GuessPostDTO();
+        guessPostDTO.setGuess("test");
+        guessPostDTO.setPlayerToken("token");
+
+        //Game
+        GameEntity game = new GameEntity();
+        game.setGuess("");
+        game.setActiveMysteryWord("test");
+
+        /**
+         doReturn(true).when(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.any(),Mockito.any()));
+         doReturn(game).when(gameService.getGameById(Mockito.any()));*/
+        given(validationService.checkPlayerIsActivePlayerOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
+        given(gameService.getGameById(Mockito.any())).willReturn(game);
+
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder postRequest = post("/games/{gameId}/guesses","1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(guessPostDTO));
+
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated());
+    }
+
+    /**
      * Tests a get-Request to /games/{gameId}/activeWord/{playerToken}/
      */
     @Test
@@ -211,6 +244,7 @@ public class LogicControllerTest {
         clue.setClue("clue");
         clue.setPlayerToken("token");
         GameEntity game = new GameEntity();
+        game.setActiveMysteryWord("Test");
         Map<String, String> clueList= new HashMap<>();
         List<PlayerEntity> players= new ArrayList<>();
         game.setClueMap(clueList);
@@ -245,6 +279,7 @@ public class LogicControllerTest {
         clue.setClue("clue");
         clue.setPlayerToken("token");
         GameEntity game = new GameEntity();
+        game.setActiveMysteryWord("Test");
         Map<String, String> clueList= new HashMap<>();
         List<PlayerEntity> players= new ArrayList<>();
         game.setClueMap(clueList);
@@ -483,31 +518,20 @@ public class LogicControllerTest {
 
     }
 
-    /**Test the a Request to /games/{gameId}/ends/{playerToken} in order to see if the game has already ended*/
+    /**Tests get Request to /games/{gameId}/statistics*/
     @Test
-    public void GetHasGameEndedWorks() throws Exception {
-        //given
-        GameEndedDTO gameEndedDTO = new GameEndedDTO();
-        gameEndedDTO.setHasGameEnded(false);
+    public void getStatistics() throws Exception {
 
 
-        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
-        given(logicService.hasGameEnded(Mockito.any())).willReturn(false);
+        given(logicService.getStatistics(Mockito.any())).willReturn(new ArrayList<StatisticsGetDTO>());
 
-
-
-        // when/then -> do the request + validate the result
-
-        MockHttpServletRequestBuilder getRequest = get("/games/{gameId}/ends/{playerToken}", "123","test");
+        MockHttpServletRequestBuilder getRequest = get("/games/{gameId}/statistics", "1");
         // then
 
         mockMvc.perform(getRequest)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.hasGameEnded", is(gameEndedDTO.getHasGameEnded())));
+                .andExpect(status().isOk());
 
     }
-
-
 
 }
 /**

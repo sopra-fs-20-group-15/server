@@ -133,8 +133,9 @@ public class LogicService {
             CardEntity card = cardService.getCardById(game.getActiveCardId());
             String word = cardService.chooseWordOnCard(wordId, card);
             game.setActiveMysteryWord(word);
-	    game.setTimeStart(System.currentTimeMillis());
-
+<<<<<<< HEAD
+            game.setTimeStart(System.currentTimeMillis());
+=======
             Map<String, String> clueMap =game.getClueMap();
             List<Angel> angels = game.getAngels();
             for (int i = 0; i < angels.size(); i++){
@@ -146,6 +147,7 @@ public class LogicService {
                 String clue = devils.get(j).giveClue(word, j);
                 clueMap.put(devils.get(j).getToken(), clue);
             }
+>>>>>>> master
             return word;
         }
         else {throw new NoContentException("The MysteryWord has already been set");}
@@ -252,7 +254,13 @@ public class LogicService {
         return  list;
     }
 
+<<<<<<< HEAD
     /**Returns whether the game has already ended or not*/
+=======
+
+    /**Returns wheter the game has already ended or not*/
+
+>>>>>>> master
     public boolean hasGameEnded(Long gameId){
         //Get the game
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);
@@ -262,10 +270,12 @@ public class LogicService {
         if (game.getCardIds().size() == 0){
             game.setHasEnded(true);
             return true;
+
         }
         return false;
-    }    
-/**Orders the items of a list*/
+    }
+
+    /**Orders the items of a list*/
     public List<StatisticsGetDTO> orderStatisticsGetDTOList(List<StatisticsGetDTO> rankScorePlayerNameList){
         //Sort with insertion sort (since max. 7 human players, time complexity is not that important(if more players, quick sort would have been used))
         for(int i = 1; i < rankScorePlayerNameList.size(); i++){
@@ -302,4 +312,5 @@ public class LogicService {
         }
         return rankScorePlayerNameList;
     }
+
 }

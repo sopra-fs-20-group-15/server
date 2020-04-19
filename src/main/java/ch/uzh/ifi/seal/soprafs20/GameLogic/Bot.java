@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 public interface Bot {
-    public String giveClue(String mysteryWord);
+    public String giveClue(String mysteryWord, int n);
     public void setName(String name);
     public void setToken(String token);
     public String getName();

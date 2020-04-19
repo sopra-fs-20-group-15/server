@@ -2,45 +2,50 @@ package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AngelTest {
+class DevilTest {
 
     @Test
     void testGiveClueGivesAnswerForNormalWord(){
-        Angel angel = new Angel();
+        Devil devil = new Devil();
 
-        String actual = angel.giveClue("Tree", 0);
+        String actual = devil.giveClue("Tree", 0);
 
         assertNotNull(actual);
     }
 
     @Test
     void testGiveClueGivesAnswerForName(){
-        Angel angel = new Angel();
+        Devil devil = new Devil();
 
-        String actual = angel.giveClue("Obama", 0);
+        String actual = devil.giveClue("Obama", 0);
 
         assertNotNull(actual);
     }
 
     @Test
     void testGiveClueGivesAnswerForPlaces(){
-        Angel angel = new Angel();
+        Devil devil = new Devil();
 
-        String actual = angel.giveClue("Paris", 0);
+        String actual = devil.giveClue("Paris", 0);
 
         assertNotNull(actual);
     }
 
     @Test
     void testGiveClueGivesTwoNonEqualClues(){
-        Angel angel = new Angel();
+        Devil devil = new Devil();
 
-        String actual1 = angel.giveClue("Smoke", 0);
-        String actual2 = angel.giveClue("Smoke", 1);
+        String actual1 = devil.giveClue("Smoke", 0);
+        String actual2 = devil.giveClue("Smoke", 1);
 
         assertNotNull(actual1);
         assertNotNull(actual2);
@@ -49,10 +54,10 @@ class AngelTest {
 
     @Test
     void testGiveClueWorksForBlendWords(){
-        Angel angel = new Angel();
+        Devil devil = new Devil();
 
-        String actual1 = angel.giveClue("emperor penguin", 0);
-        String actual2 = angel.giveClue("emperor penguin", 1);
+        String actual1 = devil.giveClue("emperor penguin", 0);
+        String actual2 = devil.giveClue("emperor penguin", 1);
 
         assertNotNull(actual1);
         assertNotNull(actual2);
@@ -60,12 +65,11 @@ class AngelTest {
     }
 
     @Test
-    void testGiveClueNeglectsCase(){
-        Angel angel = new Angel();
+    void testGiveClueNeglectsCase(){Devil devil = new Devil();
 
-        String actual1 = angel.giveClue("Smoke", 0);
-        String actual2 = angel.giveClue("smoke", 0);
-        String actual3 = angel.giveClue("sMoKE", 0);
+        String actual1 = devil.giveClue("Smoke", 0);
+        String actual2 = devil.giveClue("smoke", 0);
+        String actual3 = devil.giveClue("sMoKE", 0);
 
         assertNotNull(actual1);
         assertNotNull(actual2);

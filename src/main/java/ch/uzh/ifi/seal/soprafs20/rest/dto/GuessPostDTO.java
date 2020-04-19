@@ -8,7 +8,7 @@ public class GuessPostDTO {
         return guess;
     }
 
-    public void setGuess(String wordId) {
+    public void setGuess(String guess) {
         this.guess = guess;
     }
 

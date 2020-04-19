@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 
+import javax.persistence.Embeddable;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,8 +11,10 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@Embeddable
 public class WordComparer {
 
     /*
@@ -19,13 +22,15 @@ public class WordComparer {
         @Return: List of validClued
      */
     public Map<String, Integer> compareClues(ArrayList<String> clues, String mysteryWord) {
+        ApiRequester apiRequester = new ApiRequester();
+
         Map<String, Integer> returnMap = new HashMap<>();
         for (String clue: clues) {
             returnMap.put(clue, 0);
         }
         String mysteryStem;
         try {
-            mysteryStem = this.getWordStem(mysteryWord.toLowerCase());
+            mysteryStem = apiRequester.getWordStem(mysteryWord.toLowerCase());
         } catch(IOException ex) {
             mysteryStem = mysteryWord.toLowerCase();
         }
@@ -33,7 +38,7 @@ public class WordComparer {
         for (String word : clues) {
             String stem;
             try {
-                stem = this.getWordStem(word.toLowerCase());
+                stem = apiRequester.getWordStem(word.toLowerCase());
             } catch(IOException ex) {
                 stem = word.toLowerCase();
             }//get the word stem from API
@@ -46,7 +51,8 @@ public class WordComparer {
                 count++;
             }
             for (int j = 0; j < clues.size(); j++) {
-                if (this.closeWords(clues.get(i), clues.get(j)) || wordStems.get(i).equals(wordStems.get(j))) {
+                if (this.closeWords(clues.get(i), clues.get(j)) || wordStems.get(i).equals(wordStems.get(j)) ||
+                        (clues.get(j).contains(clues.get(i)) && clues.get(i).length() > 3)|| (clues.get(i).contains(clues.get(j)) && clues.get(j).length() > 3)) {
                     count++;
                 }
             }
@@ -56,8 +62,32 @@ public class WordComparer {
         return returnMap;
     }
 
+    public List<String> notSuitableBotClue(List<String> words, String mysteryWord){
+        ApiRequester apiRequester = new ApiRequester();
+
+        List<String> okWords = new ArrayList<>();
+        String mysteryStem;
+        try {
+            mysteryStem = apiRequester.getWordStem(mysteryWord.toLowerCase());
+        } catch(IOException ex) {
+            mysteryStem = mysteryWord.toLowerCase();
+        }
+        for(String word: words){
+            String stem;
+            try {
+                stem = apiRequester.getWordStem(word.toLowerCase());
+            } catch(IOException ex) {
+                stem = word.toLowerCase();
+            }//get the word stem from API
+            if (!(word.toLowerCase().contains(mysteryStem) || mysteryWord.toLowerCase().contains(stem) || stem.equals(mysteryStem) ||word.contains(" "))) {
+                okWords.add(word);
+            }
+        }
+        return okWords;
+    }
 
     public boolean compareMysteryWords(String guess, String mysteryWord){
+
         return closeWords(guess, mysteryWord);
     }
 
@@ -86,45 +116,6 @@ public class WordComparer {
         return count >= word1.length()-2;
     }
 
-    protected String getWordStem(String s) throws IOException {
-        String apiAnswer;
 
-        String urlParameters = "text=" + s;
-        byte[] postData = urlParameters.getBytes( StandardCharsets.UTF_8 );
-        int postDataLength = postData.length;
-        String request = "http://text-processing.com/api/stem/";
-        URL url = new URL( request );
-        HttpURLConnection conn= (HttpURLConnection) url.openConnection();
-        conn.setDoOutput(true);
-        conn.setInstanceFollowRedirects(false);
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        conn.setRequestProperty("charset", "utf-8");
-        conn.setRequestProperty("Content-Length", Integer.toString(postDataLength ));
-        conn.setUseCaches(false);
-        try(DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
-            wr.write(postData);
-            //int responseCode = conn.getResponseCode();
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            apiAnswer = response.toString();
-        }
-        return convertApiAnswer(apiAnswer);
-    }
-
-    /**
-     * @param s the string StemApiForm
-     * @return  word Stem
-     */
-    private String convertApiAnswer(String s){
-        int middle = s.indexOf(":");
-        return s.substring(middle+3, s.length()-2);
-
-    }
 
 }

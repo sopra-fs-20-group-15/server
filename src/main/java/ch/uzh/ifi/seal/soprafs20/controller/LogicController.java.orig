@@ -85,7 +85,6 @@ public class LogicController {
         String word = logicService.setMysteryWord(gameIdLong, cardPostDTO.getWordId());
         WordPostDTO wordPostDTO = new WordPostDTO();
         wordPostDTO.setWord(word);
-
     }
 
     /**Gives back the chosen MysteryWord*/
@@ -111,8 +110,13 @@ public class LogicController {
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPassivePlayerOfGame(cluePostDTO.getPlayerToken(), gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
+<<<<<<< HEAD
+        if(game.getActiveMysteryWord().equals("")) throw new ConflictException("Turn order violated : Mystery Word has not been chosen yet!");
+        logicService.giveClue(game,cluePostDTO);
+=======
         if(game.getActiveMysteryWord().isBlank()) throw new ConflictException("Turn order violated : Mystery Word has not been chosen yet!");
         logicService.giveClue(cluePostDTO.getPlayerToken(),game,cluePostDTO);
+>>>>>>> master
     }
 
     /**get the valid clue list*/
@@ -148,8 +152,14 @@ public class LogicController {
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsActivePlayerOfGame(guessPostDTO.getPlayerToken(), gameIdLong);
         GameEntity game = gameService.getGameById(gameIdLong);
+<<<<<<< HEAD
+        if (!game.getActiveMysteryWord().equals("")) {
+            if (!game.getGuess().equals("")) {
+                gameService.getPlayerByToken(guessPostDTO.getPlayerToken()).setTimePassed(System.currentTimeMillis()-game.getTimeStart());
+=======
         if (!game.getActiveMysteryWord().isBlank()) {
             if (game.getGuess().isBlank()) {
+>>>>>>> master
                 logicService.setGuess(game, guessPostDTO.getGuess());
             } else throw new NoContentException("The Guess has already been set");
         }
@@ -173,20 +183,7 @@ public class LogicController {
         return guessGetDTO;
     }
 
-    /**Check if the game has ended*/
-    @GetMapping("/games/{gameId}/ends/{playerToken}")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public GameEndedDTO hasGameEnded(@PathVariable String gameId, @PathVariable String playerToken) {
-        stringIsALong(gameId);
-        Long gameIdLong = parseLong(gameId);
-        validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
-        Boolean hasGameEnded = logicService.hasGameEnded(gameIdLong);
-        GameEndedDTO gameEndedDTO = new GameEndedDTO();
-        gameEndedDTO.setHasGameEnded(hasGameEnded);
-        return gameEndedDTO;
-    }
-	/**Get the current scores of the players*/
+    /**Get the current scores of the players*/
         @GetMapping("/games/{gameId}/statistics")
         @ResponseStatus(HttpStatus.OK)
         @ResponseBody
@@ -195,6 +192,5 @@ public class LogicController {
             Long gameIdLong = parseLong(gameId);
             return logicService.getStatistics(gameIdLong);
     }
-
 
 }
