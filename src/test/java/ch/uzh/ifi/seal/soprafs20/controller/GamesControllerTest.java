@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
+import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
@@ -107,22 +108,18 @@ public class GamesControllerTest {
      */
     @Test
     public void POSTActiveGameCreation() throws Exception {
-
         // given
         //a game
-        GameSetUpEntity game = new GameSetUpEntity();
-        game.setNumberOfPlayers(3L);
-        game.setNumberOfAngles(0L);
-        game.setNumberOfDevils(0L);
-        game.setGameType(PRIVATE);
-        game.setPassword("Cara");
-        game.setHostName("Peter");
+        ActiveGamePostDTO activeGamePostDTO = new ActiveGamePostDTO();
+        activeGamePostDTO.setId(1L);
         PlayerTokenDTO playerTokenDTO=new PlayerTokenDTO();
         playerTokenDTO.setToken("Test");
 
 
         // mock the functions
-        given(gameService.getGameSetupById(Mockito.any())).willReturn(game);
+        given(gameService.getGameSetupById(Mockito.any())).willReturn(new GameSetUpEntity());
+        given(gameService.createActiveGame(Mockito.any(), Mockito.any())).willReturn(activeGamePostDTO);
+        given(logicService.initializeTurn(Mockito.any())).willReturn(new GameEntity());
 
         // when
         MockHttpServletRequestBuilder postRequest = post("/games/{gameSetupId}", 123)

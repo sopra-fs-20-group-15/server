@@ -138,6 +138,9 @@ public class LogicServiceSetGuessIntegrationTest {
             assertNotEquals(entry.getValue(),createdActiveGame.getScoreboard().getScore().get(entry.getKey()));
         }
         assertEquals(1,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("TwoName"));
+        assertEquals(false,createdActiveGame.getHasBeenInitialized());
+        assertEquals(12, createdActiveGame.getCardIds().size());
+
     }
 
     @Test
@@ -149,5 +152,7 @@ public class LogicServiceSetGuessIntegrationTest {
         assertEquals(createdActiveGame.getGuess(), "Tree");
         assertFalse(createdActiveGame.getIsValidGuess());
         assertEquals(0,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("TwoName"));
+        assertEquals(false,createdActiveGame.getHasBeenInitialized());
+        assertEquals(11, createdActiveGame.getCardIds().size());
     }
 }
