@@ -7,11 +7,8 @@ import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.BadRequestException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
-import ch.uzh.ifi.seal.soprafs20.service.CardService;
-import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.service.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
-import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
-import ch.uzh.ifi.seal.soprafs20.service.ValidationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,16 +26,19 @@ import static java.lang.Long.parseLong;
 @RestController
 public class GamesController {
 
-    private final GameService gameService;
-    private final CardService cardService;
     private final PlayerService playerService;
+    private final CardService cardService;
+    private final GameService gameService;
     private final ValidationService validationService;
+    private final LogicService logicService;
 
-    GamesController(GameService gameService, PlayerService playerService, CardService cardService, ValidationService validationService) {
-        this.gameService = gameService;
+
+    GamesController(PlayerService playerService, CardService cardService, ValidationService validationService, GameService gameService, LogicService logicService) {
         this.playerService = playerService;
         this.cardService = cardService;
         this.validationService = validationService;
+        this.gameService = gameService;
+        this.logicService = logicService;
     }
 
     protected boolean stringIsALong(String str) {
@@ -140,7 +140,9 @@ public class GamesController {
         if (stringIsALong(gameSetUpId)){
             //Try to create active game
             Long gsId = parseLong(gameSetUpId);
-            return gameService.createActiveGame(gsId, playerTokenDTO.getToken());
+            ActiveGamePostDTO activeGamePostDTO = gameService.createActiveGame(gsId, playerTokenDTO.getToken());
+            logicService.initializeTurn(activeGamePostDTO.getId());
+            return activeGamePostDTO;
         }
         else throw new BadRequestException("Game-Setup-ID has wrong format!");
     }
