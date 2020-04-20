@@ -15,6 +15,24 @@ public class Scoreboard {
     @ElementCollection
     private Map<String, Integer> scoreboard = new HashMap<>();
 
+    @ElementCollection
+    private Map<String, Integer> correctlyGuessedMysteryWordsPerPlayer = new HashMap<>();
+
+    public void initializeMap(List<PlayerEntity> playerEntities) {
+        for (PlayerEntity playerEntity : playerEntities) {
+            scoreboard.put(playerEntity.getUsername(), 0);
+            correctlyGuessedMysteryWordsPerPlayer.put(playerEntity.getUsername(), 0);
+        }
+    }
+
+    public Map<String, Integer> getCorrectlyGuessedMysteryWordsPerPlayer() {
+        return correctlyGuessedMysteryWordsPerPlayer;
+    }
+
+    public void setCorrectlyGuessedMysteryWordsPerPlayer(Map<String, Integer> correctlyGuessedCards) {
+        this.correctlyGuessedMysteryWordsPerPlayer = correctlyGuessedCards;
+    }
+
     public Map<String, Integer> getScoreboard() {
         return scoreboard;
     }
@@ -23,11 +41,6 @@ public class Scoreboard {
         this.scoreboard = scoreboard;
     }
 
-    public void initializeMap(List<PlayerEntity> playerEntities) {
-        for (PlayerEntity playerEntity : playerEntities) {
-            scoreboard.put(playerEntity.getUsername(), 0);
-        }
-    }
 
     public Map<String, Integer> getScore() {
         return scoreboard;
@@ -45,6 +58,9 @@ public class Scoreboard {
             StatisticsGetDTO rankScorePlayerName = new StatisticsGetDTO();
             rankScorePlayerName.setPlayerName(entry.getKey());
             rankScorePlayerName.setScore(entry.getValue());
+            String playerName = entry.getKey();
+            int correctlyGuessedMysteryWords = correctlyGuessedMysteryWordsPerPlayer.get(playerName);
+            rankScorePlayerName.setNumberOfCorrectlyGuessedMysteryWords(correctlyGuessedMysteryWords);
             rankScorePlayerNameList.add(rankScorePlayerName);
         }
         return rankScorePlayerNameList;

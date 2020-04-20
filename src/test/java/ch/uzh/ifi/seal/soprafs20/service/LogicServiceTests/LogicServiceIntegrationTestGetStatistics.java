@@ -117,6 +117,7 @@ public class LogicServiceIntegrationTestGetStatistics {
         createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
         Scoreboard scoreboard = new Scoreboard();
         Map<String, Integer> scores = new HashMap<String, Integer>();
+        Map<String, Integer> mysteryWords = new HashMap<String, Integer>();
         //players
         PlayerEntity player1 = new PlayerEntity();
         player1.setUsername("A");
@@ -131,8 +132,14 @@ public class LogicServiceIntegrationTestGetStatistics {
         scores.put(player2.getUsername(),200);
         scores.put(player3.getUsername(),300);
         scores.put(player4.getUsername(),400);
+        mysteryWords.put(player1.getUsername(), 4);
+        mysteryWords.put(player2.getUsername(), 3);
+        mysteryWords.put(player3.getUsername(), 2);
+        mysteryWords.put(player4.getUsername(), 1);
         scoreboard.setScoreboard(scores);
+        scoreboard.setCorrectlyGuessedMysteryWordsPerPlayer(mysteryWords);
         createdActiveGame.setScoreboard(scoreboard);
+
     }
 
     /**Is a correctly ordered list of the scoreboard returned?*/
@@ -144,18 +151,22 @@ public class LogicServiceIntegrationTestGetStatistics {
         statisticsGetDTO.setScore(400);
         statisticsGetDTO.setPlayerName("D");
         statisticsGetDTO.setPlacement(1);
+        statisticsGetDTO.setNumberOfCorrectlyGuessedMysteryWords(1);
         intended.add(statisticsGetDTO);
         statisticsGetDTO.setScore(300);
         statisticsGetDTO.setPlayerName("C");
         statisticsGetDTO.setPlacement(2);
+        statisticsGetDTO.setNumberOfCorrectlyGuessedMysteryWords(2);
         intended.add(statisticsGetDTO);
         statisticsGetDTO.setScore(200);
         statisticsGetDTO.setPlayerName("B");
         statisticsGetDTO.setPlacement(3);
+        statisticsGetDTO.setNumberOfCorrectlyGuessedMysteryWords(3);
         intended.add(statisticsGetDTO);
         statisticsGetDTO.setScore(100);
         statisticsGetDTO.setPlayerName("A");
         statisticsGetDTO.setPlacement(4);
+        statisticsGetDTO.setNumberOfCorrectlyGuessedMysteryWords(4);
         intended.add(statisticsGetDTO);
 
         List<StatisticsGetDTO> actualList = logicService.getStatistics(createdActiveGame.getId());
@@ -177,5 +188,11 @@ public class LogicServiceIntegrationTestGetStatistics {
         assertEquals(actualList.get(1).getPlacement(), 2);
         assertEquals(actualList.get(2).getPlacement(), 3);
         assertEquals(actualList.get(3).getPlacement(), 4);
+
+        //Check number of correctly guessed cards
+        assertEquals(actualList.get(0).getNumberOfCorrectlyGuessedMysteryWords(), 1);
+        assertEquals(actualList.get(1).getNumberOfCorrectlyGuessedMysteryWords(), 2);
+        assertEquals(actualList.get(2).getNumberOfCorrectlyGuessedMysteryWords(), 3);
+        assertEquals(actualList.get(3).getNumberOfCorrectlyGuessedMysteryWords(), 4);
     }
 }

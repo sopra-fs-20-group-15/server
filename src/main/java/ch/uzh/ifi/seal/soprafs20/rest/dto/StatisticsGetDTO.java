@@ -4,6 +4,7 @@ public class StatisticsGetDTO {
     int placement;
     String PlayerName;
     int score;
+    int numberOfCorrectlyGuessedMysteryWords;
 
     public int getPlacement() {
         return placement;
@@ -27,5 +28,13 @@ public class StatisticsGetDTO {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public int getNumberOfCorrectlyGuessedMysteryWords() {
+        return numberOfCorrectlyGuessedMysteryWords;
+    }
+
+    public void setNumberOfCorrectlyGuessedMysteryWords(int numberOfCorrectlyGuessedMysteryWords) {
+        this.numberOfCorrectlyGuessedMysteryWords = numberOfCorrectlyGuessedMysteryWords;
     }
 }

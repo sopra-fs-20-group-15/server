@@ -21,21 +21,27 @@ public class ScoreboardTest {
     @BeforeEach
     public void setup() {
         Map<String, Integer> scores = new HashMap<String, Integer>();
+        Map<String, Integer> mysteryWords = new HashMap<String, Integer>();
         //players
         PlayerEntity player1 = new PlayerEntity();
         player1.setUsername("A");
         PlayerEntity player2 = new PlayerEntity();
-        player1.setUsername("B");
+        player2.setUsername("B");
         PlayerEntity player3 = new PlayerEntity();
-        player1.setUsername("C");
+        player3.setUsername("C");
         PlayerEntity player4 = new PlayerEntity();
-        player1.setUsername("D");
+        player4.setUsername("D");
         //put with scores into hash map
         scores.put(player1.getUsername(),100);
         scores.put(player2.getUsername(),200);
         scores.put(player3.getUsername(),300);
         scores.put(player4.getUsername(),400);
+        mysteryWords.put(player1.getUsername(), 1);
+        mysteryWords.put(player2.getUsername(), 2);
+        mysteryWords.put(player3.getUsername(), 3);
+        mysteryWords.put(player4.getUsername(), 4);
         scoreboard.setScoreboard(scores);
+        scoreboard.setCorrectlyGuessedMysteryWordsPerPlayer(mysteryWords);
     }
 
     /**Can the scoreboard transform itself correctly into a List of StatisticsGetDTOs?*/
@@ -46,23 +52,29 @@ public class ScoreboardTest {
         StatisticsGetDTO statisticsGetDTO = new StatisticsGetDTO();
         statisticsGetDTO.setScore(100);
         statisticsGetDTO.setPlayerName("A");
+        statisticsGetDTO.setNumberOfCorrectlyGuessedMysteryWords(1);
         intended.add(statisticsGetDTO);
         statisticsGetDTO.setScore(200);
         statisticsGetDTO.setPlayerName("B");
+        statisticsGetDTO.setNumberOfCorrectlyGuessedMysteryWords(2);
         intended.add(statisticsGetDTO);
         statisticsGetDTO.setScore(300);
         statisticsGetDTO.setPlayerName("C");
+        statisticsGetDTO.setNumberOfCorrectlyGuessedMysteryWords(3);
         intended.add(statisticsGetDTO);
         statisticsGetDTO.setScore(400);
         statisticsGetDTO.setPlayerName("D");
+        statisticsGetDTO.setNumberOfCorrectlyGuessedMysteryWords(4);
         intended.add(statisticsGetDTO);
 
         List<StatisticsGetDTO> actualList = scoreboard.transformIntoList();
         List<Integer> scoresActualList = new ArrayList<Integer>();
         List<String>  namesActualList = new ArrayList<String>();
+        List<Integer> mysteryActualList = new ArrayList<Integer>();
         for (StatisticsGetDTO element : actualList){
             scoresActualList.add(element.getScore());
             namesActualList.add(element.getPlayerName());
+            mysteryActualList.add(element.getNumberOfCorrectlyGuessedMysteryWords());
         }
 
 
@@ -74,6 +86,10 @@ public class ScoreboardTest {
         assertTrue(namesActualList.contains(intended.get(1).getPlayerName()));
         assertTrue(namesActualList.contains(intended.get(2).getPlayerName()));
         assertTrue(namesActualList.contains(intended.get(3).getPlayerName()));
+        assertTrue(mysteryActualList.contains(intended.get(0).getNumberOfCorrectlyGuessedMysteryWords()));
+        assertTrue(mysteryActualList.contains(intended.get(1).getNumberOfCorrectlyGuessedMysteryWords()));
+        assertTrue(mysteryActualList.contains(intended.get(2).getNumberOfCorrectlyGuessedMysteryWords()));
+        assertTrue(mysteryActualList.contains(intended.get(3).getNumberOfCorrectlyGuessedMysteryWords()));
 
     }
 }

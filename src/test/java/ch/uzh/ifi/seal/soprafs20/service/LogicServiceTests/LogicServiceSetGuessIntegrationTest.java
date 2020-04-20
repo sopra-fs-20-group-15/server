@@ -137,6 +137,7 @@ public class LogicServiceSetGuessIntegrationTest {
         for (Map.Entry<String, Integer> entry: scoresBefore.entrySet()) {
             assertNotEquals(entry.getValue(),createdActiveGame.getScoreboard().getScore().get(entry.getKey()));
         }
+        assertEquals(1,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("TwoName"));
     }
 
     @Test
@@ -147,5 +148,6 @@ public class LogicServiceSetGuessIntegrationTest {
         logicService.setGuess(createdActiveGame, guessPostDTO.getGuess());
         assertEquals(createdActiveGame.getGuess(), "Tree");
         assertFalse(createdActiveGame.getIsValidGuess());
+        assertEquals(0,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("TwoName"));
     }
 }
