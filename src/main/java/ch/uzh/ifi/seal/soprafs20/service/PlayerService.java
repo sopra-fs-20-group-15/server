@@ -1,8 +1,10 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
+import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
+import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +30,16 @@ public class PlayerService {
     private final Logger log = LoggerFactory.getLogger(PlayerService.class);
 
     private final PlayerRepository playerRepository;
+    private final GameRepository gameRepository;
+
 
     @Autowired
-    public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository) {
+    public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository,@Qualifier("gameRepository") GameRepository gameRepository) {
         this.playerRepository = playerRepository;
+        this.gameRepository = gameRepository;
+
     }
+
 
     public List<PlayerEntity> getUsers() {
         return this.playerRepository.findAll();
@@ -89,6 +96,9 @@ public class PlayerService {
         PlayerEntity playerEntity = playerRepository.findByToken(playerEntityInput.getToken());
         if (playerEntity ==null) throw new PlayerNotAvailable("No playerEntity with same token as your session exists.");
         else if (playerEntity.getStatus().equals(PlayerStatus.ONLINE)) {
+            for (GameEntity game: gameRepository.findAll()) {
+                if (game.getPlayers().contains(playerEntity)) throw new ConflictException("Can't logout while in a game session!");
+            }
             playerEntity.setStatus(PlayerStatus.OFFLINE);
         }
         else throw new PlayerAlreadyLoggedOut();

@@ -24,16 +24,14 @@ public class ScoreCalculatorTest {
         PlayerEntity player = new PlayerEntity();
         player.setUsername("peeeelaiiiir");
         player.setTimePassed(8000L);
-        assertEquals(21, ScoreCalculator.calculateScorePassivePlayer(player,true,true, 0));
-        player.setTimePassed(13000L);
         assertEquals(20, ScoreCalculator.calculateScorePassivePlayer(player,true,true, 0));
-        player.setTimePassed(18000L);
+        player.setTimePassed(13000L);
         assertEquals(19, ScoreCalculator.calculateScorePassivePlayer(player,true,true, 0));
-        player.setTimePassed(23000L);
+        player.setTimePassed(18000L);
         assertEquals(18, ScoreCalculator.calculateScorePassivePlayer(player,true,true, 0));
-        player.setTimePassed(28000L);
+        player.setTimePassed(23000L);
         assertEquals(17, ScoreCalculator.calculateScorePassivePlayer(player,true,true, 0));
-        player.setTimePassed(33000L);
+        player.setTimePassed(28000L);
         assertEquals(16, ScoreCalculator.calculateScorePassivePlayer(player,true,true, 0));
 
         player.setTimePassed(5000L);

@@ -19,9 +19,8 @@ public class ScoreCalculator {
 
     public static int calculateScorePassivePlayer(PlayerEntity playerEntity, boolean validGuess, boolean validClue, int numOfDuplicateGuesses) {
         if (validClue && validGuess) {
-            Long milliseconds=33000-playerEntity.getTimePassed();
-            if (milliseconds >= 25000) return 21;
-            else if (milliseconds >= 20000) return 20;
+            Long milliseconds=28000-playerEntity.getTimePassed();
+            if (milliseconds >= 20000) return 20;
             else if (milliseconds >= 15000) return 19;
             else if (milliseconds >= 10000) return 18;
             else if (milliseconds >= 5000) return 17;
