@@ -180,7 +180,12 @@ public class LogicService {
             correctlyGuessedMysteryWordsPerPlayer.replace(activePlayerName, correctlyGuessedMysteryWordsPerPlayer.get(activePlayerName)+ 1);
             scoreboard.setCorrectlyGuessedMysteryWordsPerPlayer(correctlyGuessedMysteryWordsPerPlayer);
         }
-
+        //draw an extra card if the guess was wrong
+        if (!isValidGuess){
+            drawCardFromStack(game);
+        }
+        //At this point it should be possible again to initialize an new turn
+        game.setHasBeenInitialized(false);
 //        Time to dish out some points fam!
         game.updateScoreboard();
     }
