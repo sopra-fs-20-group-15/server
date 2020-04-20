@@ -171,16 +171,12 @@ public class LogicService {
         for (PlayerEntity player:game.getPlayers()) {
             if (player.getId().equals(game.getActivePlayerId())) player.setTimePassed(System.currentTimeMillis()-game.getTimeStart());
         }
-        //If the guess was valid, add a correctly guessed mystery word to the active player
-        if (isValidGuess){
-            PlayerEntity activePlayer = playerRepository.findById(game.getActivePlayerId()).get();
-            String activePlayerName = activePlayer.getUsername();
-            Scoreboard scoreboard = game.getScoreboard();
-            Map<String, Integer> correctlyGuessedMysteryWordsPerPlayer = scoreboard.getCorrectlyGuessedMysteryWordsPerPlayer();
-            correctlyGuessedMysteryWordsPerPlayer.replace(activePlayerName, correctlyGuessedMysteryWordsPerPlayer.get(activePlayerName)+ 1);
-            scoreboard.setCorrectlyGuessedMysteryWordsPerPlayer(correctlyGuessedMysteryWordsPerPlayer);
+        //draw an extra card if the guess was wrong
+        if (!isValidGuess){
+            drawCardFromStack(game);
         }
-
+        //At this point it should be possible again to initialize an new turn
+        game.setHasBeenInitialized(false);
 //        Time to dish out some points fam!
         game.updateScoreboard();
     }

@@ -271,6 +271,11 @@ public class GameEntity {
              if (this.getActivePlayerId().equals(player.getId())) {
                  Scoreboard sc =this.getScoreboard();
                  sc.updateScore(player, ScoreCalculator.calculateScoreActivePlayer(player, this.getIsValidGuess()));
+                 if (this.getIsValidGuess()){
+                     Map<String, Integer> correctlyGuessedMysteryWordsPerPlayer = scoreboard.getCorrectlyGuessedMysteryWordsPerPlayer();
+                     correctlyGuessedMysteryWordsPerPlayer.replace(player.getUsername(), correctlyGuessedMysteryWordsPerPlayer.get(player.getUsername())+ 1);
+                     scoreboard.setCorrectlyGuessedMysteryWordsPerPlayer(correctlyGuessedMysteryWordsPerPlayer);
+                 }
                  this.setScoreboard(sc);
              }
              else {
