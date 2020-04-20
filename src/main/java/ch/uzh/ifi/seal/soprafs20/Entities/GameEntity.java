@@ -275,7 +275,7 @@ public class GameEntity {
              }
              else {
                  int numOfDuplicates = this.getAnalyzedClues().get(this.getClueMap().get(player.getToken()));
-                 boolean validClue = this.getValidClues().containsValue(player.getUsername());
+                 boolean validClue = this.getValidClues().containsKey(player.getUsername());
                  Scoreboard sc = this.getScoreboard();
                  sc.updateScore(player, ScoreCalculator.calculateScorePassivePlayer(player, this.getIsValidGuess(), validClue, numOfDuplicates));
                  this.setScoreboard(sc);
