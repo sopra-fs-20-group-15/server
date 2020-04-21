@@ -536,60 +536,75 @@ public class LogicControllerTest {
 
     }
 
+    /**Tests a get-Request to /games/{gameId}/cards/remainder/{playerToken}*/
+    @Test
+    public void getCardAmountWokrs() throws Exception {
+        GameEntity game= new GameEntity();
+        CardsRemainingDTO cardsRemainingDTO= new CardsRemainingDTO();
+        cardsRemainingDTO.setCardsOnStack(8);
+
+        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
+        given(gameService.getGameById(Mockito.any())).willReturn(game);
+        given(logicService.getCardAmount(Mockito.any())).willReturn(cardsRemainingDTO);
+
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/cards/remainder/{playerToken}", "123","test");
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cardsOnStack", is( 8)));
+
+    }
+
+    @Test
+    public void getCardAmountFailsBecauseOfWrongFormatOfGameId() throws Exception {
+        GameEntity game= new GameEntity();
+        CardsRemainingDTO cardsRemainingDTO= new CardsRemainingDTO();
+        cardsRemainingDTO.setCardsOnStack(8);
+
+        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);
+        given(gameService.getGameById(Mockito.any())).willReturn(game);
+        given(logicService.getCardAmount(Mockito.any())).willReturn(cardsRemainingDTO);
+
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/cards/remainder/{playerToken}", "12ddaa3","test");
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void getCardAmountFailsBecausePlayerOrGameNotFound() throws Exception {
+        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willThrow(NotFoundException.class);
+
+
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/cards/remainder/{playerToken}", "123","test");
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    public void getCardAmountFailsBecausePlayerNotPartOfGame() throws Exception {
+        given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willThrow(UnauthorizedException.class);
+        // when/then -> do the request + validate the result
+
+        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/cards/remainder/{playerToken}", "123","test");
+        // then
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isUnauthorized());
+
+    }
+
 }
-/**
- public void createUser_invalidInput_userExistsAlready() throws Exception {
 
- // given
-
- User user = new User();
-
- user.setId(1L);
-
- user.setName("Test User");
-
- user.setUsername("testUsername");
-
- user.setPassword("1234");
-
- user.setDate(1582974000903L);
-
- user.setToken("1");
-
- user.setStatus(UserStatus.ONLINE);
-
-
-
- UserPostDTO userPostDTO = new UserPostDTO();
-
- userPostDTO.setName("Test User");
-
- userPostDTO.setUsername("testUsername");
-
-
-
- String exceptionMessage = "The name provided is not unique. Therefore, the user could not be created!";
-
-
-
- when(userService.createUser(Mockito.any())).thenThrow(new ConflictException(exceptionMessage));
-
-
-
- // when/then -> do the request + validate the result
-
- MockHttpServletRequestBuilder postRequest = post("/users")
-
- .contentType(MediaType.APPLICATION_JSON)
-
- .content(asJsonString(userPostDTO));
-
-
-
- // then It should throw the right message
-
- mockMvc.perform(postRequest)
-
- .andExpect(status().isConflict());
-
- }*/

@@ -12,9 +12,7 @@ import ch.uzh.ifi.seal.soprafs20.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
@@ -72,6 +70,16 @@ public class LogicController {
         cardGetDTO.setId(cardEntity.getId());
         cardGetDTO.setWords(cardEntity.getWords());
         return cardGetDTO;
+    }
+
+    /**gets the amount of remaining cards on the stack*/
+    @GetMapping("/games/{gameId}/cards/remainder/{playerToken}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public CardsRemainingDTO getCardAmount(@PathVariable Long gameId, @PathVariable String playerToken) {
+        validationService.checkPlayerIsPartOfGame(playerToken, gameId);
+        CardEntity cardEntity = logicService.getCardFromGameById(gameId);
+        return logicService.getCardAmount(gameId);
     }
 
     /**sets the mysteryWord*/

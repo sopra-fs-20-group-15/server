@@ -73,6 +73,13 @@ public class LogicService {
         }
     }
 
+    /**get amount of remaining cards*/
+    public CardsRemainingDTO getCardAmount(Long gameId){
+        CardsRemainingDTO cardsRemainingDTO=new CardsRemainingDTO();
+        cardsRemainingDTO.setCardsOnStack(gameService.getGameById(gameId).getCardIds().size());
+        return cardsRemainingDTO;
+    }
+
     /**Initializes a turn*/
     public GameEntity initializeTurn(Long gameId){
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);
