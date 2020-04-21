@@ -100,9 +100,8 @@ public class LogicService {
                 game.setGuess("");
                 game.setIsValidGuess(false);
                 return game;
-/**Milliseconds?*/
         }
-            else {throw new ConflictException("The game has not ended yet!");}}
+            else {throw new ConflictException("The game round has not ended yet!");}}
         else {throw new NoContentException("The Game has already been initialized!");}
     }
 
