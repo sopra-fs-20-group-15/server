@@ -101,9 +101,8 @@ public class PlayerService {
         else if (playerEntity.getPassword().equals(potPlayerEntity.getPassword())) {
             if (playerEntity.getStatus().equals(PlayerStatus.OFFLINE)) {
                 playerEntity.setStatus(PlayerStatus.ONLINE);
-                return playerEntity;
             }
-            else throw new PlayerAlreadyLoggedIn();
+            return playerEntity;
         }
         else throw new PlayerCredentialsWrong(String.format("Incorrect password."));
     }

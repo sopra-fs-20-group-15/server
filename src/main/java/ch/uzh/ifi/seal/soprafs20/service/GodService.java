@@ -68,9 +68,9 @@ public class GodService {
         PlayerEntity p2;
         PlayerEntity p3;
 
-        game.setNumberOfPlayers(3L);
-        game.setNumberOfAngles(0L);
-        game.setNumberOfDevils(0L);
+        game.setNumberOfPlayers(5L);
+        game.setNumberOfAngles(1L);
+        game.setNumberOfDevils(1L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
         PlayerEntity playerOne= new PlayerEntity();
