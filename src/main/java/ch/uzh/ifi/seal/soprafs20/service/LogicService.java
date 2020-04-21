@@ -86,7 +86,7 @@ public class LogicService {
         if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
         GameEntity game = gameOp.get();
         if (!game.getHasBeenInitialized()){
-            if (game.getHasEnded()){
+            if (!game.getHasEnded()){
                 game.setHasBeenInitialized(true);
                 game.setActiveMysteryWord("");
                 game.setHasEnded(false);
@@ -108,7 +108,7 @@ public class LogicService {
                 game.setIsValidGuess(false);
                 return game;
         }
-            else {throw new ConflictException("The game round has not ended yet!");}}
+            else {throw new ConflictException("The game has already ended!");}}
         else {throw new NoContentException("The Game has already been initialized!");}
     }
 
