@@ -111,18 +111,15 @@ public class LogicServiceIntegrationTestInizializeTurn {
         createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
         createdActiveGame.setActiveMysteryWord("Test");
         createdActiveGame.setTimeStart(123L);
-        createdActiveGame.setHasEnded(true);
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Clue");
         logicService.giveClue(createdActiveGame, cluePostDTO);
     }
  /**Initialize Turn works*/
- /**Initialize Turn does not work since the game has not ended yet*/
- /**Initialize Turn does not work since the game has already been initialized*/
     @Test
     public void InitializeTurnWorks() {
-
+        createdActiveGame.setHasBeenInitialized(false);
 
         GameEntity initializedGame = logicService.initializeTurn(createdActiveGame.getId());
 
@@ -143,6 +140,7 @@ public class LogicServiceIntegrationTestInizializeTurn {
         assertEquals(initializedGame.getHasBeenInitialized(), true);
     }
 
+    /**Initialize Turn does not work since the game has not ended yet*/
     @Test
     public void InitializeTurnErrorBecauseGameHasAlreadyBeenInitialized() {
         createdActiveGame.setHasBeenInitialized(true);
@@ -150,6 +148,7 @@ public class LogicServiceIntegrationTestInizializeTurn {
         assertThrows(NoContentException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
     }
 
+    /**Initialize Turn does not work since the game has already been initialized*/
     @Test
     public void InitializeTurnErrorBecauseGameHasNotEndedYet() {
         createdActiveGame.setHasBeenInitialized(true);
