@@ -127,23 +127,7 @@ public class PlayerServiceIntegrationTest {
         assertEquals(newUser.getPassword(), loggedInUser.getPassword());
         assertEquals(newUser.getToken(), loggedInUser.getToken());
     }
-
-    @Test
-    public void login_validCredentials_but_alreadyLoggedIn() {
-        assertNull(playerRepository.findByUsername("testUsername"));
-
-        PlayerEntity testUser = new PlayerEntity();
-        testUser.setUsername("testUsername");
-        testUser.setPassword("testPassword");
-        PlayerEntity newUser= playerService.createUser(testUser);
-
-//        loginUser
-        playerService.loginUser(newUser);
-
-        // check that an error is thrown if user is already logged in
-        assertThrows(PlayerAlreadyLoggedIn.class, () -> playerService.loginUser(newUser));
-
-    }
+    
 
     @Test
     public void login_invalidCredentials() {
