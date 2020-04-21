@@ -274,8 +274,16 @@ public class LogicService {
         if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
         GameEntity game = gameOp.get();
         //Check if the card stack is empty. If so, set gameHasEnded to true
-        if (game.getCardIds().size() == 0){
+        if (game.getHasEnded()) return true;
+        else if (game.getCardIds().size() == 0){
             game.setHasEnded(true);
+            Map<String, Integer> sb= game.getScoreboard().getScore();
+            for (PlayerEntity player: game.getPlayers()) {
+                int score=sb.get(player.getUsername());
+                player.setLeaderBoardScore(player.getLeaderBoardScore()+score);
+                player.setGamesPlayed(player.getGamesPlayed()+1);
+                playerRepository.saveAndFlush(player);
+            }
             return true;
         }
         return false;

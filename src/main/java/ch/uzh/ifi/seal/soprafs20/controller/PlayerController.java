@@ -85,4 +85,11 @@ public class PlayerController {
         PlayerEntity playerEntityInput = DTOMapper.INSTANCE.convertUserTokenDTOToEntity(playerTokenDTO);
         playerService.logOutUser(playerEntityInput) ;
     }
+
+    @GetMapping("/leaderBoards")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<LeaderBoardGetDTO> getLeaderBoard() {
+        return playerService.getLeaderBoard();
+    }
 }

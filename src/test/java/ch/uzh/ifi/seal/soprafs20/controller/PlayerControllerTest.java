@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.LeaderBoardGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerTokenDTO;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
@@ -18,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,6 +27,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -284,6 +287,48 @@ public class PlayerControllerTest {
         // then
         mockMvc.perform(postRequest)
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getLeaderBoardWorksWithNoPlayers() throws Exception {
+        List<LeaderBoardGetDTO> leaderBoardGetDTOS= new ArrayList<>();
+
+
+        // given
+        when(playerService.getLeaderBoard()).thenReturn(leaderBoardGetDTOS);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder postRequest = get("/leaderBoards");
+
+        // then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(0)));
+    }
+
+    @Test
+    public void getLeaderBoardWorksWithPlayers() throws Exception {
+        List<LeaderBoardGetDTO> leaderBoardGetDTOS= new ArrayList<>();
+        LeaderBoardGetDTO leaderBoardGetDTO= new LeaderBoardGetDTO();
+        leaderBoardGetDTO.setPlayerName("Bilbo");
+        leaderBoardGetDTO.setScore(50000);
+        leaderBoardGetDTO.setRank(1);
+
+        leaderBoardGetDTOS.add(leaderBoardGetDTO);
+
+        // given
+        when(playerService.getLeaderBoard()).thenReturn(leaderBoardGetDTOS);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder postRequest = get("/leaderBoards");
+
+        // then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(1)))
+                .andExpect(jsonPath("$[0].playerName", is("Bilbo")))
+                .andExpect(jsonPath("$[0].rank", is(1)))
+                .andExpect(jsonPath("$[0].score", is(50000)));
     }
 
 

@@ -36,16 +36,19 @@ public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
     private String password;
 
     @Column(nullable = false)
-    private int score;
+    private int leaderBoardScore;
+
+    @Column(nullable = false)
+    private int gamesPlayed=0;
+
 
     @Column
     private Long timePassed;
 
     @Override
     public int compareTo(PlayerEntity other) {
-        if (this.getScore() == other.getScore()) return 0;
-        else if (this.getScore() > other.getScore()) return 1;
-
+        if (this.getLeaderBoardScore() == other.getLeaderBoardScore()) return 0;
+        else if (this.getLeaderBoardScore() > other.getLeaderBoardScore()) return 1;
         else return -1;
     }
 
@@ -57,15 +60,21 @@ public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
         this.timePassed = timePassed;
     }
 
-    public int getScore() {
-        return score;
+    public int getLeaderBoardScore() {
+        return leaderBoardScore;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void setLeaderBoardScore(int score) {
+        this.leaderBoardScore = score;
     }
 
+    public void setGamesPlayed(int gamesPlayed) {
+        this.gamesPlayed = gamesPlayed;
+    }
 
+    public int getGamesPlayed() {
+        return gamesPlayed;
+    }
 
     public Long getId() {
         return id;

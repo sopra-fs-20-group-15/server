@@ -33,10 +33,6 @@ public class Scoreboard {
         this.correctlyGuessedMysteryWordsPerPlayer = correctlyGuessedCards;
     }
 
-    public Map<String, Integer> getScoreboard() {
-        return scoreboard;
-    }
-
     public void setScoreboard(Map<String, Integer> scoreboard) {
         this.scoreboard = scoreboard;
     }

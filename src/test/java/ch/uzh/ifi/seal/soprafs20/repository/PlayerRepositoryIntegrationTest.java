@@ -28,7 +28,7 @@ public class PlayerRepositoryIntegrationTest {
         player.setUsername("abc");
         player.setToken("1");
         player.setPassword("erh");
-        player.setScore(1);
+        player.setLeaderBoardScore(1);
         player.setStatus(PlayerStatus.ONLINE);
 
         entityManager.persist(player);

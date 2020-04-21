@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.LeaderBoardGetDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * PlayerEntity Service
@@ -46,18 +44,36 @@ public class PlayerService {
     }
 
 
-    public List<PlayerEntity> getUsersSortedByPointsDescending(){
+    public List<LeaderBoardGetDTO> getLeaderBoard(){
         List<PlayerEntity> list = this.playerRepository.findAll();
-
         list.sort(Collections.reverseOrder());
-        return list;
+        List<LeaderBoardGetDTO> listLB = new ArrayList<>();
+        int displayRank=1;
+        int actualRank=1;
+        for (PlayerEntity player: list) {
+            LeaderBoardGetDTO leaderBoardGetDTO = new LeaderBoardGetDTO();
+            leaderBoardGetDTO.setPlayerName(player.getUsername());
+            leaderBoardGetDTO.setScore(player.getLeaderBoardScore());
+            leaderBoardGetDTO.setGamesPlayed(player.getGamesPlayed());
+            if (actualRank == 1) leaderBoardGetDTO.setRank(1);
+            else {
+                if (listLB.get(actualRank-2).getScore()==player.getLeaderBoardScore()) leaderBoardGetDTO.setRank(displayRank);
+                else {
+                    displayRank=actualRank;
+                    leaderBoardGetDTO.setRank(displayRank);
+                }
+            }
+            listLB.add(leaderBoardGetDTO);
+            actualRank++;
+        }
+        return listLB;
     }
 
 
     public PlayerEntity createUser(PlayerEntity newPlayerEntity) {
         newPlayerEntity.setToken(UUID.randomUUID().toString());
         newPlayerEntity.setStatus(PlayerStatus.OFFLINE);
-        newPlayerEntity.setScore(0);
+        newPlayerEntity.setLeaderBoardScore(0);
 
 
 
