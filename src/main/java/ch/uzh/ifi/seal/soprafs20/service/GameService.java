@@ -85,16 +85,24 @@ public class GameService {
         gameGetDTO.setId(game.getId());
         //Get the name of the active Player
         gameGetDTO.setActivePlayerName(getPlayerById(game.getActivePlayerId()).getUsername());
-        //Get the name of the passive players, save them in a list
+        //Get the name of the passive players, save them in a list (bots as well)
         List<String> playerNames = new ArrayList<String>();
         for (Long id: game.getPassivePlayerIds()){
             playerNames.add(getPlayerById(id).getUsername());
+        }
+        //Add bots
+        for (Bot bot: game.getNamesOfBots()){
+            playerNames.add(bot.getName());
         }
         gameGetDTO.setPassivePlayerNames(playerNames);
         //Add the name of the active player to the list of the passive players and return list with all players
         List<String> playerNames2 = new ArrayList<String>();
         for (Long id: game.getPassivePlayerIds()){
             playerNames2.add(getPlayerById(id).getUsername());
+        }
+        //Add bots
+        for (Bot bot: game.getNamesOfBots()){
+            playerNames2.add(bot.getName());
         }
         playerNames2.add(gameGetDTO.getActivePlayerName());
         gameGetDTO.setPlayerNames(playerNames2);
