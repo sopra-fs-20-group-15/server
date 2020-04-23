@@ -14,7 +14,6 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
-import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
 import java.util.*;
 
 /**
@@ -35,15 +33,15 @@ import java.util.*;
 @Transactional
 public class LogicService {
 
-    private final Logger log = LoggerFactory.getLogger(GameService.class);
+    private final Logger log = LoggerFactory.getLogger(GameSetUpService.class);
     private final WordComparer wordComparer;
     private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
     private final CardService cardService;
-    private final GameService gameService;
+    private final ActiveGameService gameService;
 
     @Autowired
-    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository, CardService cardService,GameService gameService) {
+    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository, CardService cardService, ActiveGameService gameService) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.wordComparer = new WordComparer();

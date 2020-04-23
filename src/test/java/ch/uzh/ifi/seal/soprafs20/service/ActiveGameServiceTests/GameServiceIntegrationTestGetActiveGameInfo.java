@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.service.GameServiceTests;
+package ch.uzh.ifi.seal.soprafs20.service.ActiveGameServiceTests;
 
 
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
@@ -13,7 +13,8 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
-import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.service.ActiveGameService;
+import ch.uzh.ifi.seal.soprafs20.service.GameSetUpService;
 import ch.uzh.ifi.seal.soprafs20.service.LogicService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,10 @@ public class GameServiceIntegrationTestGetActiveGameInfo {
     private GameRepository gameRepository;
 
     @Autowired
-    private GameService gameService;
+    private ActiveGameService gameService;
+
+    @Autowired
+    private GameSetUpService gameSetUpService;
 
     @Autowired
     private LogicService logicService;
@@ -101,7 +105,7 @@ public class GameServiceIntegrationTestGetActiveGameInfo {
         game.setHostName(p1.getUsername());
         game.setGameName("GameName");
 
-        createdGame =gameService.createGame(game);
+        createdGame =gameSetUpService.createGame(game);
 
         createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
 

@@ -1,23 +1,13 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
-import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
-import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
-import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
-import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
-import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +15,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
 import java.util.*;
 
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
@@ -40,21 +29,23 @@ import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 @Transactional
 public class GodService {
 
-    private final Logger log = LoggerFactory.getLogger(GameService.class);
+    private final Logger log = LoggerFactory.getLogger(GameSetUpService.class);
 
-    private final GameService gameService;
+    private final GameSetUpService gameSetUpService;
     private final LogicService logicService;
     private final PlayerService playerService;
     private final CardService cardService;
     private final PlayerRepository playerRepository;
+    private final ActiveGameService activeGameService;
 
     @Autowired
-    public GodService(@Qualifier("cardService") CardService cardService, @Qualifier("gameService") GameService gameService,  @Qualifier("logicService") LogicService logicService,  @Qualifier("playerService") PlayerService playerService, @Qualifier("playerRepository") PlayerRepository playerRepository) {
+    public GodService(@Qualifier("cardService") CardService cardService, @Qualifier("gameSetUpService") GameSetUpService gameSetUpService, @Qualifier("logicService") LogicService logicService, @Qualifier("playerService") PlayerService playerService, @Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("activeGameService") ActiveGameService activeGameService) {
         this.cardService = cardService;
         this.logicService = logicService;
-        this.gameService = gameService;
+        this.gameSetUpService = gameSetUpService;
         this.playerService = playerService;
         this.playerRepository = playerRepository;
+        this.activeGameService = activeGameService;
     }
 
 
@@ -109,8 +100,8 @@ public class GodService {
         game.setHostName(p1.getUsername());
         game.setGameName("GameName");
 
-        createdGame =gameService.createGame(game);
-        createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
+        createdGame = gameSetUpService.createGame(game);
+        createdActiveGame = activeGameService.getGameById(activeGameService.createActiveGame(createdGame.getId(), "One").getId());
 
         GodDTO godDTO = new GodDTO();
         godDTO.setGameId(createdActiveGame.getId());

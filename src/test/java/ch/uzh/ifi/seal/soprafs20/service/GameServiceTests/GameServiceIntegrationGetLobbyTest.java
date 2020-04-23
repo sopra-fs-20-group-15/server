@@ -11,7 +11,8 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ActiveGamePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
-import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.service.ActiveGameService;
+import ch.uzh.ifi.seal.soprafs20.service.GameSetUpService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -45,7 +46,10 @@ public class GameServiceIntegrationGetLobbyTest {
     private GameRepository gameRepository;
 
     @Autowired
-    private GameService gameService;
+    private GameSetUpService gameService;
+
+    @Autowired
+    private ActiveGameService activeGameService;
 
     private GameSetUpEntity game = new GameSetUpEntity();
 
@@ -111,7 +115,7 @@ public class GameServiceIntegrationGetLobbyTest {
     /**Successfully retrieves info from Lobby*/
     @Test
     public void getLobbyInfoWorks() {
-        ActiveGamePostDTO activeGamePostDTO=gameService.createActiveGame(createdGame.getId(),"One");
+        ActiveGamePostDTO activeGamePostDTO=activeGameService.createActiveGame(createdGame.getId(),"One");
         LobbyGetDTO lobbyGetDTO=gameService.getLobbyInfo(createdGame.getId(),"One");
 
         assertEquals(createdGame.getGameName(),lobbyGetDTO.getGameName());

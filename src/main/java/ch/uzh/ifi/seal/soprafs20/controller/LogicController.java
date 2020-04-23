@@ -22,17 +22,17 @@ import static java.lang.Long.parseLong;
 public class LogicController {
     private final PlayerService playerService;
     private final CardService cardService;
-    private final GameService gameService;
     private final ValidationService validationService;
     private final LogicService logicService;
+    private final ActiveGameService activeGameService;
 
 
-    LogicController(PlayerService playerService, CardService cardService, ValidationService validationService, GameService gameService, LogicService logicService) {
+    LogicController(PlayerService playerService, CardService cardService, ValidationService validationService, LogicService logicService, ActiveGameService activeGameService) {
         this.playerService = playerService;
         this.cardService = cardService;
         this.validationService = validationService;
-        this.gameService = gameService;
         this.logicService = logicService;
+        this.activeGameService = activeGameService;
     }
 
     protected boolean stringIsALong(String str) {
@@ -118,7 +118,7 @@ public class LogicController {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPassivePlayerOfGame(cluePostDTO.getPlayerToken(), gameIdLong);
-        GameEntity game = gameService.getGameById(gameIdLong);
+        GameEntity game = activeGameService.getGameById(gameIdLong);
         if(game.getActiveMysteryWord().isBlank()) throw new ConflictException("Turn order violated : Mystery Word has not been chosen yet!");
         logicService.giveClue(game,cluePostDTO);
     }
@@ -131,7 +131,7 @@ public class LogicController {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
-        GameEntity game = gameService.getGameById(gameIdLong);
+        GameEntity game = activeGameService.getGameById(gameIdLong);
         return logicService.getClues(game);
     }
 
@@ -143,7 +143,7 @@ public class LogicController {
         if(!stringIsALong(gameId)) throw new BadRequestException("Game-Id has wrong format.");
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
-        GameEntity game = gameService.getGameById(gameIdLong);
+        GameEntity game = activeGameService.getGameById(gameIdLong);
         return logicService.getCluePlayers(game);
     }
 
@@ -155,7 +155,7 @@ public class LogicController {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsActivePlayerOfGame(guessPostDTO.getPlayerToken(), gameIdLong);
-        GameEntity game = gameService.getGameById(gameIdLong);
+        GameEntity game = activeGameService.getGameById(gameIdLong);
         if (game.getValidClues().isEmpty()) throw new ConflictException("Turn order violated : No valid clues have been provided to you yet");
         if (!game.getActiveMysteryWord().isBlank()) {
             if (game.getGuess().isBlank()) {
@@ -173,7 +173,7 @@ public class LogicController {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
-        GameEntity game = gameService.getGameById(gameIdLong);
+        GameEntity game = activeGameService.getGameById(gameIdLong);
         String guess = game.getGuess();
         boolean isValidGuess = game.getIsValidGuess();
         GuessGetDTO guessGetDTO = new GuessGetDTO();

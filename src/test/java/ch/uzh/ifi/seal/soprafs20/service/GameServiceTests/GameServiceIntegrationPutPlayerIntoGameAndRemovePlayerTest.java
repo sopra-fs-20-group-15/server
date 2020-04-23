@@ -12,7 +12,7 @@ import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 
-import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.service.GameSetUpService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -33,7 +33,7 @@ public class GameServiceIntegrationPutPlayerIntoGameAndRemovePlayerTest {
     private GameSetUpRepository gameSetUpRepository;
 
     @Autowired
-    private GameService gameService;
+    private GameSetUpService gameService;
 
     private GameSetUpEntity game = new GameSetUpEntity();
     private GameSetUpEntity createdGame = new GameSetUpEntity();

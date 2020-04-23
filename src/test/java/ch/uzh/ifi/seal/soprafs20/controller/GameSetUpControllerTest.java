@@ -37,14 +37,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * This tests if the UserController works.
  */
 
-@WebMvcTest(GamesController.class)
-public class GamesControllerTest {
+@WebMvcTest(GameSetUpController.class)
+public class GameSetUpControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private GameService gameService;
+    private GameSetUpService gameService;
 
     @MockBean
     private PlayerService playerService;
@@ -104,61 +104,8 @@ public class GamesControllerTest {
     }
 
     /**
-     * Tests a post-Request to /games/{gameSetupId}
-     */
-    @Test
-    public void POSTActiveGameCreation() throws Exception {
-        // given
-        //a game
-        ActiveGamePostDTO activeGamePostDTO = new ActiveGamePostDTO();
-        activeGamePostDTO.setId(1L);
-        PlayerTokenDTO playerTokenDTO=new PlayerTokenDTO();
-        playerTokenDTO.setToken("Test");
-
-
-        // mock the functions
-        given(gameService.getGameSetupById(Mockito.any())).willReturn(new GameSetUpEntity());
-        given(gameService.createActiveGame(Mockito.any(), Mockito.any())).willReturn(activeGamePostDTO);
-        given(logicService.initializeTurn(Mockito.any())).willReturn(new GameEntity());
-
-        // when
-        MockHttpServletRequestBuilder postRequest = post("/games/{gameSetupId}", 123)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(playerTokenDTO));
-
-        // then
-        mockMvc.perform(postRequest).andExpect(status().isCreated());
-    }
-
-    @Test
-    public void POSTActiveGameCreationFailsBecauseWrongFormatOfGameSetupId() throws Exception {
-        MockHttpServletRequestBuilder postRequest = post("/games/{gameSetupId}", "abc");
-        mockMvc.perform(postRequest).andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void POSTActiveGameCreationFailsBecauseOfMissingBody() throws Exception {
-        MockHttpServletRequestBuilder postRequest = post("/games/{gameSetupId}", "123");
-        mockMvc.perform(postRequest).andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void POSTActiveGameCreationFailsBecauseGameSetupWithSpecifiedIdDoesNotExist() throws Exception {
-        given(gameService.createActiveGame(Mockito.any(),Mockito.anyString())).willThrow(new NotFoundException("Test"));
-        PlayerTokenDTO playerTokenDTO=new PlayerTokenDTO();
-        playerTokenDTO.setToken("Test");
-
-        MockHttpServletRequestBuilder postRequest = post("/games/{gameSetupId}", 123)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(playerTokenDTO));
-
-        mockMvc.perform(postRequest).andExpect(status().isNotFound());
-    }
-
-    /**
      * Tests a Get-Request to /games/lobbies/{gameSetupId}/{playerToken}
      */
-
     @Test
     public void GETLobby() throws Exception {
         LobbyGetDTO lobbyGetDTO = new LobbyGetDTO();
@@ -349,31 +296,5 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
         mockMvc.perform(deleteRequest).andExpect(status().isOk());
     }
 
-    /**Test getGameInformationAndItWorks*/
-    /**GetRequest at /activeGames/{gameId}*/
-    @Test
-    public void getGameInformationAndItWorks() throws Exception {
-        //given
-        GameGetDTO gameGetDTO = new GameGetDTO();
-        gameGetDTO.setActivePlayerName("Kirk");
-        List<String> names = new ArrayList<String>();
-        names.add("Spock");
-        names.add("Scotty");
-        names.add("Chekov");
-        gameGetDTO.setPassivePlayerNames(names);
-        names.add("Kirk");
-        gameGetDTO.setPlayerNames(names);
-        gameGetDTO.setId(1L);
-
-        // mock the functions
-        given(gameService.getGameInformationById(Mockito.any())).willReturn(gameGetDTO);
-
-        // when
-        MockHttpServletRequestBuilder getRequest = get("/activeGames/{gameId}", 1);
-
-        // then
-        mockMvc.perform(getRequest).andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)));
-    }
 
 }

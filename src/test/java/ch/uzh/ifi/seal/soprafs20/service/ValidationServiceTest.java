@@ -7,9 +7,6 @@ import ch.uzh.ifi.seal.soprafs20.exceptions.PlayerNotAvailable;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs20.service.GameService;
-import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
-import ch.uzh.ifi.seal.soprafs20.service.ValidationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -32,7 +29,7 @@ public class ValidationServiceTest {
 
     @InjectMocks
     private PlayerService playerService;
-    private GameService gameService;
+    private GameSetUpService gameService;
     private PlayerEntity testPlayer;
 
     @BeforeEach

@@ -1,5 +1,5 @@
 
-package ch.uzh.ifi.seal.soprafs20.service.GameServiceTests;
+package ch.uzh.ifi.seal.soprafs20.service.ActiveGameServiceTests;
 
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
@@ -13,7 +13,8 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ActiveGamePostDTO;
-import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.service.ActiveGameService;
+import ch.uzh.ifi.seal.soprafs20.service.GameSetUpService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -51,7 +52,10 @@ public class GameServiceIntegrationCreateActiveGameTest {
     private GameRepository gameRepository;
 
     @Autowired
-    private GameService gameService;
+    private ActiveGameService gameService;
+
+    @Autowired
+    private GameSetUpService gameSetUpService;
 
     private GameSetUpEntity game = new GameSetUpEntity();
 
@@ -113,7 +117,7 @@ public class GameServiceIntegrationCreateActiveGameTest {
         game.setPlayerTokens(playerTokens);
         //Valid host gets already checked beforehand
         game.setHostName(player1.getUsername());
-        createdGame = gameService.createGame(game);
+        createdGame = gameSetUpService.createGame(game);
 
     }
 
@@ -145,7 +149,7 @@ public class GameServiceIntegrationCreateActiveGameTest {
     public void CreateActiveGameSuccessfullyWithBots() {
         game.setNumberOfAngles(1L);
         game.setNumberOfDevils(1L);
-        createdGame = gameService.createGame(game);
+        createdGame = gameSetUpService.createGame(game);
 
         ActiveGamePostDTO activeGamePostDTO =gameService.createActiveGame(createdGame.getId(), "One");
 //        check if expected output matches actual output
@@ -168,7 +172,7 @@ public class GameServiceIntegrationCreateActiveGameTest {
 
         game.setPlayerTokens(playerTokens);
 
-        createdGame = gameService.createGame(game);
+        createdGame = gameSetUpService.createGame(game);
 
         assertThrows(ConflictException.class, ()-> gameService.createActiveGame(createdGame.getId(), "One"));
     }

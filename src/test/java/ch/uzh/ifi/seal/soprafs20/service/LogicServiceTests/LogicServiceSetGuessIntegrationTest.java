@@ -4,13 +4,13 @@ import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
-import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GuessPostDTO;
-import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.service.ActiveGameService;
+import ch.uzh.ifi.seal.soprafs20.service.GameSetUpService;
 import ch.uzh.ifi.seal.soprafs20.service.LogicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,10 @@ public class LogicServiceSetGuessIntegrationTest {
     private GameRepository gameRepository;
 
     @Autowired
-    private GameService gameService;
+    private ActiveGameService gameService;
+
+    @Autowired
+    private GameSetUpService gameSetUpService;
 
     @Autowired
     private LogicService logicService;
@@ -108,7 +111,7 @@ public class LogicServiceSetGuessIntegrationTest {
         game.setHostName(p1.getUsername());
         game.setGameName("GameName");
 
-        createdGame = gameService.createGame(game);
+        createdGame =gameSetUpService.createGame(game);
 
         createdActiveGame = gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
         logicService.initializeTurn(createdActiveGame.getId());

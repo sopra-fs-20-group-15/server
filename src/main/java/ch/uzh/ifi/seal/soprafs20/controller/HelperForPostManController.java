@@ -1,21 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
-import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
-import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
-import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.exceptions.BadRequestException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.service.*;
-import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.lang.Long.parseLong;
 
@@ -28,13 +16,13 @@ import static java.lang.Long.parseLong;
 public class HelperForPostManController {
     private final PlayerService playerService;
     private final CardService cardService;
-    private final GameService gameService;
+    private final GameSetUpService gameService;
     private final ValidationService validationService;
     private final LogicService logicService;
     private final GodService godService;
 
 
-    HelperForPostManController(PlayerService playerService, CardService cardService, ValidationService validationService, GameService gameService, LogicService logicService, GodService godService) {
+    HelperForPostManController(PlayerService playerService, CardService cardService, ValidationService validationService, GameSetUpService gameService, LogicService logicService, GodService godService) {
         this.playerService = playerService;
         this.cardService = cardService;
         this.validationService = validationService;
