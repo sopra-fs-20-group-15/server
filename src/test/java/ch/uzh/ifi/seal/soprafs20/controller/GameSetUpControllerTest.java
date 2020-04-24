@@ -146,7 +146,7 @@ public class GameSetUpControllerTest {
                 "asdfa fdsf", "tik-token");
 
         // then
-        mockMvc.perform(postRequest).andExpect(status().isBadRequest());
+        mockMvc.perform(postRequest).andExpect(status().isConflict());
     }
 
     @Test

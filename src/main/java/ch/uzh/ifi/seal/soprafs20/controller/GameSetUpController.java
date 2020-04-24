@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.BadRequestException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.service.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
@@ -37,16 +38,18 @@ public class GameSetUpController {
         this.logicService = logicService;
     }
 
+
     protected boolean stringIsALong(String str) {
         try {
             parseLong(str);
         } catch(NumberFormatException e) {
-            return false;
+            throw new ConflictException("The PathVariable should be a long!");
         } catch(NullPointerException e) {
-            return false;
+            throw new ConflictException("The PathVariable should be a long!");
         }
         return true;
     }
+
 
     /**Creates a game setUp*/
     @PostMapping("/games")

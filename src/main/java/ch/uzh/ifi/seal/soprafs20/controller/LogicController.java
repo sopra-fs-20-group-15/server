@@ -39,9 +39,9 @@ public class LogicController {
         try {
             parseLong(str);
         } catch(NumberFormatException e) {
-            return false;
+            throw new ConflictException("The PathVariable should be a long!");
         } catch(NullPointerException e) {
-            return false;
+            throw new ConflictException("The PathVariable should be a long!");
         }
         return true;
     }

@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.exceptions.BadRequestException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.service.*;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import static java.lang.Long.parseLong;
 
 /**ActiveGamesController
- * Is responsible for creating the active version of the Just One Game*/
+ * Is responsible for creating and deleting the active version of the Just One Game*/
 @RestController
 public class ActiveGamesController {
 
@@ -26,12 +27,13 @@ public class ActiveGamesController {
         try {
             parseLong(str);
         } catch(NumberFormatException e) {
-            return false;
+            throw new ConflictException("The PathVariable should be a long!");
         } catch(NullPointerException e) {
-            return false;
+            throw new ConflictException("The PathVariable should be a long!");
         }
         return true;
     }
+
 
     /**Creates an active game*/
     @PostMapping("/games/{gameSetUpId}")

@@ -47,6 +47,9 @@ public class ActiveGameControllerTest {
     private ActiveGameService gameService;
 
     @MockBean
+    private GameSetUpService gameSetUpService;
+
+    @MockBean
     private PlayerService playerService;
 
     @MockBean
@@ -64,7 +67,7 @@ public class ActiveGameControllerTest {
 
 
         // mock the functions
-        given(gameService.getGameSetupById(Mockito.any())).willReturn(new GameSetUpEntity());
+        given(gameSetUpService.getGameSetupById(Mockito.any())).willReturn(new GameSetUpEntity());
         given(gameService.createActiveGame(Mockito.any(), Mockito.any())).willReturn(activeGamePostDTO);
         given(logicService.initializeTurn(Mockito.any())).willReturn(new GameEntity());
 

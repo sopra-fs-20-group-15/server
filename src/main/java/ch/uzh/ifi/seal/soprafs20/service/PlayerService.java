@@ -69,6 +69,13 @@ public class PlayerService {
         return listLB;
     }
 
+    public PlayerEntity getPlayerById(long id){
+        Optional<PlayerEntity> playerOp = playerRepository.findById(id);
+        if (playerOp.isEmpty()) throw new NotFoundException("No Game Setup with this id exists!");
+        return playerOp.get();
+
+    }
+
 
     public PlayerEntity createUser(PlayerEntity newPlayerEntity) {
         newPlayerEntity.setToken(UUID.randomUUID().toString());

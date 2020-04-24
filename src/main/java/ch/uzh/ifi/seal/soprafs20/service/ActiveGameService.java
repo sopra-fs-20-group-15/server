@@ -39,49 +39,39 @@ public class ActiveGameService {
 
     private final Logger log = LoggerFactory.getLogger(GameSetUpService.class);
 
-    private final PlayerRepository playerRepository;
+    private final PlayerService playerService;
     private final GameRepository gameRepository;
-    private final GameSetUpRepository gameSetUpRepository;
+    private final GameSetUpService gameSetUpService;
     private final CardService cardService;
 
     @Autowired
-    public ActiveGameService(@Qualifier("cardService") CardService cardService, @Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("gameRepository") GameRepository gameRepository) {
+    public ActiveGameService(@Qualifier("cardService") CardService cardService, @Qualifier("playerService") PlayerService playerService, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("gameRepository") GameRepository gameRepository, GameSetUpService gameSetUpService) {
         this.cardService = cardService;
-        this.playerRepository = playerRepository;
+        this.playerService = playerService;
         this.gameRepository = gameRepository;
-        this.gameSetUpRepository = gameSetUpRepository;
+        this.gameSetUpService = gameSetUpService;
     }
-    /**Getters*/
+    /**Get an active game by its Id or throw 404 in case the game is not found*/
     public GameEntity getGameById(Long id){
         Optional<GameEntity> gameOp = gameRepository.findById(id);
         if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
         return gameOp.get();
     }
 
-    public PlayerEntity getPlayerById(long id){
-        Optional<PlayerEntity> playerOp = playerRepository.findById(id);
-        if (playerOp.isEmpty()) throw new NotFoundException("No Game Setup with this id exists!");
-        return playerOp.get();
-
-    }
-
-    public PlayerEntity getPlayerByToken(String playerToken){
-        PlayerEntity player = playerRepository.findByToken(playerToken);
-        if (player==null) throw new NotFoundException("No player with your Token exists");
-        return player;
-    }
-
     /**Get the information about a game that is Important for the frontend*/
     public GameGetDTO getGameInformationById(Long gameId){
+
         GameGetDTO gameGetDTO = new GameGetDTO();
         GameEntity game = getGameById(gameId);
         gameGetDTO.setId(game.getId());
+
         //Get the name of the active Player
-        gameGetDTO.setActivePlayerName(getPlayerById(game.getActivePlayerId()).getUsername());
+        gameGetDTO.setActivePlayerName(playerService.getPlayerById(game.getActivePlayerId()).getUsername());
+
         //Get the name of the passive players, save them in a list (bots as well)
         List<String> playerNames = new ArrayList<String>();
         for (Long id: game.getPassivePlayerIds()){
-            playerNames.add(getPlayerById(id).getUsername());
+            playerNames.add(playerService.getPlayerById(id).getUsername());
         }
         //Add bots
         for (Bot bot: game.getNamesOfBots()){
@@ -91,7 +81,7 @@ public class ActiveGameService {
         //Add the name of the active player to the list of the passive players and return list with all players
         List<String> playerNames2 = new ArrayList<String>();
         for (Long id: game.getPassivePlayerIds()){
-            playerNames2.add(getPlayerById(id).getUsername());
+            playerNames2.add(playerService.getPlayerById(id).getUsername());
         }
         //Add bots
         for (Bot bot: game.getNamesOfBots()){
@@ -102,47 +92,71 @@ public class ActiveGameService {
         return gameGetDTO;
     }
 
-    public GameSetUpEntity getGameSetupById(Long id){
-        Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(id);
-        if (gameOp.isEmpty()) throw new NotFoundException("No Game Setup with this id exists!");
-        return gameOp.get();
+
+    /**Create active game with helpers*/
+
+    /**Adds requested number of bots to a game*/
+    public GameEntity addBots(GameEntity game, int numOfDevils, int numOfAngels){
+        List<Angel> angels=new ArrayList<>();
+        List<Devil> devils=new ArrayList<>();
+        //Add angles
+        for (int i = 1; i <= numOfAngels; i++) {
+            Angel bot = new Angel();
+            bot.setName("Angel_Nr_" + String.valueOf(i));
+            bot.setToken("Angel_" + String.valueOf(i));
+            angels.add(bot);
+        }
+        //Add devils
+        for (int i = 1; i <= numOfDevils; i++) {
+            Devil bot = new Devil();
+            bot.setName("Devil_Nr_" + String.valueOf(i));
+            bot.setToken("Devil_" + String.valueOf(i));
+            devils.add(bot);
+        }
+        game.setAngels(angels);
+        game.setDevils(devils);
+        return game;
+    }
+
+    /**Adds the human players to a game*/
+    public GameEntity addHumanPlayers(GameEntity game, List<String> playerTokens){
+        List<PlayerEntity> players = new ArrayList<>();
+        for (String playerToken : playerTokens) {
+            players.add(playerService.getPlayerByToken(playerToken));
+            game.setPlayers(players);
+        }
+    }
+
+    public ActiveGamePostDTO createActiveGamePostDTO(GameEntity game){
+        ActiveGamePostDTO activeGamePostDTO=new ActiveGamePostDTO();
+        activeGamePostDTO.setId(game.getId());
+        List<String> playerNames= new ArrayList<>();
+        for (PlayerEntity player : game.getPlayers()){
+            playerNames.add(player.getUsername());
+        }
+        for(Bot bot : game.getNamesOfBots()) playerNames.add(bot.getName());
+        activeGamePostDTO.setPlayerNames(playerNames);
     }
 
     /**Create a an active game from a gameSetUpEntity*/
     public ActiveGamePostDTO createActiveGame(Long gameSetupId, String pt) {
-        if (!getGameSetupById(gameSetupId).getHostName().equals(getPlayerByToken(pt).getUsername()))
+        //Checkers
+        //Check that the player is the host
+        if (!gameSetUpService.getGameSetupById(gameSetupId).getHostName().equals(playerService.getPlayerByToken(pt).getUsername()))
             throw new UnauthorizedException("Player is not host and therefore not allowed to start the game");
-        GameSetUpEntity gameSetUpEntity =this.getGameSetupById(gameSetupId);
-//            Check that enough players are in the lobby to start the game.
+        GameSetUpEntity gameSetUpEntity =gameSetUpService.getGameSetupById(gameSetupId);
+        //Check that enough players are in the lobby to start the game.
         if (gameSetUpEntity.getPlayerTokens().size()+gameSetUpEntity.getNumberOfDevils()+gameSetUpEntity.getNumberOfAngles()
                 >2 && gameSetUpEntity.getPlayerTokens().size()+gameSetUpEntity.getNumberOfDevils()+gameSetUpEntity.getNumberOfAngles()<8) {
-//                game initialization
+
+
+            //game initialization
             GameEntity game = new GameEntity();
-//                adding human and not human players to the game
-            List<PlayerEntity> players = new ArrayList<>();
-            List<Angel> angels=new ArrayList<>();
-            List<Devil> devils=new ArrayList<>();
-            for (String playerToken : gameSetUpEntity.getPlayerTokens()) {
-                players.add(playerRepository.findByToken(playerToken));
-            }
-            int numOfAngels = gameSetUpEntity.getNumberOfAngles().intValue();
-            int numOfDevils = gameSetUpEntity.getNumberOfDevils().intValue();
-            for (int i = 1; i <= numOfAngels; i++) {
-                Angel bot = new Angel();
-                bot.setName("Angel_Nr_" + String.valueOf(i));
-                bot.setToken("Angel_" + String.valueOf(i));
-                angels.add(bot);
-            }
-            for (int i = 1; i <= numOfDevils; i++) {
-                Devil bot = new Devil();
-                bot.setName("Devil_Nr_" + String.valueOf(i));
-                bot.setToken("Devil_" + String.valueOf(i));
-                devils.add(bot);
-            }
-            game.setAngels(angels);
-            game.setDevils(devils);
-            game.setPlayers(players);
-//                further initialization
+            //adding human and not human players to the game
+            addBots(game, gameSetUpEntity.getNumberOfAngles().intValue(), gameSetUpEntity.getNumberOfDevils().intValue());
+            addHumanPlayers(game, gameSetUpEntity.getPlayerTokens());
+
+            //further initialization
             game.setHasBeenInitialized(false);
             game.setHasEnded(false);
 
@@ -156,7 +170,7 @@ public class ActiveGameService {
 
             game.setValidCluesAreSet(false);
             game.setClueMap(new HashMap<String,String>());
-            game.setActivePlayerId(getPlayerByToken(pt).getId());
+            game.setActivePlayerId(playerService.getPlayerByToken(pt).getId());
             game.setScoreboard(new Scoreboard());
             game.getScoreboard().initializeMap(game.getPlayers());
             game.setAnalyzedClues(new HashMap<String, Integer>());
@@ -170,16 +184,9 @@ public class ActiveGameService {
             game.setPassivePlayerIds(passivePlayerIds);
 //              setup of the DTO that needs to be returned
             GameEntity activeGame= gameRepository.saveAndFlush(game);
-            getGameSetupById(gameSetupId).setActiveGameId(activeGame.getId());
-            ActiveGamePostDTO activeGamePostDTO=new ActiveGamePostDTO();
-            activeGamePostDTO.setId(activeGame.getId());
-            List<String> playerNames= new ArrayList<>();
-            for (PlayerEntity player : activeGame.getPlayers()){
-                playerNames.add(player.getUsername());
-            }
-            for(Bot bot : activeGame.getNamesOfBots()) playerNames.add(bot.getName());
-            activeGamePostDTO.setPlayerNames(playerNames);
-            return activeGamePostDTO;
+            gameSetUpService.getGameSetupById(gameSetupId).setActiveGameId(activeGame.getId());
+            //Create the activeGamePostDTO
+            return createActiveGamePostDTO(activeGame);
         }
         else throw new ConflictException("Not enough or too many players to start game!");
     }

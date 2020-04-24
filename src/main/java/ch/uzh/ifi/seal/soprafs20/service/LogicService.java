@@ -39,14 +39,16 @@ public class LogicService {
     private final GameRepository gameRepository;
     private final CardService cardService;
     private final ActiveGameService gameService;
+    private final PlayerService playerService;
 
     @Autowired
-    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository, CardService cardService, ActiveGameService gameService) {
+    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository, CardService cardService, ActiveGameService gameService, PlayerService playerService) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.wordComparer = new WordComparer();
         this.cardService = cardService;
         this.gameService= gameService;
+        this.playerService = playerService;
     }
 
     /**Puts the active player at the end of the passive Players List, takes the passive Player at 0 and make him the active player*/
@@ -192,7 +194,7 @@ public class LogicService {
             clueMap.put(cluePostDTO.getPlayerToken(),cluePostDTO.getClue());
             game.setClueMap(clueMap);
             System.currentTimeMillis();
-            gameService.getPlayerByToken(cluePostDTO.getPlayerToken()).setTimePassed(System.currentTimeMillis()-game.getTimeStart());
+            playerService.getPlayerByToken(cluePostDTO.getPlayerToken()).setTimePassed(System.currentTimeMillis()-game.getTimeStart());
         }
         else throw new UnauthorizedException("You have already submitted a clue for this round!");
         if (game.getClueMap().size()==game.getPlayers().size()+game.getNumOfBots()-1){

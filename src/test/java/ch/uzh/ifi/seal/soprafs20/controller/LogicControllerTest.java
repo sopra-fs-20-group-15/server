@@ -516,7 +516,7 @@ public class LogicControllerTest {
         // then
 
         mockMvc.perform(postRequest)
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isConflict());
 
     }
 
