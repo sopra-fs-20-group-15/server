@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import static java.lang.Long.parseLong;
 
 /**ActiveGamesController
- * Is responsible for creating and deleting the active version of the Just One Game*/
+ * Is responsible for creating and deleting the active version of the Just One Game. Can also give information about an active game*/
 @RestController
 public class ActiveGamesController {
 
@@ -35,7 +35,13 @@ public class ActiveGamesController {
     }
 
 
-    /**Creates an active game*/
+    /**Creates an active game
+     * @Param: playerTokenDTO: String playerToken
+     * @Returns: activeGamePostDTO: Long id, List<String> playerNames
+     * @Throws: 409: The PathVariable is not a Long
+     * @Throws: 409: Not enough players are part of the game in order to start it
+     * @Throws: 401: playerToken is not the Token of the Host
+     * */
     @PostMapping("/games/{gameSetUpId}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -52,15 +58,19 @@ public class ActiveGamesController {
     }
 
 
-    /**Allows player to get an overview of the existing active games*/
+    /**Allows player to get an overview of the existing active games
+     * @Returns: GameGetDTO: Long id, String activePlayerName, List<String> playerNames, List<String> passivePlayerNames,
+     * @Throws: 409:The PathVariable is not a Long
+     * @Throws: 404: Game with specified Id cannot be found
+     * */
     @GetMapping("/activeGames/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public GameGetDTO getActiveGame(@PathVariable String gameId) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
-        GameGetDTO game = activeGameService.getGameInformationById(gameIdLong);
-        return game;
+        GameGetDTO gameGetDTO = activeGameService.getGameInformationById(gameIdLong);
+        return gameGetDTO;
     }
 
 

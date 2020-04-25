@@ -51,14 +51,22 @@ public class ActiveGameService {
         this.gameRepository = gameRepository;
         this.gameSetUpService = gameSetUpService;
     }
-    /**Get an active game by its Id or throw 404 in case the game is not found*/
+    /**Get an active game by its Id or throw 404 in case the game is not found
+     *  @Param: Long id; Id of the active game that should be retrieved
+     *  @Returns: GameEntity; The active Game
+     *  @Throws: 404: If no game with specified id exists
+     * */
     public GameEntity getGameById(Long id){
         Optional<GameEntity> gameOp = gameRepository.findById(id);
         if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
         return gameOp.get();
     }
 
-    /**Get the information about a game that is Important for the frontend*/
+    /**Get the information about a game that is Important for the frontend
+     * @Param: Long gameId (activeGame)
+     * @Returns: GameGetDTO: Long id, String activePlayerName, List<String> playerNames, List<String> passivePlayerNames,
+     * @Throws: 404: Game with specified Id cannot be found
+     * */
     public GameGetDTO getGameInformationById(Long gameId){
 
         GameGetDTO gameGetDTO = new GameGetDTO();
@@ -80,18 +88,11 @@ public class ActiveGameService {
         gameGetDTO.setPassivePlayerNames(playerNames);
         //Add the name of the active player to the list of the passive players and return list with all players
         List<String> playerNames2 = new ArrayList<String>();
-        for (Long id: game.getPassivePlayerIds()){
-            playerNames2.add(playerService.getPlayerById(id).getUsername());
-        }
-        //Add bots
-        for (Bot bot: game.getNamesOfBots()){
-            playerNames2.add(bot.getName());
-        }
+        for (String name: playerNames){playerNames2.add(name);}
         playerNames2.add(gameGetDTO.getActivePlayerName());
         gameGetDTO.setPlayerNames(playerNames2);
         return gameGetDTO;
     }
-
 
     /**Create active game with helpers*/
 
@@ -175,7 +176,12 @@ public class ActiveGameService {
         return activeGamePostDTO;
     }
 
-    /**Create a an active game from a gameSetUpEntity*/
+    /**Create a an active game from a gameSetUpEntity
+     *@Param: playerTokenDTO: String playerToken
+     *@Returns: activeGamePostDTO: Long id, List<String> playerNames
+     *@Throws: 409: Not enough players are part of the game in order to start it
+     *@Throws: 401: playerToken is not the Token of the Host
+     *      * */
     public ActiveGamePostDTO createActiveGame(Long gameSetupId, String pt) {
         //Checkers
         //Check that the player is the host
@@ -199,5 +205,5 @@ public class ActiveGameService {
         }
         else throw new ConflictException("Not enough or too many players to start game!");
     }
-    
+
 }
