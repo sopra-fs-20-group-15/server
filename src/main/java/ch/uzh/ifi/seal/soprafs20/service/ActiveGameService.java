@@ -95,8 +95,8 @@ public class ActiveGameService {
 
     /**Create active game with helpers*/
 
-    /**Adds requested number of bots to a game*/
-    public GameEntity addBots(GameEntity game, int numOfDevils, int numOfAngels){
+    /**Adds requested number of bots to a game (angels and devils)*/
+    protected GameEntity addBots(GameEntity game, int numOfDevils, int numOfAngels){
         List<Angel> angels=new ArrayList<>();
         List<Devil> devils=new ArrayList<>();
         //Add angles
@@ -119,15 +119,51 @@ public class ActiveGameService {
     }
 
     /**Adds the human players to a game*/
-    public GameEntity addHumanPlayers(GameEntity game, List<String> playerTokens){
+    protected GameEntity addHumanPlayers(GameEntity game, List<String> playerTokens, String hostToken){
+        //Add playerEntities
         List<PlayerEntity> players = new ArrayList<>();
         for (String playerToken : playerTokens) {
             players.add(playerService.getPlayerByToken(playerToken));
             game.setPlayers(players);
         }
+        //Add Ids
+        game.setActivePlayerId(playerService.getPlayerByToken(hostToken).getId());
+        List<Long> passivePlayerIds=new ArrayList<>();
+        for (PlayerEntity player : game.getPlayers()){
+            if (!player.getId().equals(game.getActivePlayerId())) passivePlayerIds.add(player.getId());
+        }
+        game.setPassivePlayerIds(passivePlayerIds);
+        return game;
     }
 
-    public ActiveGamePostDTO createActiveGamePostDTO(GameEntity game){
+    /**Adds 13 cards to a game and initializes the card repository if this has not been done yet*/
+    protected GameEntity addCards(GameEntity game){
+        try {cardService.addAllCards();
+        } catch (IOException ex) {
+            throw new NoContentException("The CardDatabase couldn't be filled");
+        }
+        game.setCardIds(cardService.getFullStackOfCards());
+        return game;
+    }
+
+    /**Initializes Scoreboard, Clues and Guesses*/
+    protected GameEntity furtherInitialize(GameEntity game){
+        //further initialization
+        game.setHasBeenInitialized(false);
+        game.setHasEnded(false);
+        game.setValidCluesAreSet(false);
+        game.setClueMap(new HashMap<String,String>());
+        game.setScoreboard(new Scoreboard());
+        game.getScoreboard().initializeMap(game.getPlayers());
+        game.setAnalyzedClues(new HashMap<String, Integer>());
+        game.setTimeStart(null);
+        Map<String, String> validClues= new HashMap<>();
+        game.setValidClues(validClues);
+        return game;
+    }
+
+    /**Saves all the information about the newly created game into a DTO*/
+    protected ActiveGamePostDTO createActiveGamePostDTO(GameEntity game){
         ActiveGamePostDTO activeGamePostDTO=new ActiveGamePostDTO();
         activeGamePostDTO.setId(game.getId());
         List<String> playerNames= new ArrayList<>();
@@ -136,6 +172,7 @@ public class ActiveGameService {
         }
         for(Bot bot : game.getNamesOfBots()) playerNames.add(bot.getName());
         activeGamePostDTO.setPlayerNames(playerNames);
+        return activeGamePostDTO;
     }
 
     /**Create a an active game from a gameSetUpEntity*/
@@ -148,41 +185,13 @@ public class ActiveGameService {
         //Check that enough players are in the lobby to start the game.
         if (gameSetUpEntity.getPlayerTokens().size()+gameSetUpEntity.getNumberOfDevils()+gameSetUpEntity.getNumberOfAngles()
                 >2 && gameSetUpEntity.getPlayerTokens().size()+gameSetUpEntity.getNumberOfDevils()+gameSetUpEntity.getNumberOfAngles()<8) {
-
-
             //game initialization
             GameEntity game = new GameEntity();
-            //adding human and not human players to the game
-            addBots(game, gameSetUpEntity.getNumberOfAngles().intValue(), gameSetUpEntity.getNumberOfDevils().intValue());
-            addHumanPlayers(game, gameSetUpEntity.getPlayerTokens());
-
-            //further initialization
-            game.setHasBeenInitialized(false);
-            game.setHasEnded(false);
-
-//              Fill CardRepository and add 13 Cards to Game
-            try {cardService.addAllCards();
-            } catch (IOException ex) {
-                throw new NoContentException("The CardDatabase couldn't be filled");
-            }
-            game.setCardIds(cardService.getFullStackOfCards());
-//              further initialization
-
-            game.setValidCluesAreSet(false);
-            game.setClueMap(new HashMap<String,String>());
-            game.setActivePlayerId(playerService.getPlayerByToken(pt).getId());
-            game.setScoreboard(new Scoreboard());
-            game.getScoreboard().initializeMap(game.getPlayers());
-            game.setAnalyzedClues(new HashMap<String, Integer>());
-            game.setTimeStart(null);
-            Map<String, String> validClues= new HashMap<>();
-            game.setValidClues(validClues);
-            List<Long> passivePlayerIds=new ArrayList<>();
-            for (PlayerEntity player : game.getPlayers()){
-                if (!player.getId().equals(game.getActivePlayerId())) passivePlayerIds.add(player.getId());
-            }
-            game.setPassivePlayerIds(passivePlayerIds);
-//              setup of the DTO that needs to be returned
+            addBots(game, gameSetUpEntity.getNumberOfDevils().intValue(), gameSetUpEntity.getNumberOfAngles().intValue());
+            addHumanPlayers(game, gameSetUpEntity.getPlayerTokens(), pt);
+            addCards(game);
+            furtherInitialize(game);
+            //Save and flush
             GameEntity activeGame= gameRepository.saveAndFlush(game);
             gameSetUpService.getGameSetupById(gameSetupId).setActiveGameId(activeGame.getId());
             //Create the activeGamePostDTO
@@ -190,8 +199,5 @@ public class ActiveGameService {
         }
         else throw new ConflictException("Not enough or too many players to start game!");
     }
-
-
-
-
+    
 }
