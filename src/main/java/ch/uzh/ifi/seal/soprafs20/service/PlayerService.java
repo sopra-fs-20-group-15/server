@@ -38,6 +38,9 @@ public class PlayerService {
 
     }
 
+    public PlayerRepository getPlayerRepository() {
+        return playerRepository;
+    }
 
     public List<PlayerEntity> getUsers() {
         return this.playerRepository.findAll();

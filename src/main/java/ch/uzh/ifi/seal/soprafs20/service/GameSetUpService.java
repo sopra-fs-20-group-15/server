@@ -32,26 +32,20 @@ import java.util.*;
 @Transactional
 public class GameSetUpService {
 
-    private final PlayerRepository playerRepository;
+    private final PlayerService playerService;
     private final GameSetUpRepository gameSetUpRepository;
 
     @Autowired
-    public GameSetUpService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository) {
-        this.playerRepository = playerRepository;
+    public GameSetUpService(@Qualifier("playerService") PlayerService playerService, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository) {
+        this.playerService = playerService;
         this.gameSetUpRepository = gameSetUpRepository;
     }
-    /**Getters*/
 
+    /**Getters*/
     public GameSetUpEntity getGameSetupById(Long id){
         Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(id);
         if (gameOp.isEmpty()) throw new NotFoundException("No Game Setup with this id exists!");
         return gameOp.get();
-    }
-
-    public PlayerEntity getPlayerByToken(String playerToken){
-        PlayerEntity player = playerRepository.findByToken(playerToken);
-        if (player==null) throw new NotFoundException("No player with your Token exists");
-        return player;
     }
 
     /**Creates a game. GameToken should be checked beforehand so that player exists*/
@@ -159,10 +153,10 @@ public class GameSetUpService {
 
     /**Get Information about a GameSetUp*/
     public LobbyGetDTO getLobbyInfo (Long gameSetupId, String playerToken){
-        getPlayerByToken(playerToken);
+        playerService.getPlayerByToken(playerToken);
         if (!getGameSetupById(gameSetupId).getPlayerTokens().contains(playerToken))
             throw new UnauthorizedException("Player has not joined the lobby and therefore can't access lobby information!");
-        return LobbyGetDTOMapper.convertGameSetUpEntityToLobbyGetDTO(getGameSetupById(gameSetupId), playerRepository);
+        return LobbyGetDTOMapper.convertGameSetUpEntityToLobbyGetDTO(getGameSetupById(gameSetupId), playerService.getPlayerRepository());
     }
 
     /**Get all gameSetUpEntities*/

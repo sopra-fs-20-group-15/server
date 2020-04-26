@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.PlayerNotAvailable;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
@@ -141,7 +142,7 @@ public class GameServiceIntegrationGetLobbyTest {
 
     @Test
     public void getLobbyFailsBecausePlayerDoesNotExist() {
-        assertThrows(NotFoundException.class, ()-> gameService.getLobbyInfo(game.getId(),"Five"));
+        assertThrows(PlayerNotAvailable.class, ()-> gameService.getLobbyInfo(game.getId(),"Five"));
     }
 
     @Test
