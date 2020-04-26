@@ -1,13 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
-
-import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Bot;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
@@ -38,18 +32,12 @@ import java.util.*;
 @Transactional
 public class GameSetUpService {
 
-    private final Logger log = LoggerFactory.getLogger(GameSetUpService.class);
-
     private final PlayerRepository playerRepository;
-    private final GameRepository gameRepository;
     private final GameSetUpRepository gameSetUpRepository;
-    private final CardService cardService;
 
     @Autowired
-    public GameSetUpService(@Qualifier("cardService") CardService cardService, @Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("gameRepository") GameRepository gameRepository) {
-        this.cardService = cardService;
+    public GameSetUpService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository) {
         this.playerRepository = playerRepository;
-        this.gameRepository = gameRepository;
         this.gameSetUpRepository = gameSetUpRepository;
     }
     /**Getters*/
@@ -58,13 +46,6 @@ public class GameSetUpService {
         Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(id);
         if (gameOp.isEmpty()) throw new NotFoundException("No Game Setup with this id exists!");
         return gameOp.get();
-    }
-
-    public PlayerEntity getPlayerById(long id){
-        Optional<PlayerEntity> playerOp = playerRepository.findById(id);
-        if (playerOp.isEmpty()) throw new NotFoundException("No Game Setup with this id exists!");
-        return playerOp.get();
-
     }
 
     public PlayerEntity getPlayerByToken(String playerToken){

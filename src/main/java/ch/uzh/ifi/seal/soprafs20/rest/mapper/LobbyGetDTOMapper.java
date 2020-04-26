@@ -3,10 +3,14 @@ package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
+@Transactional
 public class LobbyGetDTOMapper {
     public static LobbyGetDTO convertGameSetUpEntityToLobbyGetDTO(GameSetUpEntity gameSetUpEntity, PlayerRepository playerRepository) {
         LobbyGetDTO lobbyGetDTO=new LobbyGetDTO();
