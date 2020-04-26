@@ -16,28 +16,19 @@ import java.util.List;
 import static java.lang.Long.parseLong;
 
 /**
- * User Controller
- * This class is responsible for handling all REST request that are related to the user.
- * The controller will receive the request and delegate the execution to the PlayerService and finally return the result.
+ * Is responsible for creating, deleting and updating a Game Setup.
  */
 @RestController
 public class GameSetUpController {
 
     private final PlayerService playerService;
-    private final CardService cardService;
     private final GameSetUpService gameService;
-    private final ValidationService validationService;
-    private final LogicService logicService;
 
 
-    GameSetUpController(PlayerService playerService, CardService cardService, ValidationService validationService, GameSetUpService gameService, LogicService logicService) {
+    GameSetUpController(PlayerService playerService, GameSetUpService gameService) {
         this.playerService = playerService;
-        this.cardService = cardService;
-        this.validationService = validationService;
         this.gameService = gameService;
-        this.logicService = logicService;
     }
-
 
     protected boolean stringIsALong(String str) {
         try {
@@ -50,8 +41,16 @@ public class GameSetUpController {
         return true;
     }
 
-
-    /**Creates a game setUp*/
+    /**Creates a game setUp
+     * @Param: GamePostDTO:
+     * @Returns:
+     * @Throws:
+     *
+     *
+     *
+     *
+     *
+     * */
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
