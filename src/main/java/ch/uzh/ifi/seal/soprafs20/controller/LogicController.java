@@ -195,6 +195,7 @@ public class LogicController {
         gameEndedDTO.setHasGameEnded(hasGameEnded);
         return gameEndedDTO;
     }
+
 	/**Get the current scores of the players*/
         @GetMapping("/games/{gameId}/statistics")
         @ResponseStatus(HttpStatus.OK)

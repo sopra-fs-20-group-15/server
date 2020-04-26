@@ -46,7 +46,6 @@ public class PlayerService {
         return this.playerRepository.findAll();
     }
 
-
     public List<LeaderBoardGetDTO> getLeaderBoard(){
         List<PlayerEntity> list = this.playerRepository.findAll();
         list.sort(Collections.reverseOrder());
@@ -78,7 +77,6 @@ public class PlayerService {
         return playerOp.get();
 
     }
-
 
     public PlayerEntity createUser(PlayerEntity newPlayerEntity) {
         newPlayerEntity.setToken(UUID.randomUUID().toString());

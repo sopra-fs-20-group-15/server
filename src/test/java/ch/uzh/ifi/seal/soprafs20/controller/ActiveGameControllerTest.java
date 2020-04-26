@@ -32,9 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * UserControllerTest
- * This is a WebMvcTest which allows to test the UserController i.e. GET/POST request without actually sending them over the network.
- * This tests if the UserController works.
+ * ActiveGameController Tests
+ * Tests the Endpoints in the file "ActiveGameController"
  */
 
 @WebMvcTest(ActiveGamesController.class)
@@ -48,9 +47,6 @@ public class ActiveGameControllerTest {
 
     @MockBean
     private GameSetUpService gameSetUpService;
-
-    @MockBean
-    private PlayerService playerService;
 
     @MockBean
     private LogicService logicService;
@@ -139,7 +135,7 @@ public class ActiveGameControllerTest {
 
         mockMvc.perform(deleteRequest).andExpect(status().isOk());
     }
-    
+
     private String asJsonString(final Object object) {
 
         try {

@@ -1,6 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
@@ -32,9 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * UserControllerTest
- * This is a WebMvcTest which allows to test the UserController i.e. GET/POST request without actually sending them over the network.
- * This tests if the UserController works.
+ * GameSetUpController Tests
+ * Tests the Endpoints in the file "GameSetUpController"
  */
 
 @WebMvcTest(GameSetUpController.class)
@@ -49,19 +47,10 @@ public class GameSetUpControllerTest {
     @MockBean
     private PlayerService playerService;
 
-    @MockBean
-    private CardService cardService;
-
-    @MockBean
-    private ValidationService validationService;
-
-    @MockBean
-    private LogicService logicService;
 
     /**
      * Tests a post-Request to /games/
      */
-    /**works: three players*/
     @Test
     public void POSTGamesCreateGameWorksWithThreePlayers() throws Exception {
 
@@ -101,6 +90,103 @@ public class GameSetUpControllerTest {
                 .andExpect(jsonPath("$.gameType", is("PRIVATE")))
                 .andExpect(jsonPath("$.gameId", is(1)));
 
+    }
+
+    /** Delete-Request to: /gameSetUps/{gameSetUpId} :Deletes a game Set Up*/
+    @Test
+    public void DELETEGameSetUpEntity() throws Exception {
+
+        // given
+        String playerToken = "ABC";
+        PlayerEntity player = new PlayerEntity();
+        player.setUsername("Anna");
+
+        TokenDTO tokenDTO =  new TokenDTO();
+        tokenDTO.setPlayerToken("A");
+        // mock the functions
+        given(playerService.getPlayerByToken(Mockito.any())).willReturn(player);
+        given(gameService.deleteGameSetUpEntity(Mockito.any(), Mockito.any())).willReturn(true);
+        // when
+        MockHttpServletRequestBuilder deleteRequest = delete("/gameSetUps/{gameSetUpId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(tokenDTO));
+        // then
+        mockMvc.perform(deleteRequest).andExpect(status().isOk());
+    }
+
+    /**Put-Request to /games/{gameId}/players :lets player join a gameSetUp*/
+    @Test
+    public void PUTaPlayerIntoPrivateGame() throws Exception {
+
+        // given
+        //a player
+        PlayerEntity player = new PlayerEntity();
+        player.setId(1L);
+        player.setToken("F");
+        //a game
+        GameSetUpEntity game = new GameSetUpEntity();
+        game.setNumberOfPlayers(3L);
+        game.setNumberOfAngles(0L);
+        game.setNumberOfDevils(0L);
+        game.setGameType(PRIVATE);
+        game.setPassword("Cara");
+        game.setHostName("L");
+        game.setId(1L);
+        List<String> playerTokens = new ArrayList<String>();
+        playerTokens.add(player.getToken());
+        game.setPlayerTokens(playerTokens);
+
+        //from Client through DTO
+        PlayerIntoGameSetUpDTO playerIntoGameSetUpDTO = new PlayerIntoGameSetUpDTO();
+        playerIntoGameSetUpDTO.setPlayerToken("A");
+        playerIntoGameSetUpDTO.setPassword("Cara");
+
+        // mock the functions
+        given(playerService.getPlayerByToken(Mockito.any())).willReturn(player);
+        given(gameService.putPlayerIntoGame(Mockito.any(), Mockito.any(), Mockito.any())).willReturn(game);
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/players", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(playerIntoGameSetUpDTO));
+        // then
+        mockMvc.perform(putRequest).andExpect(status().isOk());
+    }
+
+    /**Put-Request to: /games/{gameId}/lobbies/players :takes a player out of the game*/
+    @Test
+    public void PUTaPlayerFromGameSetUpIntoOverview() throws Exception {
+
+        // given
+        //a player
+        PlayerEntity player = new PlayerEntity();
+        player.setId(1L);
+        player.setToken("F");
+        //a game
+        GameSetUpEntity game = new GameSetUpEntity();
+        game.setNumberOfPlayers(3L);
+        game.setNumberOfAngles(0L);
+        game.setNumberOfDevils(0L);
+        game.setGameType(PRIVATE);
+        game.setPassword("Cara");
+        game.setHostName("Aba");
+        game.setId(1L);
+        List<String> playerTokens = new ArrayList<String>();
+        playerTokens.add(player.getToken());
+        game.setPlayerTokens(playerTokens);
+
+        //from Client through DTO
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setPlayerToken("A");
+
+        // mock the functions
+        given(playerService.getPlayerByToken(Mockito.any())).willReturn(player);
+        given(gameService.removePlayerFromGame(Mockito.any(), Mockito.any())).willReturn(game);
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/players", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(tokenDTO));
+        // then
+        mockMvc.perform(putRequest).andExpect(status().isOk());
     }
 
     /**
@@ -173,6 +259,28 @@ public class GameSetUpControllerTest {
         mockMvc.perform(postRequest).andExpect(status().isUnauthorized());
     }
 
+    /**Tests Get-Request to /games/lobbies :GetLobbies*/
+    @Test
+    public void GETLobbies() throws Exception {
+        List<LobbyOverviewGetDTO> lobbies=new ArrayList<>();
+        LobbyOverviewGetDTO game1 = new LobbyOverviewGetDTO();
+        LobbyOverviewGetDTO game2 = new LobbyOverviewGetDTO();
+        game1.setGameName("Game1");
+        game2.setGameName("Game2");
+        lobbies.add(game1);
+        lobbies.add(game2);
+
+        // mock the functions
+        given(gameService.getLobbies()).willReturn(lobbies);
+
+        // when
+        MockHttpServletRequestBuilder postRequest = get("/games/lobbies");
+
+        // then
+        mockMvc.perform(postRequest).andExpect(status().isOk());
+
+    }
+
 
     /**
      * Helper Method to convert userPostDTO into a JSON string such that the input can be processed
@@ -193,109 +301,5 @@ public class GameSetUpControllerTest {
             throw new SopraServiceException(String.format("The request body could not be created.%s", e.toString()));
         }
     }
-
-
-/**Test put player into game*/
-/**Works with valid player and valid password for private game*/
-@Test
-public void PUTaPlayerIntoPrivateGame() throws Exception {
-
-    // given
-    //a player
-    PlayerEntity player = new PlayerEntity();
-    player.setId(1L);
-    player.setToken("F");
-    //a game
-    GameSetUpEntity game = new GameSetUpEntity();
-    game.setNumberOfPlayers(3L);
-    game.setNumberOfAngles(0L);
-    game.setNumberOfDevils(0L);
-    game.setGameType(PRIVATE);
-    game.setPassword("Cara");
-    game.setHostName("L");
-    game.setId(1L);
-    List<String> playerTokens = new ArrayList<String>();
-    playerTokens.add(player.getToken());
-    game.setPlayerTokens(playerTokens);
-
-    //from Client through DTO
-    PlayerIntoGameSetUpDTO playerIntoGameSetUpDTO = new PlayerIntoGameSetUpDTO();
-    playerIntoGameSetUpDTO.setPlayerToken("A");
-    playerIntoGameSetUpDTO.setPassword("Cara");
-
-    // mock the functions
-    given(playerService.getPlayerByToken(Mockito.any())).willReturn(player);
-    given(gameService.putPlayerIntoGame(Mockito.any(), Mockito.any(), Mockito.any())).willReturn(game);
-    // when
-    MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/players", 1)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(asJsonString(playerIntoGameSetUpDTO));
-    // then
-    mockMvc.perform(putRequest).andExpect(status().isOk());
-    }
-
-
-
-/**Test take player out of game*/
-    /**Works with valid player and valid password for private game*/
-    @Test
-    public void PUTaPlayerFromGameSetUpIntoOverview() throws Exception {
-
-        // given
-        //a player
-        PlayerEntity player = new PlayerEntity();
-        player.setId(1L);
-        player.setToken("F");
-        //a game
-        GameSetUpEntity game = new GameSetUpEntity();
-        game.setNumberOfPlayers(3L);
-        game.setNumberOfAngles(0L);
-        game.setNumberOfDevils(0L);
-        game.setGameType(PRIVATE);
-        game.setPassword("Cara");
-        game.setHostName("Aba");
-        game.setId(1L);
-        List<String> playerTokens = new ArrayList<String>();
-        playerTokens.add(player.getToken());
-        game.setPlayerTokens(playerTokens);
-
-        //from Client through DTO
-        TokenDTO tokenDTO = new TokenDTO();
-        tokenDTO.setPlayerToken("A");
-
-        // mock the functions
-        given(playerService.getPlayerByToken(Mockito.any())).willReturn(player);
-        given(gameService.removePlayerFromGame(Mockito.any(), Mockito.any())).willReturn(game);
-        // when
-        MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/players", 1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(tokenDTO));
-        // then
-        mockMvc.perform(putRequest).andExpect(status().isOk());
-    }
-
-    /**Test DeletionOfAGameSetUp*/
-    /**Works with valid player and valid password for private game*/
-    @Test
-    public void DELETEGameSetUpEntity() throws Exception {
-
-        // given
-        String playerToken = "ABC";
-        PlayerEntity player = new PlayerEntity();
-        player.setUsername("Anna");
-
-        TokenDTO tokenDTO =  new TokenDTO();
-        tokenDTO.setPlayerToken("A");
-        // mock the functions
-        given(playerService.getPlayerByToken(Mockito.any())).willReturn(player);
-        given(gameService.deleteGameSetUpEntity(Mockito.any(), Mockito.any())).willReturn(true);
-        // when
-        MockHttpServletRequestBuilder deleteRequest = delete("/gameSetUps/{gameSetUpId}", 1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(tokenDTO));
-        // then
-        mockMvc.perform(deleteRequest).andExpect(status().isOk());
-    }
-
 
 }
