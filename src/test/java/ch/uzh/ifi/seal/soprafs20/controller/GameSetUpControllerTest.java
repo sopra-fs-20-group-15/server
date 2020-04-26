@@ -239,7 +239,7 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
 /**Test take player out of game*/
     /**Works with valid player and valid password for private game*/
     @Test
-    public void DELETEaPlayerFromGameSetUp() throws Exception {
+    public void DELETEaPlayerFromGameSetUpIntoOverview() throws Exception {
 
         // given
         //a player
@@ -260,19 +260,18 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
         game.setPlayerTokens(playerTokens);
 
         //from Client through DTO
-        PlayerIntoGameSetUpDTO playerIntoGameSetUpDTO = new PlayerIntoGameSetUpDTO();
-        playerIntoGameSetUpDTO.setPlayerToken("A");
-        playerIntoGameSetUpDTO.setPassword("Cara");
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setPlayerToken("A");
 
         // mock the functions
         given(playerService.getPlayerByToken(Mockito.any())).willReturn(player);
         given(gameService.removePlayerFromGame(Mockito.any(), Mockito.any())).willReturn(game);
         // when
-        MockHttpServletRequestBuilder deleteRequest = delete("/games/{gameId}/players", 1)
+        MockHttpServletRequestBuilder putRequest = delete("/games/{gameId}/players", 1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(playerIntoGameSetUpDTO));
+                .content(asJsonString(tokenDTO));
         // then
-        mockMvc.perform(deleteRequest).andExpect(status().isOk());
+        mockMvc.perform(putRequest).andExpect(status().isOk());
     }
 
     /**Test DeletionOfAGameSetUp*/
@@ -285,13 +284,15 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
         PlayerEntity player = new PlayerEntity();
         player.setUsername("Anna");
 
+        TokenDTO tokenDTO =  new TokenDTO();
+        tokenDTO.setPlayerToken("A");
         // mock the functions
         given(playerService.getPlayerByToken(Mockito.any())).willReturn(player);
         given(gameService.deleteGameSetUpEntity(Mockito.any(), Mockito.any())).willReturn(true);
         // when
         MockHttpServletRequestBuilder deleteRequest = delete("/gameSetUps/{gameSetUpId}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(playerToken));
+                .content(asJsonString(tokenDTO));
         // then
         mockMvc.perform(deleteRequest).andExpect(status().isOk());
     }

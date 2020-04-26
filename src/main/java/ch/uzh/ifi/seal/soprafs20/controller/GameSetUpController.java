@@ -41,16 +41,16 @@ public class GameSetUpController {
         return true;
     }
 
-    /**Creates a game setUp
-     * @Param: GamePostDTO:
-     * @Returns:
-     * @Throws:
-     *
-     *
-     *
-     *
-     *
-     * */
+
+     /**Creates a game setUp
+     * @Param: GamePostDTO: Long gameId, String gameName, Long numberOfPlayers, Long numberOfAngles, Long numberOfDevils, GameType gameType, String password, String playerToken,
+     * @Returns: CreatedGameSetUpDTP:  Long gameId, String gameName, Long numberOfPlayers, Long numberOfAngles, Long numberOfDevils, GameType gameType, String hostName
+     * @Throws: 404: playerToken does not exist
+      * @Throws: 409: total player number not between 3 and 7
+      * @Throws: 409: bot number below zero or bigger than total player number -1
+      * @Throws: 409: no empty game names
+      * @Throws: 409: If its a private game; the password should not be empty
+      * */
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -68,18 +68,34 @@ public class GameSetUpController {
         return gamePostDTOReturn;
     }
 
-    /**Deletes a gameSetUp (only Host)*/
+    /**Deletes a gameSetUp (only Host)
+     * @Param: TokenDTO: String playerToken
+     * @Returns: void
+     * @Throws: 404: gameId does not exist
+     * @Throws: 404: playerToken does not exist
+     * @Throws: 401: Only the game host is allowed to delete a game setup
+     * */
     @DeleteMapping("/gameSetUps/{gameSetUpId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void deleteGameSetUp(@RequestBody String playerToken, @PathVariable String gameSetUpId) {
+    public void deleteGameSetUp(@RequestBody TokenDTO TokenDTO, @PathVariable String gameSetUpId) {
         //Check that Player actually exists
-        PlayerEntity player = playerService.getPlayerByToken(playerToken);
+        PlayerEntity player = playerService.getPlayerByToken(TokenDTO.getPlayerToken());
         stringIsALong(gameSetUpId);
         Long gameSetUpIdLong = parseLong(gameSetUpId);
         gameService.deleteGameSetUpEntity(gameSetUpIdLong, player);
     }
-    /**Lets a player join a GameSetUp*/
+
+
+    /**Lets a player join a GameSetUp
+     * @Param: PlayerIntoGameSetUpDTO: String playerToken, String password (empty if public, password if private),
+     * @Returns: void
+     * @Throws: 204: the player is already part of that game
+     * @Throws: 401: Private game: password is wrong
+     * @Throws: 404: gameId does not exist
+     * @Throws: 404: playerToken does not exist
+     * @Throws: 409: game is full
+     * */
 
     @PutMapping("/games/{gameId}/players")
     @ResponseStatus(HttpStatus.OK)
@@ -92,20 +108,30 @@ public class GameSetUpController {
         gameService.putPlayerIntoGame(gameIdLong, player, playerIntoGameSetUpDTO.getPassword());
     }
 
-    /**Lets a player leave a GameSetUp*/
+    /**Lets a player leave a GameSetUp
+     * @Param: TokenDTO: String playerToken
+     * @Returns: void
+     * @Throws: 204: Host wants to leave -> delete game instead
+     * @Throws: 404: No game with this gameId
+     * @Throws: 404: The player has not joined this gameSetUp yet
+     * @Throws: 409: gameId is not a long*/
+
 
     @DeleteMapping("/games/{gameId}/players")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void DeletePlayerFromGameSetUp(@PathVariable String gameId, @RequestBody PlayerTokenDTO playerTokenDTO) {
+    public void DeletePlayerFromGameSetUp(@PathVariable String gameId, @RequestBody TokenDTO tokenDTO) {
         //Check that Player actually exists
-        PlayerEntity player = playerService.getPlayerByToken(playerTokenDTO.getToken());
+        PlayerEntity player = playerService.getPlayerByToken(tokenDTO.getPlayerToken());
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         gameService.removePlayerFromGame(gameIdLong, player);
     }
 
-    /**Allows player to get an overview of the existing game lobbies*/
+    /**Allows player to get an overview of the existing game lobbies
+     * @Param: void
+     * @Returns: List<LobbyOverviewGetDTO>: LobbyOverviewGetDTO: private String gameName, GameType gameType, Long numOfDesiredPlayers, Long numOfAngels, Long numOfDevils, Long numOfHumanPlayers,
+     */
     @GetMapping("/games/lobbies")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -114,19 +140,22 @@ public class GameSetUpController {
     }
 
 
-    /**Allows player to refresh Lobby status while in one*/
+    /**Allows player to refresh Lobby status while in one
+     * @Param: String gameSetUpId (since PathVariable), String playerToken
+     * @Returns: @Returns: LobbyGetDTO: private Long activeGameId, Long gameSetUpId, String gameName, String hostName, List<String> playerNames, Long numOfDesiredPlayers, Long numOfHumanPlayers, Long numOfAngels, Long numOfDevils;
+     * @Throws: 401: The player is not part of the lobby
+     * @Throws: 409: PathVariable gameSetUpId is not a long
+     * */
     @GetMapping("/games/lobbies/{gameSetUpId}/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public LobbyGetDTO getLobbyInfo(@PathVariable String gameSetUpId, @PathVariable String playerToken) {
         //Check that SetupEntity actually exists
-        if (stringIsALong(gameSetUpId)){
+        stringIsALong(gameSetUpId);
             //Try to create active game
             Long gsId = parseLong(gameSetUpId);
             //add cards to repository
             return gameService.getLobbyInfo(gsId, playerToken);
-        }
-        else throw new BadRequestException("Game-Setup-ID has wrong format!");
     }
 
 

@@ -48,7 +48,14 @@ public class GameSetUpService {
         return gameOp.get();
     }
 
-    /**Creates a game. GameToken should be checked beforehand so that player exists*/
+    /**Creates a game. GameToken should be checked beforehand so that player exists
+     *  @Param: GameSetUpEntity game; contains the parameters like number of players, number of bots ect.
+     * @Returns: GameSetUpEntity newGame; the game setup that was created based on the parameters
+     * @Throws: 409: total player number not between 3 and 7
+     * @Throws: 409: bot number below zero or bigger than total player number -1
+     * @Throws: 409: no empty game names
+     * @Throws: 409: If its a private game; the password should not be empty
+     * */
     public GameSetUpEntity createGame(GameSetUpEntity game) {
         //Check, if parameters are acceptable
         if (game.getNumberOfPlayers() < 8 && game.getNumberOfPlayers() > 2) {
@@ -87,7 +94,12 @@ public class GameSetUpService {
         }
     }
 
-    /**Delete a gameSetUpEntity*/
+    /**Delete a gameSetUpEntity
+     * @Param: Long gameId
+     * @Param: PlayerEntity player
+     * @Returns: void
+     * @Throws: 404: gameId does not exist
+     * @Throws: 401: Only the game host is allowed to delete a game setup*/
     public boolean deleteGameSetUpEntity(Long gameId, PlayerEntity player){
         gameSetUpRepository.findById(gameId);
         Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(gameId);
@@ -101,7 +113,15 @@ public class GameSetUpService {
     }
 
     /**Puts a player into a gameSetUp if all the requirements for that are met
-     * @Returns GameSetUpEntity; for testing reasons*/
+     * @Param: Long gameId,
+     * @Param: PlayerEntity player
+     * @Param: String password if the game is private (else empty string)
+     * @Returns: GameSetUpEntity: helps with testing
+     * @Throws: 404: gameId does not exist
+     * @Throws: 409: game is full
+     * @Throws: 204: the player is already part of that game
+     * @Throws: 401: Private game: password is wrong
+     * */
     public GameSetUpEntity putPlayerIntoGame(Long gameId, PlayerEntity player, String password){
         //Check if gameSetUpId exists
         Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(gameId);
@@ -128,7 +148,14 @@ public class GameSetUpService {
         return game;
     }
 
-    /**Removes player from game*/
+    /**Removes player from game
+     * @Param: Long gameId
+     * @Param: PlayerEntity player
+     * @Returns: GameSetUpEntity
+     * @Throws: 204: Host wants to leave -> delete game instead
+     * @Throws: 404: No game with this gameId
+     * @Throws: 404: The player has not joined this gameSetUp yet
+     * */
     public GameSetUpEntity removePlayerFromGame(Long gameId, PlayerEntity player){
         //Check if gameSetUpId exists
         Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(gameId);
@@ -151,15 +178,10 @@ public class GameSetUpService {
         return game;
     }
 
-    /**Get Information about a GameSetUp*/
-    public LobbyGetDTO getLobbyInfo (Long gameSetupId, String playerToken){
-        playerService.getPlayerByToken(playerToken);
-        if (!getGameSetupById(gameSetupId).getPlayerTokens().contains(playerToken))
-            throw new UnauthorizedException("Player has not joined the lobby and therefore can't access lobby information!");
-        return LobbyGetDTOMapper.convertGameSetUpEntityToLobbyGetDTO(getGameSetupById(gameSetupId), playerService.getPlayerRepository());
-    }
-
-    /**Get all gameSetUpEntities*/
+    /**Get all gameSetUpEntities
+     * @Param: void
+     * @Returns: List<LobbyOverviewGetDTO>: LobbyOverviewGetDTO: private String gameName, GameType gameType, Long numOfDesiredPlayers, Long numOfAngels, Long numOfDevils, Long numOfHumanPlayers,
+     */
     public List<LobbyOverviewGetDTO> getLobbies() {
         List<GameSetUpEntity> gameSetUpEntities=this.gameSetUpRepository.findAll();
         List<LobbyOverviewGetDTO> lobbies=new ArrayList<>();
@@ -170,5 +192,17 @@ public class GameSetUpService {
     }
 
 
+    /**Get Information about a GameSetUp
+     * @Param: Long gameSetUpId
+     * @Param: String playerToken
+     * @Returns: LobbyGetDTO: private Long activeGameId, Long gameSetUpId, String gameName, String hostName, List<String> playerNames, Long numOfDesiredPlayers, Long numOfHumanPlayers, Long numOfAngels, Long numOfDevils;
+     * @Throws: 401: The player is not part of the lobby
+     * */
+    public LobbyGetDTO getLobbyInfo (Long gameSetupId, String playerToken){
+        playerService.getPlayerByToken(playerToken);
+        if (!getGameSetupById(gameSetupId).getPlayerTokens().contains(playerToken))
+            throw new UnauthorizedException("Player has not joined the lobby and therefore can't access lobby information!");
+        return LobbyGetDTOMapper.convertGameSetUpEntityToLobbyGetDTO(getGameSetupById(gameSetupId), playerService.getPlayerRepository());
+    }
 
 }
