@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
+import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 @Transactional
 @WebAppConfiguration
 @SpringBootTest
-public class LogicServiceIntegrationTestInizializeTurn extends TestSETUPLogicService {
+public class LogicServiceIntegrationTestInizializeTurn extends TestSETUPCreatesActiveGame {
 
  /**Initialize Turn works*/
     @Test

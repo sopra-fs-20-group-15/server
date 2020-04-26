@@ -55,7 +55,7 @@ public class ActiveGameControllerTest {
     @MockBean
     private LogicService logicService;
 
-
+/**Test Post-Request to /games/{gameSetUpId}*/
     @Test
     public void POSTActiveGameCreation() throws Exception {
         // given
@@ -105,8 +105,9 @@ public class ActiveGameControllerTest {
         mockMvc.perform(postRequest).andExpect(status().isNotFound());
     }
 
+    /**Tests Get-Request to /activeGames/{gameId}*/
     @Test
-    public void getGameInformationAndItWorks() throws Exception {
+    public void GETGameInformationAndItWorks() throws Exception {
         //given
         GameGetDTO gameGetDTO = new GameGetDTO();
         gameGetDTO.setActivePlayerName("Kirk");
@@ -130,6 +131,15 @@ public class ActiveGameControllerTest {
                 .andExpect(jsonPath("$.id", is(1)));
     }
 
+    /**Tests Delete-Request to /activeGames/{gameId}*/
+
+    @Test
+    public void DELETEActiveGame() throws Exception {
+        MockHttpServletRequestBuilder deleteRequest = delete("/activeGames/{gameId}", 1);
+
+        mockMvc.perform(deleteRequest).andExpect(status().isOk());
+    }
+    
     private String asJsonString(final Object object) {
 
         try {

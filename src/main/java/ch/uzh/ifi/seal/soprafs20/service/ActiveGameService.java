@@ -198,4 +198,15 @@ public class ActiveGameService {
         else throw new ConflictException("Not enough or too many players to start game!");
     }
 
+    /**Deletes an active game once it has ended
+     * @Param: String gameId
+     * @Returns: void
+     * @Throws: 409: Game has not ended yet
+     * */
+    public void deleteActiveGame(long gameId){
+        GameEntity game = getGameById(gameId);
+        if (!game.getHasEnded()){throw new ConflictException("The game cannot be deleted before it has ended");}
+        gameRepository.deleteById(game.getId());
+    }
+
 }

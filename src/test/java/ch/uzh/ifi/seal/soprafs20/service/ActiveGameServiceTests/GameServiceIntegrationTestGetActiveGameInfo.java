@@ -46,8 +46,6 @@ public class GameServiceIntegrationTestGetActiveGameInfo {
     @Autowired
     private GameSetUpService gameSetUpService;
 
-    @Autowired
-    private LogicService logicService;
 
     private GameSetUpEntity game = new GameSetUpEntity();
 

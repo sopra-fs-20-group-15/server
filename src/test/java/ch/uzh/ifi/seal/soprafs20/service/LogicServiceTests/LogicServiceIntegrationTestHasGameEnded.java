@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 
+import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 @Transactional
 @WebAppConfiguration
 @SpringBootTest
-public class LogicServiceIntegrationTestHasGameEnded extends TestSETUPLogicService {
+public class LogicServiceIntegrationTestHasGameEnded extends TestSETUPCreatesActiveGame {
 
 
     @BeforeEach

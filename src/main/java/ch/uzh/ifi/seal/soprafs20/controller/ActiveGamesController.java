@@ -76,18 +76,17 @@ public class ActiveGamesController {
 
     /**Deletes an active game once it has ended. Can be executed by anyone
      * @Param: String gameId
-     * @Returns: GameGetDTO: Long id, String activePlayerName, List<String> playerNames, List<String> passivePlayerNames,
+     * @Returns: void
      * @Throws: 409:The PathVariable is not a Long
      * @Throws: 409: Game has not ended yet
      * */
     @DeleteMapping("/activeGames/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO deleteActiveGame(@PathVariable String gameId) {
+    public void deleteActiveGame(@PathVariable String gameId) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
-        GameGetDTO gameGetDTO = activeGameService.getGameInformationById(gameIdLong);
-        return gameGetDTO;
+       activeGameService.deleteActiveGame(gameIdLong);
     }
 
 

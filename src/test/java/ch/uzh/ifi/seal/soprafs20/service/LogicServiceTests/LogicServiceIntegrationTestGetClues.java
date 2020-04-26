@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
+import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
@@ -20,7 +21,7 @@ import java.util.Map;
 @Transactional
 @WebAppConfiguration
 @SpringBootTest
-public class LogicServiceIntegrationTestGetClues extends TestSETUPLogicService {
+public class LogicServiceIntegrationTestGetClues extends TestSETUPCreatesActiveGame {
 
     @BeforeEach
     public void setup2() {

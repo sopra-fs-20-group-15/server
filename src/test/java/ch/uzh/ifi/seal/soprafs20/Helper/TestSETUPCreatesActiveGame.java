@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
+package ch.uzh.ifi.seal.soprafs20.Helper;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
@@ -20,14 +20,14 @@ import java.util.List;
 
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 
-public class TestSETUPLogicService {
+public class TestSETUPCreatesActiveGame {
     @Qualifier("playerRepository")
     @Autowired
     protected PlayerRepository playerRepository;
     protected GameEntity createdActiveGame;
     protected PlayerEntity p2;
     @Autowired
-    private ActiveGameService gameService;
+    protected ActiveGameService gameService;
     @Autowired
     protected GameSetUpService gameSetUpService;
     protected GameSetUpEntity game = new GameSetUpEntity();

@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 
+import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @WebAppConfiguration
 @SpringBootTest
-public class LogicServiceGiveClueIntegrationTest extends TestSETUPLogicService {
+public class LogicServiceGiveClueIntegrationTest extends TestSETUPCreatesActiveGame {
 
     @Autowired
     private GameSetUpRepository gameSetUpRepository;
