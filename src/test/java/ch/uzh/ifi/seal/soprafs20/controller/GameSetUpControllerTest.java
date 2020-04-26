@@ -239,7 +239,7 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
 /**Test take player out of game*/
     /**Works with valid player and valid password for private game*/
     @Test
-    public void DELETEaPlayerFromGameSetUpIntoOverview() throws Exception {
+    public void PUTaPlayerFromGameSetUpIntoOverview() throws Exception {
 
         // given
         //a player
@@ -267,7 +267,7 @@ public void PUTaPlayerIntoPrivateGame() throws Exception {
         given(playerService.getPlayerByToken(Mockito.any())).willReturn(player);
         given(gameService.removePlayerFromGame(Mockito.any(), Mockito.any())).willReturn(game);
         // when
-        MockHttpServletRequestBuilder putRequest = delete("/games/{gameId}/players", 1)
+        MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/players", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(tokenDTO));
         // then

@@ -2,7 +2,6 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.exceptions.BadRequestException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.service.*;
@@ -16,7 +15,7 @@ import java.util.List;
 import static java.lang.Long.parseLong;
 
 /**
- * Is responsible for creating, deleting and updating a Game Setup.
+ * GameSetUpController is responsible for creating, deleting and updating a Game Setup. Lets also players join and leave a game setup.
  */
 @RestController
 public class GameSetUpController {
@@ -117,10 +116,10 @@ public class GameSetUpController {
      * @Throws: 409: gameId is not a long*/
 
 
-    @DeleteMapping("/games/{gameId}/players")
+    @PutMapping("/games/{gameId}/lobbies/players")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void DeletePlayerFromGameSetUp(@PathVariable String gameId, @RequestBody TokenDTO tokenDTO) {
+    public void putPlayerBackIntoLobbyFromGameSetUp(@PathVariable String gameId, @RequestBody TokenDTO tokenDTO) {
         //Check that Player actually exists
         PlayerEntity player = playerService.getPlayerByToken(tokenDTO.getPlayerToken());
         stringIsALong(gameId);
