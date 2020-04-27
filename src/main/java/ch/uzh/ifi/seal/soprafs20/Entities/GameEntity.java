@@ -166,14 +166,6 @@ public class GameEntity {
         this.scoreboard = scoreboard;
     }
 
-    public boolean isValidGuess() {
-        return isValidGuess;
-    }
-
-    public void setValidGuess(boolean validGuess) {
-        isValidGuess = validGuess;
-    }
-
     public List<Long> getCardIds() {
         return CardIds;
     }
@@ -214,52 +206,9 @@ public class GameEntity {
         return devils.size()+angels.size();
     }
 
-    public List<Bot> getNamesOfBots(){
-        List<Bot> bots = new ArrayList<>();
-        bots.addAll(angels);
-        bots.addAll(devils);
-        return bots;
+    public String getGuess() {
+        return Guess;
     }
-
-    public void setPassivePlayerIds(List<Long> passivePlayerIds) {
-        this.passivePlayerIds = passivePlayerIds;
-    }
-
-    private int getNumOfDuplicates(PlayerEntity player){
-        String  clue = clueMap.get(player.getUsername()).toLowerCase();
-        int cnt=-1;
-        for (String clue2: clueMap.values()
-             ) {
-            if (clue.equals(clue2.toLowerCase())) cnt++;
-        }
-        return cnt;
-    }
-
-     public void updateScoreboard(){
-         for (PlayerEntity player: this.getPlayers()) {
-             if (this.getActivePlayerId().equals(player.getId())) {
-                 Scoreboard sc =this.getScoreboard();
-                 sc.updateScore(player, ScoreCalculator.calculateScoreActivePlayer(player, this.getIsValidGuess()));
-                 if (this.getIsValidGuess()){
-                     Map<String, Integer> correctlyGuessedMysteryWordsPerPlayer = scoreboard.getCorrectlyGuessedMysteryWordsPerPlayer();
-                     correctlyGuessedMysteryWordsPerPlayer.replace(player.getUsername(), correctlyGuessedMysteryWordsPerPlayer.get(player.getUsername())+ 1);
-                     scoreboard.setCorrectlyGuessedMysteryWordsPerPlayer(correctlyGuessedMysteryWordsPerPlayer);
-                 }
-                 this.setScoreboard(sc);
-             }
-             else {
-                 int numOfDuplicates = this.getAnalyzedClues().get(this.getClueMap().get(player.getToken()));
-                 boolean validClue = this.getValidClues().containsKey(player.getUsername());
-                 Scoreboard sc = this.getScoreboard();
-                 sc.updateScore(player, ScoreCalculator.calculateScorePassivePlayer(player, this.getIsValidGuess(), validClue, numOfDuplicates));
-                 this.setScoreboard(sc);
-             }
-         }
-     }
-
-      public String getGuess() {
-        	return Guess;
-      }
 
     public void setGuess(String guess) {
         Guess = guess;
@@ -284,4 +233,37 @@ public class GameEntity {
     public void setHasEnded(Boolean hasEnded) {
         this.hasEnded = hasEnded;
     }
+
+    public List<Bot> getNamesOfBots(){
+        List<Bot> bots = new ArrayList<>();
+        bots.addAll(angels);
+        bots.addAll(devils);
+        return bots;
+    }
+
+    public void setPassivePlayerIds(List<Long> passivePlayerIds) {
+        this.passivePlayerIds = passivePlayerIds;
+    }
+
+     public void updateScoreboard(){
+         for (PlayerEntity player: this.getPlayers()) {
+             if (this.getActivePlayerId().equals(player.getId())) {
+                 Scoreboard sc =this.getScoreboard();
+                 sc.updateScore(player, ScoreCalculator.calculateScoreActivePlayer(player, this.getIsValidGuess()));
+                 if (this.getIsValidGuess()){
+                     Map<String, Integer> correctlyGuessedMysteryWordsPerPlayer = scoreboard.getCorrectlyGuessedMysteryWordsPerPlayer();
+                     correctlyGuessedMysteryWordsPerPlayer.replace(player.getUsername(), correctlyGuessedMysteryWordsPerPlayer.get(player.getUsername())+ 1);
+                     scoreboard.setCorrectlyGuessedMysteryWordsPerPlayer(correctlyGuessedMysteryWordsPerPlayer);
+                 }
+                 this.setScoreboard(sc);
+             }
+             else {
+                 int numOfDuplicates = this.getAnalyzedClues().get(this.getClueMap().get(player.getToken()));
+                 boolean validClue = this.getValidClues().containsKey(player.getUsername());
+                 Scoreboard sc = this.getScoreboard();
+                 sc.updateScore(player, ScoreCalculator.calculateScorePassivePlayer(player, this.getIsValidGuess(), validClue, numOfDuplicates));
+                 this.setScoreboard(sc);
+             }
+         }
+     }
 }

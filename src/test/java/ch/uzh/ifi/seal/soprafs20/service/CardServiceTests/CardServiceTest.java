@@ -46,34 +46,7 @@ public class CardServiceTest {
         // when -> any object is being save in the playerRepository -> return the dummy testPlayer
         Mockito.when(cardRepository.save(Mockito.any())).thenReturn(testCard);
     }
-    //These tests are not needed anymore since only Longs can be given now
-/**
-    @Test
-    public void NonNumberShouldThrowError() {
-        CardService cardService = new CardService(cardRepository);
-        CardEntity card = new CardEntity();
-        String wordId = "ajkdlsfjkldsaf";
 
-        NotANumber thrown = assertThrows(NotANumber.class, () -> {
-            cardService.chooseWordOnCard(wordId, card);
-        });
-
-        assertTrue(thrown.getMessage().contains("The input should be an integer!"));
-    }
-
-    @Test
-    public void EmptyStringShouldThrowError() {
-        CardService cardService = new CardService(cardRepository);
-        CardEntity card = new CardEntity();
-        String wordId = "";
-
-        NotANumber thrown = assertThrows(NotANumber.class, () -> {
-            cardService.chooseWordOnCard(wordId, card);
-        });
-
-        assertTrue(thrown.getMessage().contains("The input should be an integer!"));
-    }
-*/
     @Test
     public void ZeroShouldThrowError() {
         CardService cardService = new CardService(cardRepository);
@@ -86,19 +59,6 @@ public class CardServiceTest {
 
         assertTrue(thrown.getMessage().contains("The input should be between 1 and 5!"));
     }
-
-    /*
-    @Test
-    public void cardRepositoryGetsFilled() throws IOException {
-        CardService cardService = new CardService(cardRepository);
-        cardService.addAllCards();
-        //CardEntity card = cardService.getCardById(0L);
-        List<String> words= testCard.getWords();
-        String word = words.get(0);
-        Long id = testCard.getId();
-        Long exptected = 0L;
-
-    }*/
 
     @Test
     public void SixShouldThrowError() {

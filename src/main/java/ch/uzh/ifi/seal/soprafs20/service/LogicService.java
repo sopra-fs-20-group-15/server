@@ -192,7 +192,6 @@ public class LogicService {
             Map<String, String> clueMap =game.getClueMap();
             clueMap.put(cluePostDTO.getPlayerToken(),cluePostDTO.getClue());
             game.setClueMap(clueMap);
-            System.currentTimeMillis();
             playerService.getPlayerByToken(cluePostDTO.getPlayerToken()).setTimePassed(System.currentTimeMillis()-game.getTimeStart());
         }
         else throw new UnauthorizedException("You have already submitted a clue for this round!");
