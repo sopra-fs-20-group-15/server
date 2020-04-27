@@ -2,7 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.service.CardServiceTests;
 
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumberbetweenOneAndFive;
+import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.service.CardService;
 
@@ -80,7 +80,7 @@ public class CardServiceTest {
         CardEntity card = new CardEntity();
         Long wordId = 0L;
 
-        NotANumberbetweenOneAndFive thrown = assertThrows(NotANumberbetweenOneAndFive.class, () -> {
+        ConflictException thrown = assertThrows(ConflictException.class, () -> {
             cardService.chooseWordOnCard(wordId, card);
         });
 
@@ -106,7 +106,7 @@ public class CardServiceTest {
         CardEntity card = new CardEntity();
         Long wordId = 6L;
 
-        NotANumberbetweenOneAndFive thrown = assertThrows(NotANumberbetweenOneAndFive.class, () -> {
+        ConflictException thrown = assertThrows(ConflictException.class, () -> {
             cardService.chooseWordOnCard(wordId, card);
         });
 

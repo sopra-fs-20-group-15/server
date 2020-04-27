@@ -98,7 +98,6 @@ public class LogicService {
                     player.setTimePassed(null);
                 }
                 game.setRightGuess(false);
-                game.setValidClue(false);
                 game.setValidCluesAreSet(false);
                 game.setClueMap(new HashMap<String, String>());
                 game.setValidClues(new HashMap<String, String>());

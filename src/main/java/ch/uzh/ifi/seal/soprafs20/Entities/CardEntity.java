@@ -1,14 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.Entities;
 
-import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumber;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NotANumberbetweenOneAndFive;
-import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

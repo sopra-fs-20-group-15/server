@@ -8,15 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * Internal PlayerEntity Representation
- * This class composes the internal representation of the user and defines how the user is stored in the database.
- * Every variable will be mapped into a database field with the @Column annotation
- *  nullable = false -> this cannot be left empty
- * - unique = true -> this value must be unqiue across the database -> composes the primary key
- */
 @Entity
-//Even though there is a red line beneath "PlayerEntity", it should still work
+//Even though there is a red line beneath "GAME", it should still work
 @Table(name = "GAME")
 public class GameEntity {
     @Id
@@ -33,20 +26,13 @@ public class GameEntity {
     private String activeMysteryWord;
 
     @Column(nullable = true)
-    private Boolean hasEnded;
-
-    @Column(nullable = true)
     private Long activePlayerId;
 
     @Column(nullable = true)
     private Boolean rightGuess;
 
     @Column(nullable = true)
-    private Boolean validClue;
-
-    @Column(nullable = true)
     private Boolean validCluesAreSet = false;
-
 
     @ElementCollection
     List<PlayerEntity> players;
@@ -75,9 +61,6 @@ public class GameEntity {
     @Embedded
     private Scoreboard scoreboard;
 
-    @Column(nullable = true)
-    private Long Milliseconds;
-
     @Column
     private String Guess;
 
@@ -86,6 +69,9 @@ public class GameEntity {
 
     @Column
     private Long timeStart;
+
+    @Column(nullable = true)
+    private Boolean hasEnded;
 
     public void setTimeStart(Long timeStart) {
         this.timeStart = timeStart;
@@ -152,11 +138,6 @@ public class GameEntity {
         this.activeMysteryWord = activeMysteryWord;
     }
 
-
-    public Boolean getValidClue() {
-        return validClue;
-    }
-
     public Long getActivePlayerId() {
         return activePlayerId;
     }
@@ -181,10 +162,6 @@ public class GameEntity {
         this.hasBeenInitialized = hasBeenInitialized;
     }
 
-    public void setValidClue(Boolean validClue) {
-        this.validClue = validClue;
-    }
-
     public void setScoreboard(Scoreboard scoreboard) {
         this.scoreboard = scoreboard;
     }
@@ -205,20 +182,12 @@ public class GameEntity {
         return passivePlayerIds;
     }
 
-    public Long getMilliseconds() {
-        return Milliseconds;
-    }
-
     public void setActivePlayerId(Long activePlayerId) {
         this.activePlayerId = activePlayerId;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setMilliseconds(Long milliseconds) {
-        Milliseconds = milliseconds;
     }
 
     public Scoreboard getScoreboard() {

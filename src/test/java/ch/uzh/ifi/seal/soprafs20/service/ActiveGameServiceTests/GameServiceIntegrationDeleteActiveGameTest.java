@@ -28,8 +28,6 @@ public class GameServiceIntegrationDeleteActiveGameTest extends TestSETUPCreates
     @Test
     public void CannotDeleteSinceGameHasNotEndedYet() {
 
-        gameService.deleteActiveGame(createdActiveGame.getId());
-
-        assertThrows(ConflictException.class, ()-> gameService.getGameById(createdActiveGame.getId()));
+        assertThrows(ConflictException.class, ()->  gameService.deleteActiveGame(createdActiveGame.getId()));
     }
 }
