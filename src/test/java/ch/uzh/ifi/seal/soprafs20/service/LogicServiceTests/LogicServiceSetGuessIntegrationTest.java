@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 
+import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
@@ -32,31 +33,9 @@ import java.util.Map;
 @Transactional
 @WebAppConfiguration
 @SpringBootTest
-public class LogicServiceSetGuessIntegrationTest{
+public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveGame{
 
-    @Qualifier("playerRepository")
-    @Autowired
-    protected PlayerRepository playerRepository;
-    protected GameEntity createdActiveGame;
-    protected PlayerEntity p2;
-    @Autowired
-    protected ActiveGameService gameService;
-    @Autowired
-    protected GameSetUpService gameSetUpService;
-    protected GameSetUpEntity game = new GameSetUpEntity();
-    protected GameSetUpEntity createdGame;
-    protected PlayerEntity p1;
-    protected PlayerEntity p3;
-
-    @Autowired
-    protected GameSetUpRepository gameSetUpRepository;
-
-    @Qualifier("gameRepository")
-    @Autowired
-    protected GameRepository gameRepository;
-
-    @Autowired
-    protected LogicService logicService;
+    protected CardEntity card;
 
     @BeforeTransaction
     public void clean(){
@@ -66,58 +45,22 @@ public class LogicServiceSetGuessIntegrationTest{
     }
 
     @BeforeEach
-    public void setup() {
-        game.setNumberOfPlayers(3L);
-        game.setNumberOfAngles(0L);
-        game.setNumberOfDevils(0L);
-        game.setGameType(PRIVATE);
-        game.setPassword("Cara");
-
-        PlayerEntity playerOne= new PlayerEntity();
-        PlayerEntity playerTwo= new PlayerEntity();
-        PlayerEntity playerThree= new PlayerEntity();
-
-        playerOne.setUsername("OneName");
-        playerOne.setPassword("One");
-        playerOne.setToken("One");
-        playerOne.setStatus(PlayerStatus.ONLINE);
-        p1=playerRepository.save(playerOne);
-
-        playerTwo.setUsername("TwoName");
-        playerTwo.setPassword("Two");
-        playerTwo.setToken("Two");
-        playerTwo.setStatus(PlayerStatus.ONLINE);
-        p2=playerRepository.save(playerTwo);
-
-        playerThree.setUsername("ThreeName");
-        playerThree.setToken("Three");
-        playerThree.setPassword("Three");
-        playerThree.setStatus(PlayerStatus.ONLINE);
-        p3=playerRepository.save(playerThree);
-
-        List<String> playerTokens=new ArrayList<>();
-        playerTokens.add("One");
-        playerTokens.add("Two");
-        playerTokens.add("Three");
-
-
-        game.setPlayerTokens(playerTokens);
-
-        game.setHostName(p1.getUsername());
-        game.setGameName("GameName");
-
-        createdGame =gameSetUpService.createGame(game);
-
-        createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
-        createdActiveGame.setActiveMysteryWord("RandomMysteryWord");
+    public void setup2() {
+        createdActiveGame.setActiveMysteryWord("");
         createdActiveGame.setTimeStart(123L);
-
-        logicService.initializeTurn(createdActiveGame.getId());
+        logicService.drawCardFromStack(createdActiveGame);
+        card=logicService.getCardFromGameById(createdActiveGame.getId());
+        List<String> list=new ArrayList<>();
+        list.add("Elf");
+        list.add("Cat");
+        list.add("Shoe");
+        list.add("Fire");
+        list.add("Voldemort");
+        card.setWords(list);
         logicService.setMysteryWord(createdActiveGame.getId(),3L);
-        createdActiveGame.setActiveMysteryWord("Shoe");
 
         CluePostDTO cluePostDTO=new CluePostDTO();
-        cluePostDTO.setPlayerToken("One");
+        cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Gremlin");
         logicService.giveClue(createdActiveGame,cluePostDTO);
 
@@ -130,7 +73,7 @@ public class LogicServiceSetGuessIntegrationTest{
     public void activePlayerGivesCorrectGuess() {
         Map<String, Integer> scoresBefore= Map.copyOf(createdActiveGame.getScoreboard().getScore());
         GuessPostDTO guessPostDTO = new GuessPostDTO();
-        guessPostDTO.setPlayerToken("Two");
+        guessPostDTO.setPlayerToken("One");
         guessPostDTO.setGuess("Shoe");
         logicService.setGuess(createdActiveGame, guessPostDTO.getGuess());
         assertEquals(createdActiveGame.getGuess(), "Shoe");
@@ -138,10 +81,9 @@ public class LogicServiceSetGuessIntegrationTest{
         for (Map.Entry<String, Integer> entry: scoresBefore.entrySet()) {
             assertNotEquals(entry.getValue(),createdActiveGame.getScoreboard().getScore().get(entry.getKey()));
         }
-        assertEquals(1,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("TwoName"));
+        assertEquals(1,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("OneName"));
         assertEquals(false,createdActiveGame.getHasBeenInitialized());
         assertEquals(12, createdActiveGame.getCardIds().size());
-
     }
 
     @Test
@@ -153,7 +95,7 @@ public class LogicServiceSetGuessIntegrationTest{
         assertEquals(createdActiveGame.getGuess(), "Tree");
         assertFalse(createdActiveGame.getIsValidGuess());
         assertEquals(0,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("TwoName"));
-        assertEquals(false,createdActiveGame.getHasBeenInitialized());
+        assertFalse(createdActiveGame.getHasBeenInitialized());
         assertEquals(11, createdActiveGame.getCardIds().size());
     }
 }

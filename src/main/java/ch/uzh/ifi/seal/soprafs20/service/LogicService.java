@@ -151,6 +151,11 @@ public class LogicService {
                 String clue = devils.get(j).giveClue(word, j);
                 clueMap.put(devils.get(j).getToken(), clue);
             }
+            //check if active player is playing a game exclusively with bots, if so set validClues
+            if (game.getPassivePlayerIds().isEmpty()){
+                addValidClues(game);
+                setTimer(game);
+            }
             return word;
         }
         else {throw new NoContentException("The MysteryWord has already been set");}
@@ -185,39 +190,63 @@ public class LogicService {
 //        Time to dish out some points fam!
         game.updateScoreboard();
     }
+    /**sets the timer*/
+    protected void setTimer(GameEntity game){
+        game.setTimeStart(System.currentTimeMillis());
+    }
 
-    /**Lets players give clues and saves them into a list*/
+    /**adds all the valid clues to validClues*/
+    protected void addValidClues(GameEntity game){
+        // let the wordComparer do it's magic and return the analyzed clues
+        ArrayList<String> clues = new ArrayList<String>(game.getClueMap().values());
+        String mystery=game.getActiveMysteryWord();
+        game.setAnalyzedClues(wordComparer.compareClues(clues, mystery));
+
+        //initialize validClues Map and fill it with
+        Map<String,String> validClues = new HashMap<>();
+        for (Map.Entry<String,String> entry: game.getClueMap().entrySet()){
+            //put human players' clues into validClues
+            if (playerRepository.findByToken(entry.getKey())!=null) {
+                if (game.getAnalyzedClues().get(entry.getValue())==0) validClues.put(playerRepository.findByToken(entry.getKey()).getUsername(),
+                        entry.getValue());
+            }
+            //put bots' clues into validClues
+            else {
+                for (Angel angel : game.getAngels()){
+                    if (angel.getToken().equals(entry.getKey())) validClues.put(angel.getName(), entry.getValue());
+                }
+                for (Devil devil : game.getDevils()){
+                    if (devil.getToken().equals(entry.getKey())) validClues.put(devil.getName(), entry.getValue());
+                }
+            }
+        }
+        //update validClues of game and set flag
+        game.setValidClues(validClues);
+        game.setValidCluesAreSet(true);
+    }
+
+
+    /**adds single clue to clueMap*/
+    protected void addClueToClueMap(GameEntity game, CluePostDTO cluePostDTO){
+        Map<String, String> clueMap =game.getClueMap();
+        clueMap.put(cluePostDTO.getPlayerToken(),cluePostDTO.getClue());
+        game.setClueMap(clueMap);
+        playerService.getPlayerByToken(cluePostDTO.getPlayerToken()).setTimePassed(System.currentTimeMillis()-game.getTimeStart());
+    }
+
+    /**Let's players give clues and save them into a list
+     *@Param: GameEntity; CluePostDTO: String playerToken, String clue
+     *@Returns: void
+     *@Throws: 401: Not authorized to give clue anymore.
+     *      * */
     public void giveClue(GameEntity game, CluePostDTO cluePostDTO){
         if (game.getClueMap().get(cluePostDTO.getPlayerToken())==null) {
-            Map<String, String> clueMap =game.getClueMap();
-            clueMap.put(cluePostDTO.getPlayerToken(),cluePostDTO.getClue());
-            game.setClueMap(clueMap);
-            playerService.getPlayerByToken(cluePostDTO.getPlayerToken()).setTimePassed(System.currentTimeMillis()-game.getTimeStart());
+            addClueToClueMap(game,cluePostDTO);
         }
         else throw new UnauthorizedException("You have already submitted a clue for this round!");
         if (game.getClueMap().size()==game.getPlayers().size()+game.getNumOfBots()-1){
-            ArrayList<String> clues = new ArrayList<String>(game.getClueMap().values());
-            String mystery=game.getActiveMysteryWord();
-            Map<String,Integer> analyzedClues=wordComparer.compareClues(clues, mystery);
-            game.setAnalyzedClues(analyzedClues);
-            Map<String,String> validClues = new HashMap<>();
-            for ( Map.Entry<String,String> entry: game.getClueMap().entrySet()){
-                if (playerRepository.findByToken(entry.getKey())!=null) {
-                    if (analyzedClues.get(entry.getValue())==0) validClues.put(playerRepository.findByToken(entry.getKey()).getUsername(),
-                        entry.getValue());
-                }
-                else {
-                    for (Angel angel : game.getAngels()){
-                        if (angel.getToken().equals(entry.getKey())) validClues.put(angel.getName(), entry.getValue());
-                    }
-                    for (Devil devil : game.getDevils()){
-                        if (devil.getToken().equals(entry.getKey())) validClues.put(devil.getName(), entry.getValue());
-                    }
-                }
-            }
-            game.setValidClues(validClues);
-            game.setValidCluesAreSet(true);
-            game.setTimeStart(System.currentTimeMillis());
+            addValidClues(game);
+            setTimer(game);
         }
     }
 
