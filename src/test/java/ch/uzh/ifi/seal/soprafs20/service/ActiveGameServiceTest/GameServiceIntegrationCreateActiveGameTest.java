@@ -1,5 +1,5 @@
 
-package ch.uzh.ifi.seal.soprafs20.service.ActiveGameServiceTests;
+package ch.uzh.ifi.seal.soprafs20.service.ActiveGameServiceTest;
 
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;

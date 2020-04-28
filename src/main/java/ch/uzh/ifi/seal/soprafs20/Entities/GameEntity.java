@@ -234,7 +234,7 @@ public class GameEntity {
         this.hasEnded = hasEnded;
     }
 
-    public List<Bot> getNamesOfBots(){
+    public List<Bot> getBots(){
         List<Bot> bots = new ArrayList<>();
         bots.addAll(angels);
         bots.addAll(devils);
