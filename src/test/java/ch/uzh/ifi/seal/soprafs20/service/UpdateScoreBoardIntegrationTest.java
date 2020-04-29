@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
+package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
@@ -14,7 +14,7 @@ import java.util.*;
 @Transactional
 @WebAppConfiguration
 @SpringBootTest
-public class LogicServiceUpdateScoreBoardIntegrationTest extends TestSETUPCreatesActiveGame {
+public class UpdateScoreBoardIntegrationTest extends TestSETUPCreatesActiveGame {
 
     @BeforeEach
     public void setup2() {
@@ -40,7 +40,7 @@ public class LogicServiceUpdateScoreBoardIntegrationTest extends TestSETUPCreate
         Map scoreBefore= Map.copyOf(createdActiveGame.getScoreboard().getScore());
         Map scoreBoard=createdActiveGame.getScoreboard().getScore();
 
-        createdActiveGame.updateScoreboard();
+        logicService.updateScoreboard(createdActiveGame);
 
         assertNotEquals(scoreBefore.get(p1.getUsername()),scoreBoard.get(p1.getUsername()));
         assertNotEquals(scoreBefore.get(p2.getUsername()),scoreBoard.get(p2.getUsername()));
@@ -72,7 +72,7 @@ public class LogicServiceUpdateScoreBoardIntegrationTest extends TestSETUPCreate
         Map scoreBefore= Map.copyOf(createdActiveGame.getScoreboard().getScore());
         Map scoreBoard=createdActiveGame.getScoreboard().getScore();
 
-        createdActiveGame.updateScoreboard();
+        logicService.updateScoreboard(createdActiveGame);
 
         assertNotEquals(scoreBefore.get(p1.getUsername()),scoreBoard.get(p1.getUsername()));
         assertNotEquals(scoreBefore.get(p2.getUsername()),scoreBoard.get(p2.getUsername()));
@@ -106,7 +106,7 @@ public class LogicServiceUpdateScoreBoardIntegrationTest extends TestSETUPCreate
 
         createdActiveGame.setIsValidGuess(false);
 
-        createdActiveGame.updateScoreboard();
+        logicService.updateScoreboard(createdActiveGame);
 
         assertEquals(scoreBefore.get(p1.getUsername()),scoreBoard.get(p1.getUsername()));
         assertNotEquals(scoreBefore.get(p2.getUsername()),scoreBoard.get(p2.getUsername()));

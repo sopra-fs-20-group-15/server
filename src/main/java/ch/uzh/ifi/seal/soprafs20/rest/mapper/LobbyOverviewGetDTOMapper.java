@@ -7,6 +7,7 @@ public class LobbyOverviewGetDTOMapper {
     public static LobbyOverviewGetDTO convertGameSetUpEntityToLobbyOverviewGetDTOMapper (GameSetUpEntity gameSetUpEntity){
         LobbyOverviewGetDTO lobbyOverviewGetDTO= new LobbyOverviewGetDTO();
 
+        lobbyOverviewGetDTO.setId(gameSetUpEntity.getId());
         lobbyOverviewGetDTO.setGameName(gameSetUpEntity.getGameName());
         lobbyOverviewGetDTO.setGameType(gameSetUpEntity.getGameType());
         lobbyOverviewGetDTO.setNumOfHumanPlayers((long) gameSetUpEntity.getPlayerTokens().size());

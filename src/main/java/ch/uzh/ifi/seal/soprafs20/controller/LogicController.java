@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
 
@@ -46,7 +45,13 @@ public class LogicController {
         return true;
     }
 
-    /**Initializes the turn of a game*/
+    /**Initializes the turn of a game
+     *@Param: String gameId, TokenDTO: String playerToken
+     *@Returns: void
+     *@Throws: 404 not found, if player or game does not exist
+     *@Throws: 409: Game has already ended
+     *@Throws: 204: Game has already been initialized
+     **/
     @PutMapping("/games/{gameId}/initializations")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -58,13 +63,19 @@ public class LogicController {
         logicService.initializeTurn(gameIdLong);
     }
 
+    /**gets the amount of remaining cards on the stack
+     *@Param: String gameId, String playerToken
+     *@Returns: CardGetDTO: Long id, List<String> words
+     *@Throws: 404 not found, if player or game does not exist
+     *@Throws: 404: No active card set and therefore not found.
+     **/
     @GetMapping("/games/{gameId}/cards/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CardGetDTO getCard(@PathVariable String gameId, @PathVariable String playerToken) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
-        validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
+        validationService.checkPlayerIsPassivePlayerOfGame(playerToken, gameIdLong);
         CardEntity cardEntity = logicService.getCardFromGameById(gameIdLong);
         CardGetDTO cardGetDTO = new CardGetDTO();
         cardGetDTO.setId(cardEntity.getId());
@@ -72,17 +83,25 @@ public class LogicController {
         return cardGetDTO;
     }
 
-    /**gets the amount of remaining cards on the stack*/
+    /**gets the amount of remaining cards on the stack
+     *@Param: Long gameId, String playerToken
+     *@Returns: CardsRemainingDTO: int cardsOnStack
+     *@Throws: 404 not found, if player or game does not exist
+     **/
     @GetMapping("/games/{gameId}/cards/remainder/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CardsRemainingDTO getCardAmount(@PathVariable Long gameId, @PathVariable String playerToken) {
         validationService.checkPlayerIsPartOfGame(playerToken, gameId);
-        CardEntity cardEntity = logicService.getCardFromGameById(gameId);
+        logicService.getCardFromGameById(gameId);
         return logicService.getCardAmount(gameId);
     }
 
-    /**sets the mysteryWord*/
+    /**sets the mysteryWord
+     * @Param: String gameId, CardPostDTo cardPostDTO: long wordId, String playerToken
+     * @Returns: void
+     * @throws: 404 not found, if player or game does not exist
+     * @Throws: 204: Mystery Word has already been set*/
     @PutMapping("/games/{gameId}/mysteryWord")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -96,7 +115,13 @@ public class LogicController {
 
     }
 
-    /**Gives back the chosen MysteryWord*/
+    /**Gives back the chosen MysteryWord
+     * @Param: String gameId, String playerToken
+     * @Returns: WordPostDTO: String word
+     * @throws: 404 not found, if player or game does not exist
+     * @Throws: 401: Not authorized to give clue anymore.
+     * @Throws: 409: Turn order violated
+     * */
     @GetMapping("/games/{gameId}/mysteryWord/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -110,7 +135,13 @@ public class LogicController {
         return wordPostDTO;
     }
 
-    /**Sets the clue for each player into a list. Once all players have given their clues, they will be evaluated*/
+    /**Sets the clue for each player into a list. Once all players have given their clues, they will be evaluated
+     * @Param: String gameId, CluePostDTO: String clue, String playerToken
+     * @Returns: void
+     * @throws: 404 not found, if player or game does not exist
+     * @Throws: 401: Not authorized to give clue anymore.
+     * @Throws: 409: Turn order violated
+     * */
     @PostMapping("/games/{gameId}/clues")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -123,7 +154,13 @@ public class LogicController {
         logicService.giveClue(game,cluePostDTO);
     }
 
-    /**get the valid clue list*/
+    /**Gets a list with the valid clues
+     * @Param: String gameId, String playerToken
+     * @Returns: List<ClueGetDTO>: ClueGetDTO: String playerName, String clue
+     * @throws: 404 not found, if player or game does not exist
+     * @Throws: 204: Guess has already been set
+     * @Throws: 204: Mystery word has not been set
+     * */
     @GetMapping("/games/{gameId}/clues/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -135,19 +172,34 @@ public class LogicController {
         return logicService.getClues(game);
     }
 
-    /**get list with players that have already submitted clue*/
+    /**Gets names of the players, that have already submitted a clue
+     * @Param: String gameId, String playerToken
+     * @Returns: List<PlayerNameDTO>: PlayerNameDTO: String playerName
+     * @Throws: 400: GameId has wrong format
+     * @throws: 404 not found, if player or game does not exist
+     * @Throws: 204: Guess has already been set
+     * @Throws: 204: Mystery word has not been set
+     * */
     @GetMapping("/games/{gameId}/clues/players/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<PlayerNameDTO> getCluePlayers(@PathVariable String gameId, @PathVariable String playerToken) {
-        if(!stringIsALong(gameId)) throw new BadRequestException("Game-Id has wrong format.");
+        if(!stringIsALong(gameId)) throw new BadRequestException("GameId has wrong format.");
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
         GameEntity game = activeGameService.getGameById(gameIdLong);
         return logicService.getCluePlayers(game);
     }
 
-    /**sets the guess and checks, if the guess was correct (set points based on that)*/
+    /**sets the guess and checks, if the guess was correct (set points based on that)
+     * @Param: String gameId, GuessPostDTO: String guess, String playerToken
+     * @Returns: void
+     * @throws: 404 not found, if player or game does not exist
+     * @throws: 401 unauthorized, if player ist not the active player of the game
+     * @Throws: 409: Turn order violated
+     * @Throws: 204: Guess has already been set
+     * @Throws: 204: Mystery word has not been set
+     * */
     @PostMapping("/games/{gameId}/guesses")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -156,7 +208,7 @@ public class LogicController {
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsActivePlayerOfGame(guessPostDTO.getPlayerToken(), gameIdLong);
         GameEntity game = activeGameService.getGameById(gameIdLong);
-        if (game.getValidClues().isEmpty()) throw new ConflictException("Turn order violated : No valid clues have been provided to you yet");
+        if (!game.getValidCluesAreSet()) throw new ConflictException("Turn order violated : No valid clues have been provided to you yet");
         if (!game.getActiveMysteryWord().isBlank()) {
             if (game.getGuess().isBlank()) {
                 logicService.setGuess(game, guessPostDTO.getGuess());
@@ -165,7 +217,12 @@ public class LogicController {
         else throw new NoContentException("The MysteryWord has not been set yet");
     }
 
-    /**Get the clue and check, if it was valid*/
+    /**Get the guess and check, if it was valid
+     *@Param: String gameId, String playerToken
+     *@Returns: GuessGetDTO: String guess, boolean isValidGuess
+     *@throws: 404 not found, if player or game does not exist
+     *@throws: 401 unauthorized, if player ist not the active player of the game
+     * */
     @GetMapping("/games/{gameId}/guesses/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -182,7 +239,12 @@ public class LogicController {
         return guessGetDTO;
     }
 
-    /**Check if the game has ended*/
+    /**Returns whether the game has already ended or not
+     *@Param: String gameId, String playerToken
+     *@Returns: GameEndedDTO: boolean hasGameEnded
+     *@throws: 404 not found, if player or game does not exist
+     *@throws: 401 unauthorized, if player ist not the active player of the game
+     * */
     @GetMapping("/games/{gameId}/ends/{playerToken}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -196,7 +258,11 @@ public class LogicController {
         return gameEndedDTO;
     }
 
-	/**Get the current scores of the players*/
+	/**Get the current statistics
+     * @Param: String gameId
+     * @Returns: List<StatisticsGetDTO>: StatisticGetDTO: int placement, string playerName, int score, int numberOfCorrectlyGuessedMysteryWords
+     * @Throws: 404: No game with specified id found.
+     * */
         @GetMapping("/games/{gameId}/statistics")
         @ResponseStatus(HttpStatus.OK)
         @ResponseBody
