@@ -245,25 +245,5 @@ public class GameEntity {
         this.passivePlayerIds = passivePlayerIds;
     }
 
-     public void updateScoreboard(){
-         for (PlayerEntity player: this.getPlayers()) {
-             if (this.getActivePlayerId().equals(player.getId())) {
-                 Scoreboard sc =this.getScoreboard();
-                 sc.updateScore(player, ScoreCalculator.calculateScoreActivePlayer(player, this.getIsValidGuess()));
-                 if (this.getIsValidGuess()){
-                     Map<String, Integer> correctlyGuessedMysteryWordsPerPlayer = scoreboard.getCorrectlyGuessedMysteryWordsPerPlayer();
-                     correctlyGuessedMysteryWordsPerPlayer.replace(player.getUsername(), correctlyGuessedMysteryWordsPerPlayer.get(player.getUsername())+ 1);
-                     scoreboard.setCorrectlyGuessedMysteryWordsPerPlayer(correctlyGuessedMysteryWordsPerPlayer);
-                 }
-                 this.setScoreboard(sc);
-             }
-             else {
-                 int numOfDuplicates = this.getAnalyzedClues().get(this.getClueMap().get(player.getToken()));
-                 boolean validClue = this.getValidClues().containsKey(player.getUsername());
-                 Scoreboard sc = this.getScoreboard();
-                 sc.updateScore(player, ScoreCalculator.calculateScorePassivePlayer(player, this.getIsValidGuess(), validClue, numOfDuplicates));
-                 this.setScoreboard(sc);
-             }
-         }
-     }
+
 }
