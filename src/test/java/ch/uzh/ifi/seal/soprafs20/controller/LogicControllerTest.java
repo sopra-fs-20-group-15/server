@@ -167,6 +167,7 @@ public class LogicControllerTest {
         Map<String, String> map= new HashMap<>();
         map.put("Test", "Test");
         game.setValidClues(map);
+        game.setValidCluesAreSet(true);
 
         /**
          doReturn(true).when(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.any(),Mockito.any()));

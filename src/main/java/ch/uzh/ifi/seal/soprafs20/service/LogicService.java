@@ -50,6 +50,32 @@ public class LogicService {
         this.gameService= gameService;
         this.playerService = playerService;
     }
+    /**sets the timer for game*/
+    protected void setTimeStart(GameEntity game){
+        game.setTimeStart(System.currentTimeMillis());
+    }
+
+    /**sets the timer for the player*/
+    protected void setTimePassed(GameEntity game, PlayerEntity player){
+        player.setTimePassed(System.currentTimeMillis()-game.getTimeStart());
+    }
+
+
+    /**Draws card from stack and sets it as the current active card
+     *@Param: GameEntity
+     *@Returns: GameEntity
+     *@Throws: 409: Empty stack
+     *     */
+    public GameEntity drawCardFromStack(GameEntity game){
+        if (game.getCardIds().size() > 0){
+            List<Long> cardIds = game.getCardIds();
+            game.setActiveCardId(cardIds.remove(cardIds.size()-1));
+            return game;
+        }
+        else{
+            throw new ConflictException("The CardStack is empty! The game should have ended already!");
+        }
+    }
 
     /**Puts the active player at the end of the passive Players List, takes the passive Player at 0 and make him the active player*/
     public GameEntity goOnePlayerFurther(GameEntity game){
@@ -61,26 +87,13 @@ public class LogicService {
         return game;
     }
 
-    /***/
-    public GameEntity drawCardFromStack(GameEntity game){
-        if (game.getCardIds().size() > 0){
-            List<Long> cardIds = game.getCardIds();
-            game.setActiveCardId(cardIds.remove(cardIds.size()-1));
-            return game;
-        }
-        else{
-            throw new ConflictException("The CardStack is empty!The game should have ended already!");
-        }
-    }
-
-    /**get amount of remaining cards*/
-    public CardsRemainingDTO getCardAmount(Long gameId){
-        CardsRemainingDTO cardsRemainingDTO=new CardsRemainingDTO();
-        cardsRemainingDTO.setCardsOnStack(gameService.getGameById(gameId).getCardIds().size());
-        return cardsRemainingDTO;
-    }
-
-    /**Initializes a turn*/
+    /**Initializes Turn
+     *@Param: Long
+     *@Returns: GameEntity
+     *@Throws: 404: No game with specified id found
+     *@Throws: 409: Game has already ended
+     *@Throws: 204: Game has already been initialized
+     *     */
     public GameEntity initializeTurn(Long gameId){
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);
         if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
@@ -111,7 +124,12 @@ public class LogicService {
         else {throw new NoContentException("The Game has already been initialized!");}
     }
 
-    /**Gets a gameId and gives back the active Card of that game*/
+    /**Get's active card
+     *@Param: Long
+     *@Returns: CardEntity
+     *@Throws: 404: No game with specified id found
+     *@Throws: 404: No active card set and therefore not found.
+     * */
     public CardEntity getCardFromGameById(Long gameId){
         //Get Game
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);
@@ -127,42 +145,65 @@ public class LogicService {
         else {throw new NotFoundException("The active Card of this game has not been set yet!");}
     }
 
+    /**Get amount of remaining cards
+     *@Param: Long
+     *@Returns: CardsRemainingDTO: int
+     *     */
+    public CardsRemainingDTO getCardAmount(Long gameId){
+        CardsRemainingDTO cardsRemainingDTO=new CardsRemainingDTO();
+        cardsRemainingDTO.setCardsOnStack(gameService.getGameById(gameId).getCardIds().size());
+        return cardsRemainingDTO;
+    }
 
-    /**Set the MysteryWord*/
+    protected void botsAddClues(GameEntity game, String word){
+        Map<String, String> clueMap =game.getClueMap();
+        List<Angel> angels = game.getAngels();
+        for (int i = 0; i < angels.size(); i++){
+            String clue = angels.get(i).giveClue(word, i);
+            clueMap.put(angels.get(i).getToken(), clue);
+        }
+        List<Devil> devils = game.getDevils();
+        for (int j = 0; j < devils.size(); j++){
+            String clue = devils.get(j).giveClue(word, j);
+            clueMap.put(devils.get(j).getToken(), clue);
+        }
+    }
 
+
+    /**Set Mystery Word
+     *@Param: Long, Long
+     *@Returns: String
+     *@Throws: 404: No game with specified id found
+     *@Throws: 204: Mystery Word has already been set
+     *     */
     public String setMysteryWord(Long gameId, Long wordId){
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);
         if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
         GameEntity game = gameOp.get();
         if (game.getActiveMysteryWord().isBlank()){
+            //set mystery word
             CardEntity card = cardService.getCardById(game.getActiveCardId());
             String word = cardService.chooseWordOnCard(wordId, card);
             game.setActiveMysteryWord(word);
-	    game.setTimeStart(System.currentTimeMillis());
-
-            Map<String, String> clueMap =game.getClueMap();
-            List<Angel> angels = game.getAngels();
-            for (int i = 0; i < angels.size(); i++){
-                String clue = angels.get(i).giveClue(word, i);
-                clueMap.put(angels.get(i).getToken(), clue);
-            }
-            List<Devil> devils = game.getDevils();
-            for (int j = 0; j < devils.size(); j++){
-                String clue = devils.get(j).giveClue(word, j);
-                clueMap.put(devils.get(j).getToken(), clue);
-            }
+            setTimeStart(game);
+            // let bots give their clues
+            botsAddClues(game,word);
             //check if active player is playing a game exclusively with bots, if so set validClues
             if (game.getPassivePlayerIds().isEmpty()){
                 addValidClues(game);
-                setTimer(game);
+                setTimeStart(game);
             }
             return word;
         }
         else {throw new NoContentException("The MysteryWord has already been set");}
     }
 
-    /**Get the MysteryWord*/
-
+    /**Get Mystery Word
+     *@Param: Long
+     *@Returns: String
+     *@Throws: 404: No game with specified id found
+     *@Throws: 404: Mystery Word not found, because it has not been set yet
+     *     */
     public String getMysteryWord(Long gameId){
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);
         if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
@@ -173,27 +214,6 @@ public class LogicService {
         else {throw new NotFoundException("The MysteryWord not been set yet!");}
     }
 
-    /**Set the Guess*/
-    public void setGuess(GameEntity game, String guess){
-        boolean isValidGuess = wordComparer.compareMysteryWords(game.getActiveMysteryWord(), guess);
-        game.setGuess(guess);
-        game.setIsValidGuess(isValidGuess);
-        for (PlayerEntity player:game.getPlayers()) {
-            if (player.getId().equals(game.getActivePlayerId())) player.setTimePassed(System.currentTimeMillis()-game.getTimeStart());
-        }
-        //draw an extra card if the guess was wrong
-        if (!isValidGuess){
-            drawCardFromStack(game);
-        }
-        //At this point it should be possible again to initialize an new turn
-        game.setHasBeenInitialized(false);
-//        Time to dish out some points fam!
-        game.updateScoreboard();
-    }
-    /**sets the timer*/
-    protected void setTimer(GameEntity game){
-        game.setTimeStart(System.currentTimeMillis());
-    }
 
     /**adds all the valid clues to validClues*/
     protected void addValidClues(GameEntity game){
@@ -213,10 +233,12 @@ public class LogicService {
             //put bots' clues into validClues
             else {
                 for (Angel angel : game.getAngels()){
-                    if (angel.getToken().equals(entry.getKey())) validClues.put(angel.getName(), entry.getValue());
+                    if (angel.getToken().equals(entry.getKey()) && game.getAnalyzedClues().get(entry.getValue())==0)
+                        validClues.put(angel.getName(), entry.getValue());
                 }
                 for (Devil devil : game.getDevils()){
-                    if (devil.getToken().equals(entry.getKey())) validClues.put(devil.getName(), entry.getValue());
+                    if (devil.getToken().equals(entry.getKey()) && game.getAnalyzedClues().get(entry.getValue())==0)
+                        validClues.put(devil.getName(), entry.getValue());
                 }
             }
         }
@@ -231,7 +253,7 @@ public class LogicService {
         Map<String, String> clueMap =game.getClueMap();
         clueMap.put(cluePostDTO.getPlayerToken(),cluePostDTO.getClue());
         game.setClueMap(clueMap);
-        playerService.getPlayerByToken(cluePostDTO.getPlayerToken()).setTimePassed(System.currentTimeMillis()-game.getTimeStart());
+        setTimePassed(game,playerService.getPlayerByToken(cluePostDTO.getPlayerToken()));
     }
 
     /**Let's players give clues and save them into a list
@@ -240,40 +262,54 @@ public class LogicService {
      *@Throws: 401: Not authorized to give clue anymore.
      *      * */
     public void giveClue(GameEntity game, CluePostDTO cluePostDTO){
+        //Check if player has already given clue, if not let him commit a clue
         if (game.getClueMap().get(cluePostDTO.getPlayerToken())==null) {
             addClueToClueMap(game,cluePostDTO);
         }
         else throw new UnauthorizedException("You have already submitted a clue for this round!");
+        //Check if all players have given clues, if so set validClues
         if (game.getClueMap().size()==game.getPlayers().size()+game.getNumOfBots()-1){
             addValidClues(game);
-            setTimer(game);
+            setTimeStart(game);
         }
     }
 
-    /**Get full clue list*/
-    public List<ClueGetDTO> getClues(GameEntity game) {
-//        check if clues have already been set for this round
-        if (game.getValidCluesAreSet()) {
-            List<ClueGetDTO> list = new ArrayList<>();
-            for (String playerName: game.getValidClues().keySet()) {
-                ClueGetDTO clueGetDTO =new ClueGetDTO();
-                clueGetDTO.setClue(game.getValidClues().get(playerName));
-                clueGetDTO.setPlayerName(playerName);
-                list.add(clueGetDTO);
-            }
-            return list;
+    protected List<ClueGetDTO> createListOfClueGetDTOs (GameEntity game){
+        List<ClueGetDTO> list = new ArrayList<>();
+        for (String playerName: game.getValidClues().keySet()) {
+            ClueGetDTO clueGetDTO =new ClueGetDTO();
+            clueGetDTO.setClue(game.getValidClues().get(playerName));
+            clueGetDTO.setPlayerName(playerName);
+            list.add(clueGetDTO);
         }
-//        if clues have not been set throw NoContentException
+        return list;
+    }
+    /**Let's players get the valid clues
+     *@Param: GameEntity
+     *@Returns: void
+     *@Throws: 204: No content, since clues are not ready yet.
+     *     */
+    public List<ClueGetDTO> getClues(GameEntity game) {
+        //check if clues have already been set for this round, if yes return valid clues
+        if (game.getValidCluesAreSet()) {
+            return createListOfClueGetDTOs(game);
+        }
+        //if valid clues have not been set yet throw NoContentException
         else throw new NoContentException("Clues are not ready yet!");
     }
 
-    /**Returns the names of all the players that have already submitted a clue*/
+    /**Returns the names of all the players that have already submitted a clue
+     *@Param: GameEntity
+     *@Returns: void
+     *     */
     public List<PlayerNameDTO> getCluePlayers(GameEntity game) {
         List<PlayerNameDTO> list = new ArrayList<>();
         for (String token: game.getClueMap().keySet()) {
+            //add players that have given clues to list
             if (playerRepository.findByToken(token)!=null){
                 list.add(DTOMapper.INSTANCE.convertPlayerEntityToPlayerNameDTO(playerRepository.findByToken(token)));
             }
+            //add bots that have given clues to list
             else {
                 for (Angel angel: game.getAngels()) {
                     if (angel.getToken().equals(token)) {
@@ -293,29 +329,86 @@ public class LogicService {
         }
         return  list;
     }
+    /**updates the scoreboard*/
+    public void updateScoreboard(GameEntity game){
+        for (PlayerEntity player: game.getPlayers()) {
+            //for active players
+            if (game.getActivePlayerId().equals(player.getId())) {
+                Scoreboard scoreboard =game.getScoreboard();
+                scoreboard.updateScore(player, ScoreCalculator.calculateScoreActivePlayer(player, game.getIsValidGuess()));
+                //Update the amount of correctly guessed mystery words.
+                if (game.getIsValidGuess()){
+                    Map<String, Integer> correctlyGuessedMysteryWordsPerPlayer = game.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer();
+                    correctlyGuessedMysteryWordsPerPlayer.replace(player.getUsername(), correctlyGuessedMysteryWordsPerPlayer.get(player.getUsername())+ 1);
+                    game.getScoreboard().setCorrectlyGuessedMysteryWordsPerPlayer(correctlyGuessedMysteryWordsPerPlayer);
+                }
+                game.setScoreboard(scoreboard);
+            }
+            //for passive players
+            else {
+                int numOfDuplicates = game.getAnalyzedClues().get(game.getClueMap().get(player.getToken()));
+                boolean validClue = game.getValidClues().containsKey(player.getUsername());
+                Scoreboard scoreboard = game.getScoreboard();
+                scoreboard.updateScore(player, ScoreCalculator.calculateScorePassivePlayer(player, game.getIsValidGuess(), validClue, numOfDuplicates));
+                game.setScoreboard(scoreboard);
+            }
+        }
+    }
 
-    /**Returns whether the game has already ended or not*/
+    /**Set the Guess
+     *@Param: GameEntity, String
+     *@Returns: void
+     * */
+    public void setGuess(GameEntity game, String guess){
+        boolean isValidGuess = wordComparer.compareMysteryWords(game.getActiveMysteryWord(), guess);
+        game.setGuess(guess);
+        game.setIsValidGuess(isValidGuess);
+        for (PlayerEntity player:game.getPlayers()) {
+            if (player.getId().equals(game.getActivePlayerId())) setTimePassed(game, player);
+        }
+        //draw an extra card if the guess was wrong
+        if (!isValidGuess){
+            drawCardFromStack(game);
+        }
+        //At this point it should be possible again to initialize an new turn
+        game.setHasBeenInitialized(false);
+        //Time to dish out some points fam!
+        updateScoreboard(game);
+    }
+
+    protected void updateLeaderBoard (GameEntity game){
+        Map<String, Integer> sb= game.getScoreboard().getScore();
+        //update the leader board scores for every human player in game
+        for (PlayerEntity player: game.getPlayers()) {
+            int score=sb.get(player.getUsername());
+            player.setLeaderBoardScore(player.getLeaderBoardScore()+score);
+            player.setGamesPlayed(player.getGamesPlayed()+1);
+            playerRepository.saveAndFlush(player);
+        }
+    }
+
+    /**Returns whether the game has already ended or not
+     *@Param: GameId
+     *@Returns: boolean
+     *@Throws: 404: No game with specified id found.
+     *     */
     public boolean hasGameEnded(Long gameId){
         //Get the game
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);
         if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
         GameEntity game = gameOp.get();
-        //Check if the card stack is empty. If so, set gameHasEnded to true
+        //Check if the hasEnded flag has already been set, if so return true
         if (game.getHasEnded()) return true;
+        //Check if the card stack is empty. If so, set gameHasEnded to true
         else if (game.getCardIds().size() == 0){
             game.setHasEnded(true);
-            Map<String, Integer> sb= game.getScoreboard().getScore();
-            for (PlayerEntity player: game.getPlayers()) {
-                int score=sb.get(player.getUsername());
-                player.setLeaderBoardScore(player.getLeaderBoardScore()+score);
-                player.setGamesPlayed(player.getGamesPlayed()+1);
-                playerRepository.saveAndFlush(player);
-            }
+            updateLeaderBoard(game);
             return true;
         }
         return false;
-    }    
-/**Orders the items of a list*/
+    }
+
+    /**Orders the items of a list*/
     public List<StatisticsGetDTO> orderStatisticsGetDTOList(List<StatisticsGetDTO> rankScorePlayerNameList){
         //Sort with insertion sort (since max. 7 human players, time complexity is not that important(if more players, quick sort would have been used))
         for(int i = 1; i < rankScorePlayerNameList.size(); i++){
@@ -330,9 +423,11 @@ public class LogicService {
         return  rankScorePlayerNameList;
     }
 
-
-
-    /**Get the scores of the players in a game*/
+    /**Get the scores of the players in a game
+     *@Param: GameId
+     *@Returns: void
+     *@Throws: 404: No game with specified id found.
+     *     */
     public List<StatisticsGetDTO> getStatistics(Long gameId){
         //Get a game by Id;
         Optional<GameEntity> gameOp = gameRepository.findById(gameId);
