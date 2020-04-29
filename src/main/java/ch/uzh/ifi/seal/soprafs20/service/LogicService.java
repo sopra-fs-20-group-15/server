@@ -367,7 +367,7 @@ public class LogicService {
             if (player.getId().equals(game.getActivePlayerId())) setTimePassed(game, player);
         }
         //draw an extra card if the guess was wrong
-        if (!isValidGuess){
+        if (!isValidGuess && !(game.getCardIds().size() == 0)){
             drawCardFromStack(game);
         }
         //At this point it should be possible again to initialize an new turn

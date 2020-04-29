@@ -115,9 +115,9 @@ public class GameServiceIntegrationTestGetActiveGameInfo {
         assertEquals(gameGetDTO.getPassivePlayerNames().get(0), "TwoName");
         assertEquals(gameGetDTO.getPassivePlayerNames().get(1), "ThreeName");
         assertEquals(gameGetDTO.getPassivePlayerNames().size(), 2);
-        assertEquals(gameGetDTO.getPlayerNames().get(2),"OneName");
-        assertEquals(gameGetDTO.getPlayerNames().get(0), "TwoName");
-        assertEquals(gameGetDTO.getPlayerNames().get(1), "ThreeName");
+        assertEquals(gameGetDTO.getPlayerNames().get(2),"ThreeName");
+        assertEquals(gameGetDTO.getPlayerNames().get(0), "OneName");
+        assertEquals(gameGetDTO.getPlayerNames().get(1), "TwoName");
         assertEquals(gameGetDTO.getPlayerNames().size(), 3);
 
 
