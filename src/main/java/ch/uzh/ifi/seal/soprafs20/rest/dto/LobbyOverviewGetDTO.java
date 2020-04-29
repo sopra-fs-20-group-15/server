@@ -3,12 +3,21 @@ package ch.uzh.ifi.seal.soprafs20.rest.dto;
 import ch.uzh.ifi.seal.soprafs20.constant.GameType;
 
 public class LobbyOverviewGetDTO {
+    private Long id;
     private String gameName;
     private GameType gameType;
     private Long numOfDesiredPlayers;
     private Long numOfAngels;
     private Long numOfDevils;
     private Long numOfHumanPlayers;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getGameName() {
         return gameName;
