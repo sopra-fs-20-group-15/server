@@ -229,6 +229,7 @@ public class ValidationServiceTest {
         GameEntity game = new GameEntity();
         List<Long> passivePlayers = new ArrayList<Long>();
         game.setPassivePlayerIds(passivePlayers);
+        game.setActivePlayerId(2L);
         Optional<GameEntity> gameOp = Optional.of(game);
         //Mocks the functions validationService needs
         Mockito.when(playerRepository.findByToken(Mockito.any())).thenReturn(player);

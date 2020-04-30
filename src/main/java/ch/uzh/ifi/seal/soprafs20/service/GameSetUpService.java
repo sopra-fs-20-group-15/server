@@ -105,7 +105,7 @@ public class GameSetUpService {
         Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(gameId);
         if (gameOp.isEmpty()) throw new NotFoundException("No gameEntity with specified ID exists.");
         GameSetUpEntity game = gameOp.get();
-        if (player.getUsername() != game.getHostName()){
+        if (!player.getUsername().equals(game.getHostName())){
             throw new UnauthorizedException("This player is not the Host of the Game!");
         }
         gameSetUpRepository.delete(game);
