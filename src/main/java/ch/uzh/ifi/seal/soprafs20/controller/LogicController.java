@@ -75,7 +75,7 @@ public class LogicController {
     public CardGetDTO getCard(@PathVariable String gameId, @PathVariable String playerToken) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
-        validationService.checkPlayerIsPassivePlayerOfGame(playerToken, gameIdLong);
+        validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
         CardEntity cardEntity = logicService.getCardFromGameById(gameIdLong);
         CardGetDTO cardGetDTO = new CardGetDTO();
         cardGetDTO.setId(cardEntity.getId());
