@@ -4,9 +4,6 @@ import ch.uzh.ifi.seal.soprafs20.constant.GameType;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-
 
 /**
  * Internal PlayerEntity Representation

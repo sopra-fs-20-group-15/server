@@ -58,7 +58,7 @@ public class ActiveGamesController {
     }
 
 
-    /**Allows player to get an overview of the existing active games
+    /**Allows player to get an overview of an existing active game
      * @Param: String gameId
      * @Returns: GameGetDTO: Long id, String activePlayerName, List<String> playerNames, List<String> passivePlayerNames,
      * @Throws: 409:The PathVariable is not a Long

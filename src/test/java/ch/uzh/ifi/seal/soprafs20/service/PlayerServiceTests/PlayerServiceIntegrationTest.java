@@ -152,7 +152,7 @@ public class PlayerServiceIntegrationTest {
         String exceptionMessage2 = "Incorrect password.";
         PlayerNotAvailable exception = assertThrows(PlayerNotAvailable.class, () -> playerService.loginUser(testUser2), exceptionMessage);
         assertEquals(exceptionMessage, exception.getMessage());
-        PlayerCredentialsWrong exception2 = assertThrows(PlayerCredentialsWrong.class, () -> playerService.loginUser(testUser3), exceptionMessage2);
+        UnauthorizedException exception2 = assertThrows(UnauthorizedException.class, () -> playerService.loginUser(testUser3), exceptionMessage2);
         assertEquals(exceptionMessage2, exception2.getMessage());
     }
 
@@ -211,7 +211,7 @@ public class PlayerServiceIntegrationTest {
         testUser.setUsername("testUsername");
         testUser.setPassword("testPassword");
         PlayerEntity newUser= playerService.createUser(testUser);
-        PlayerEntity getUser= playerService.getUser(testUser);
+        PlayerEntity getUser= playerService.getPlayerById(testUser.getId());
 
 
 //    make sure everything works
@@ -233,8 +233,8 @@ public class PlayerServiceIntegrationTest {
 
 
 //    make sure exception thrown when id does not exist
-        String exceptionMsg= "No user with this id exists, that can be fetched.";
-        PlayerNotAvailable exception= assertThrows(PlayerNotAvailable.class, () -> playerService.getUser(newUser));
+        String exceptionMsg= "No player with this id exists!";
+        NotFoundException exception= assertThrows(NotFoundException.class, () -> playerService.getPlayerById(newUser.getId()));
         assertEquals(exception.getMessage(),exceptionMsg);
     }
 }

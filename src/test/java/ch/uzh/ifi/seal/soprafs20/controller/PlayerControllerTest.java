@@ -4,7 +4,6 @@ import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.LeaderBoardGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerTokenDTO;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
@@ -55,7 +54,7 @@ public class PlayerControllerTest {
 
         List<PlayerEntity> allUsers = Collections.singletonList(player);
 
-        // this mocks the UserService -> we define above what the userService should return when getUsers() is called
+        // this mocks the PlayerService -> we define above what the userService should return when getUsers() is called
         given(playerService.getUsers()).willReturn(allUsers);
 
         // when
@@ -263,7 +262,7 @@ public class PlayerControllerTest {
         player.setId(1L);
         player.setStatus(PlayerStatus.ONLINE);
 
-        given(playerService.getUser(Mockito.any())).willReturn(player);
+        given(playerService.getPlayerById(Mockito.anyLong())).willReturn(player);
 
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder postRequest = get("/players/{userId}", 1);
@@ -279,7 +278,7 @@ public class PlayerControllerTest {
     @Test
     public void getPlayer_IdDoesNotExists() throws Exception {
         // given
-        given(playerService.getUser(Mockito.any())).willThrow(new NotFoundException("No User with this id available!"));
+        given(playerService.getPlayerById(Mockito.anyLong())).willThrow(new NotFoundException("No User with this id available!"));
 
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder postRequest = get("/players/{userId}", 1);

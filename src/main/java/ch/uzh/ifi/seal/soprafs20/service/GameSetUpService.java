@@ -7,24 +7,16 @@ import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
-import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.ActiveGamePostDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyOverviewGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.LobbyGetDTOMapper;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.LobbyOverviewGetDTOMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.io.IOException;
 import java.util.*;
 
 
@@ -105,8 +97,10 @@ public class GameSetUpService {
         Optional<GameSetUpEntity> gameOp = gameSetUpRepository.findById(gameId);
         if (gameOp.isEmpty()) throw new NotFoundException("No gameEntity with specified ID exists.");
         GameSetUpEntity game = gameOp.get();
-        if (player.getUsername() != game.getHostName()){
-            throw new UnauthorizedException("This player is not the Host of the Game!");
+        if ((game.getActiveGameId() == null)){
+            if (player.getUsername() != game.getHostName()){
+                throw new UnauthorizedException("This player is not the Host of the Game!");
+            }
         }
         gameSetUpRepository.delete(game);
         return true;

@@ -51,10 +51,6 @@ public interface DTOMapper {
     @Mapping(source = "status", target = "status")
     PlayerGetDTO convertEntityToUserGetDTO(PlayerEntity playerEntity);
 
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "words", target = "words")
-    CardGetDTO convertEntityToCardGetDTO(CardEntity cardEntity);
-
     @Mapping(source = "username", target = "username")
     @Mapping(source = "password", target = "password")
     PlayerEntity convertUserPutDTOtoEntity(PlayerPutDTO playerPutDTO);
@@ -72,10 +68,6 @@ public interface DTOMapper {
 
     @Mapping(source = "playerToken", target = "token")
     PlayerEntity convertTokenDTOToEntity(TokenDTO tokenDTO);
-
-    @Mapping(source = "token", target = "token")
-    @Mapping(source = "username", target = "username")
-    PlayerEntity convertUserPutUserIdDTOToEntity(PlayerPutUserIdDTO playerPutUserIdDTO);
 
     @Mapping(source = "username", target = "playerName")
     PlayerNameDTO convertPlayerEntityToPlayerNameDTO(PlayerEntity playerEntity);

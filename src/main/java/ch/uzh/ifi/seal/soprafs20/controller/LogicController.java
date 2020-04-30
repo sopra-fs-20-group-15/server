@@ -19,16 +19,12 @@ import static java.lang.Long.parseLong;
 
 @RestController
 public class LogicController {
-    private final PlayerService playerService;
-    private final CardService cardService;
     private final ValidationService validationService;
     private final LogicService logicService;
     private final ActiveGameService activeGameService;
 
 
-    LogicController(PlayerService playerService, CardService cardService, ValidationService validationService, LogicService logicService, ActiveGameService activeGameService) {
-        this.playerService = playerService;
-        this.cardService = cardService;
+    LogicController(ValidationService validationService, LogicService logicService, ActiveGameService activeGameService) {
         this.validationService = validationService;
         this.logicService = logicService;
         this.activeGameService = activeGameService;

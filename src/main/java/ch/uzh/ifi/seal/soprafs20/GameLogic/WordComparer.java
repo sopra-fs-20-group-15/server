@@ -1,14 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
-
 import javax.persistence.Embeddable;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

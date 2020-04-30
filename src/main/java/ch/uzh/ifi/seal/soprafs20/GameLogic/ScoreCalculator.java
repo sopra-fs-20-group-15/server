@@ -3,8 +3,6 @@ package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 
-import java.util.Map;
-
 public class ScoreCalculator {
 
     public static int calculateScoreActivePlayer(PlayerEntity playerEntity, boolean validGuess) {

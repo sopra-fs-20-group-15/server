@@ -24,6 +24,56 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
+    /** Creates a player
+     * @Param: PlayerPostDTO: String username, String password,
+     * @Returns: PlayerGetDTO: Long id, String username, PlayerStatus status,
+     * @Throws: 409: The username exists already
+     * @Throws: 422: Unprocessable Entity; username or password is empty
+     * */
+    @PostMapping("/players")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public PlayerGetDTO createUser(@RequestBody PlayerPostDTO playerPostDTO) {
+        // convert API user to internal representation
+        PlayerEntity playerEntityInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(playerPostDTO);
+
+        // create user
+        PlayerEntity createdPlayerEntity = playerService.createUser(playerEntityInput);
+
+        // convert internal representation of user back to API
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdPlayerEntity);
+    }
+
+    /** Let a player login
+     * @Param: PlayerPutDTO: String username, String password,
+     * @Returns: PlayerGetDTO: Long id, String username, PlayerStatus status,
+     * @Throws: 401: the password is not correct for this player
+     * @Throws: 404: the player does not exist
+     * */
+    @PutMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public PlayerTokenDTO loginUser(@RequestBody PlayerPutDTO playerPutDTO){
+        PlayerEntity playerEntityInput =DTOMapper.INSTANCE.convertUserPutDTOtoEntity(playerPutDTO);
+        return DTOMapper.INSTANCE.convertEntityToUserTokenDTO(playerService.loginUser(playerEntityInput)) ;
+    }
+
+    /** Let a player logout
+     * @Param: PlayerTokenDTO: String token, Long id;
+     * @Throws: 404: the player does not exist
+     * @Throws: 409: The player is currently playing a game and cannot logout
+     * */
+    @PutMapping("/logout")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void logoutUser(@RequestBody PlayerTokenDTO playerTokenDTO){
+        PlayerEntity playerEntityInput = DTOMapper.INSTANCE.convertUserTokenDTOToEntity(playerTokenDTO);
+        playerService.logOutUser(playerEntityInput);
+    }
+
+    /** Gets a list of all players that have registered an account
+     * @Returns: List<PlayerGetDTO>: Long id, String username, PlayerStatus status,
+     * */
     @GetMapping("/players")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -39,52 +89,18 @@ public class PlayerController {
         return playerGetDTOS;
     }
 
+    /** Gets a list of all players that have registered an account
+     * @Param: String playerId; pathVariable
+     * @Returns: PlayerGetDTO: Long id, String username, PlayerStatus status,
+     * @Throws: 404: no player with this id exists
+     * */
     @GetMapping("/players/{playerId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public PlayerGetDTO getUser(@PathVariable String playerId) {
         PlayerEntity playerEntityInput = DTOMapper.INSTANCE.convertUserIdStringToEntity(playerId);
-        PlayerGetDTO playerGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(playerService.getUser(playerEntityInput));
+        PlayerGetDTO playerGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(playerService.getPlayerById(playerEntityInput.getId()));
         return playerGetDTO;
     }
-
-    @PostMapping("/players")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public PlayerGetDTO createUser(@RequestBody PlayerPostDTO playerPostDTO) {
-        // convert API user to internal representation
-        PlayerEntity playerEntityInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(playerPostDTO);
-
-        // create user
-        PlayerEntity createdPlayerEntity = playerService.createUser(playerEntityInput);
-
-        // convert internal representation of user back to API
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdPlayerEntity);
-    }
-
-    @PutMapping("/login")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public PlayerTokenDTO loginUser(@RequestBody PlayerPutDTO userputDTO){
-        PlayerEntity playerEntityInput =DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userputDTO);
-        return DTOMapper.INSTANCE.convertEntityToUserTokenDTO(playerService.loginUser(playerEntityInput)) ;
-    }
-
-    @PutMapping("/players/{playerId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ResponseBody
-    public void updateUser(@RequestBody PlayerPutUserIdDTO playerPutUserIdDTO, @PathVariable String playerId){
-        playerService.updateUser(DTOMapper.INSTANCE.convertUserPutUserIdDTOToEntity(playerPutUserIdDTO), playerId);
-
-    }
-
-    @PutMapping("/logout")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public void logoutUser(@RequestBody PlayerTokenDTO playerTokenDTO){
-        PlayerEntity playerEntityInput = DTOMapper.INSTANCE.convertUserTokenDTOToEntity(playerTokenDTO);
-        playerService.logOutUser(playerEntityInput) ;
-    }
-
 
 }

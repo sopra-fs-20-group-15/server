@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+/**LeaderBoardController: Shows statistics, for example how is the best Just One player. */
 
 @RestController
 public class LeaderBoardController {
@@ -18,7 +19,9 @@ public class LeaderBoardController {
     LeaderBoardController(LeaderBoardService leaderboardService) {
         this.leaderboardService = leaderboardService;
     }
-
+    /**Shows the LeaderBoard of all players. In there is how many rounds they played, how many points they got over all games etc.
+     * @Returns: List<LeaderBoardGetDTO>: int rank, int score, int gamesPlayed, String playerName,
+     * */
     @GetMapping("/leaderBoards")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

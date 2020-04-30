@@ -6,7 +6,6 @@ import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.LeaderBoardGetDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,38 +37,17 @@ public class PlayerService {
 
     }
 
+    /**Getters*/
+
     public PlayerRepository getPlayerRepository() {
         return playerRepository;
     }
 
-    public List<PlayerEntity> getUsers() {
-        return this.playerRepository.findAll();
-    }
-
     public PlayerEntity getPlayerById(long id){
         Optional<PlayerEntity> playerOp = playerRepository.findById(id);
-        if (playerOp.isEmpty()) throw new NotFoundException("No Game Setup with this id exists!");
+        if (playerOp.isEmpty()) throw new NotFoundException("No player with this id exists!");
         return playerOp.get();
 
-    }
-
-    public PlayerEntity createUser(PlayerEntity newPlayerEntity) {
-        newPlayerEntity.setToken(UUID.randomUUID().toString());
-        newPlayerEntity.setStatus(PlayerStatus.OFFLINE);
-        newPlayerEntity.setLeaderBoardScore(0);
-
-
-
-        checkIfUserExists(newPlayerEntity);
-
-        if (newPlayerEntity.getPassword().equals("")|| newPlayerEntity.getUsername().equals("")) throw new IllegalRegistrationInput("Username and/or password can't consist of an empty string!");
-
-        // saves the given entity but data is only persisted in the database once flush() is called
-        newPlayerEntity = playerRepository.save(newPlayerEntity);
-        playerRepository.flush();
-
-        log.debug("Created Information for PlayerEntity: {}", newPlayerEntity);
-        return newPlayerEntity;
     }
 
     public PlayerEntity getPlayerByToken(String token){
@@ -77,52 +55,6 @@ public class PlayerService {
         if (player == null) throw new PlayerNotAvailable("No playerEntity with same token as your session exists.");
         return player;
     }
-
-    public PlayerEntity loginUser(PlayerEntity potPlayerEntity){
-        PlayerEntity playerEntity = playerRepository.findByUsername(potPlayerEntity.getUsername());
-        if (playerEntity ==null) throw new PlayerNotAvailable(String.format("No playerEntity with this username exists."));
-        else if (playerEntity.getPassword().equals(potPlayerEntity.getPassword())) {
-            if (playerEntity.getStatus().equals(PlayerStatus.OFFLINE)) {
-                playerEntity.setStatus(PlayerStatus.ONLINE);
-            }
-            return playerEntity;
-        }
-        else throw new PlayerCredentialsWrong(String.format("Incorrect password."));
-    }
-
-    public void logOutUser(PlayerEntity playerEntityInput){
-        PlayerEntity playerEntity = playerRepository.findByToken(playerEntityInput.getToken());
-        if (playerEntity ==null) throw new PlayerNotAvailable("No playerEntity with same token as your session exists.");
-        else if (playerEntity.getStatus().equals(PlayerStatus.ONLINE)) {
-            for (GameEntity game: gameRepository.findAll()) {
-                if (game.getPlayers().contains(playerEntity)) throw new ConflictException("Can't logout while in a game session!");
-            }
-            playerEntity.setStatus(PlayerStatus.OFFLINE);
-        }
-        else throw new PlayerAlreadyLoggedOut();
-    }
-
-    public PlayerEntity getUser (PlayerEntity playerEntityInput){
-        Optional<PlayerEntity> userOp =this.playerRepository.findById(playerEntityInput.getId());
-        if (userOp.isEmpty()) throw new PlayerNotAvailable("No user with this id exists, that can be fetched.");
-        return userOp.get();
-
-    }
-
-    public void updateUser (PlayerEntity playerEntity, String userId){
-        Optional<PlayerEntity> userOp =this.playerRepository.findById(Long.parseLong(userId));
-        if (userOp.isEmpty()) throw new PlayerNotAvailable("No playerEntity with specified ID exists.");
-        else if (userOp.get().getToken().equals(playerEntity.getToken())) {
-            if (playerEntity.getUsername()!=null) {
-                if (playerEntity.getUsername().equals(userOp.get().getUsername()));
-                else if (this.playerRepository.findByUsername(playerEntity.getUsername())!=null) throw new UsernameAlreadyExists("Username is already in use!");
-                else userOp.get().setUsername(playerEntity.getUsername());
-            }
-        }
-        else throw new PlayerCredentialsWrong("You are not authorized to change this playerEntity, since tokens do not match.");
-    }
-
-
 
     /**
      * This is a helper method that will check the uniqueness criteria of the username and the name
@@ -141,4 +73,68 @@ public class PlayerService {
         }
 
     }
+
+    /** Creates a User
+     * @Param: PlayerEntity newPlayerEntity
+     * @Returns: PlayerEntity
+     * @Throws: 409: The username exists already
+     * @Throws: 422: Unprocessable Entity; username or password is empty
+     * */
+    public PlayerEntity createUser(PlayerEntity newPlayerEntity) {
+        newPlayerEntity.setToken(UUID.randomUUID().toString());
+        newPlayerEntity.setStatus(PlayerStatus.OFFLINE);
+        newPlayerEntity.setLeaderBoardScore(0);
+
+        checkIfUserExists(newPlayerEntity);
+
+        if (newPlayerEntity.getPassword().equals("")|| newPlayerEntity.getUsername().equals("")) throw new IllegalRegistrationInput("Username and/or password can't consist of an empty string!");
+
+        // saves the given entity but data is only persisted in the database once flush() is called
+        newPlayerEntity = playerRepository.save(newPlayerEntity);
+        playerRepository.flush();
+
+        log.debug("Created Information for PlayerEntity: {}", newPlayerEntity);
+        return newPlayerEntity;
+    }
+
+    /** Let a player login
+     * @Param: PlayerEntity
+     * @Returns: PlayerEntity
+     * @Throws: 401: the password is not correct for this player
+     * @Throws: 404: the player does not exist
+     * */
+    public PlayerEntity loginUser(PlayerEntity potPlayerEntity){
+        PlayerEntity playerEntity = playerRepository.findByUsername(potPlayerEntity.getUsername());
+        if (playerEntity ==null) throw new PlayerNotAvailable(String.format("No playerEntity with this username exists."));
+        else if (playerEntity.getPassword().equals(potPlayerEntity.getPassword())) {
+            if (playerEntity.getStatus().equals(PlayerStatus.OFFLINE)) {
+                playerEntity.setStatus(PlayerStatus.ONLINE);
+            }
+            return playerEntity;
+        }
+        else throw new UnauthorizedException(String.format("Incorrect password."));
+    }
+
+    /** Lets a player logout
+     * @Param: PlayerEntity
+     * @Throws: 404: the player does not exist
+     * @Throws: 409: The player is currently playing a game and cannot logout
+     * */
+    public void logOutUser(PlayerEntity playerEntityInput){
+        PlayerEntity playerEntity = playerRepository.findByToken(playerEntityInput.getToken());
+        if (playerEntity ==null) throw new PlayerNotAvailable("No playerEntity with same token as your session exists.");
+        else if (playerEntity.getStatus().equals(PlayerStatus.ONLINE)) {
+            for (GameEntity game: gameRepository.findAll()) {
+                if (game.getPlayers().contains(playerEntity)) throw new ConflictException("Can't logout while in a game session!");
+            }
+            playerEntity.setStatus(PlayerStatus.OFFLINE);
+        }
+        else throw new PlayerAlreadyLoggedOut();
+    }
+
+    public List<PlayerEntity> getUsers() {
+        return this.playerRepository.findAll();
+    }
+
+
 }
