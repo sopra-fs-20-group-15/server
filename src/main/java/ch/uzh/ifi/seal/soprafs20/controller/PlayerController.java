@@ -86,10 +86,5 @@ public class PlayerController {
         playerService.logOutUser(playerEntityInput) ;
     }
 
-    @GetMapping("/leaderBoards")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public List<LeaderBoardGetDTO> getLeaderBoard() {
-        return playerService.getLeaderBoard();
-    }
+
 }

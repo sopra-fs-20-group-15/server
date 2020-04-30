@@ -74,14 +74,17 @@ public class ActiveGameService {
             playerNames.add(playerService.getPlayerById(id).getUsername());
         }
         //Add bots
-        for (Bot bot: game.getNamesOfBots()){
+        for (Bot bot: game.getBots()){
             playerNames.add(bot.getName());
         }
         gameGetDTO.setPassivePlayerNames(playerNames);
         //Add the name of the active player to the list of the passive players and return list with all players
         List<String> playerNames2 = new ArrayList<String>();
-        for (String name: playerNames){playerNames2.add(name);}
-        playerNames2.add(gameGetDTO.getActivePlayerName());
+        for (PlayerEntity player : game.getPlayers()){playerNames2.add(player.getUsername());}
+        //Add bots
+        for (Bot bot: game.getBots()){
+            playerNames2.add(bot.getName());
+        }
         gameGetDTO.setPlayerNames(playerNames2);
         return gameGetDTO;
     }
@@ -164,7 +167,7 @@ public class ActiveGameService {
         for (PlayerEntity player : game.getPlayers()){
             playerNames.add(player.getUsername());
         }
-        for(Bot bot : game.getNamesOfBots()) playerNames.add(bot.getName());
+        for(Bot bot : game.getBots()) playerNames.add(bot.getName());
         activeGamePostDTO.setPlayerNames(playerNames);
         return activeGamePostDTO;
     }

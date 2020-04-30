@@ -289,47 +289,6 @@ public class PlayerControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    public void getLeaderBoardWorksWithNoPlayers() throws Exception {
-        List<LeaderBoardGetDTO> leaderBoardGetDTOS= new ArrayList<>();
-
-
-        // given
-        when(playerService.getLeaderBoard()).thenReturn(leaderBoardGetDTOS);
-
-        // when/then -> do the request + validate the result
-        MockHttpServletRequestBuilder postRequest = get("/leaderBoards");
-
-        // then
-        mockMvc.perform(postRequest)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(0)));
-    }
-
-    @Test
-    public void getLeaderBoardWorksWithPlayers() throws Exception {
-        List<LeaderBoardGetDTO> leaderBoardGetDTOS= new ArrayList<>();
-        LeaderBoardGetDTO leaderBoardGetDTO= new LeaderBoardGetDTO();
-        leaderBoardGetDTO.setPlayerName("Bilbo");
-        leaderBoardGetDTO.setScore(50000);
-        leaderBoardGetDTO.setRank(1);
-
-        leaderBoardGetDTOS.add(leaderBoardGetDTO);
-
-        // given
-        when(playerService.getLeaderBoard()).thenReturn(leaderBoardGetDTOS);
-
-        // when/then -> do the request + validate the result
-        MockHttpServletRequestBuilder postRequest = get("/leaderBoards");
-
-        // then
-        mockMvc.perform(postRequest)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(1)))
-                .andExpect(jsonPath("$[0].playerName", is("Bilbo")))
-                .andExpect(jsonPath("$[0].rank", is(1)))
-                .andExpect(jsonPath("$[0].score", is(50000)));
-    }
 
 
     /**

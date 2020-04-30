@@ -4,7 +4,7 @@ import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LeaderBoardGetDTO;
-import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
+import ch.uzh.ifi.seal.soprafs20.service.LeaderBoardService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,14 +20,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @WebAppConfiguration
 @SpringBootTest
-public class PlayerServiceIntegrationTestGetLeaderBoard {
+public class LeaderBoardServiceIntegrationTestGetLeaderBoard {
 
     @Qualifier("playerRepository")
     @Autowired
     private PlayerRepository playerRepository;
 
     @Autowired
-    private PlayerService playerService;
+    private LeaderBoardService leaderBoardService;
 
     PlayerEntity p1;
     PlayerEntity p2;
@@ -68,7 +68,7 @@ public class PlayerServiceIntegrationTestGetLeaderBoard {
 
     @Test
     public void getLeaderBoardWorksWithNoDuplicateScores() {
-        List<LeaderBoardGetDTO> list=playerService.getLeaderBoard();
+        List<LeaderBoardGetDTO> list= leaderBoardService.getLeaderBoard();
 
         //check if list has right order and right values
         assertEquals(3,list.size());
@@ -110,7 +110,7 @@ public class PlayerServiceIntegrationTestGetLeaderBoard {
         p5.setStatus(PlayerStatus.ONLINE);
         p5=playerRepository.save(p5);
 
-        List<LeaderBoardGetDTO> list=playerService.getLeaderBoard();
+        List<LeaderBoardGetDTO> list= leaderBoardService.getLeaderBoard();
 
         //check if list has right order and right values
         assertEquals(5,list.size());

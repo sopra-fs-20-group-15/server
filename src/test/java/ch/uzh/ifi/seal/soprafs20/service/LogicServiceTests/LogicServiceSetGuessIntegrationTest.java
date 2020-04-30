@@ -98,4 +98,19 @@ public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveG
         assertFalse(createdActiveGame.getHasBeenInitialized());
         assertEquals(11, createdActiveGame.getCardIds().size());
     }
+
+    @Test
+    public void activePlayerGivesIncorrectGuessAndTheCardStackIsEmpty() {
+        createdActiveGame.setCardIds(new ArrayList<Long>());
+
+        GuessPostDTO guessPostDTO = new GuessPostDTO();
+        guessPostDTO.setPlayerToken("Two");
+        guessPostDTO.setGuess("Tree");
+        logicService.setGuess(createdActiveGame, guessPostDTO.getGuess());
+        assertEquals(createdActiveGame.getGuess(), "Tree");
+        assertFalse(createdActiveGame.getIsValidGuess());
+        assertEquals(0,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("TwoName"));
+        assertFalse(createdActiveGame.getHasBeenInitialized());
+        assertEquals(0, createdActiveGame.getCardIds().size());
+    }
 }

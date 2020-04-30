@@ -46,31 +46,6 @@ public class PlayerService {
         return this.playerRepository.findAll();
     }
 
-    public List<LeaderBoardGetDTO> getLeaderBoard(){
-        List<PlayerEntity> list = this.playerRepository.findAll();
-        list.sort(Collections.reverseOrder());
-        List<LeaderBoardGetDTO> listLB = new ArrayList<>();
-        int displayRank=1;
-        int actualRank=1;
-        for (PlayerEntity player: list) {
-            LeaderBoardGetDTO leaderBoardGetDTO = new LeaderBoardGetDTO();
-            leaderBoardGetDTO.setPlayerName(player.getUsername());
-            leaderBoardGetDTO.setScore(player.getLeaderBoardScore());
-            leaderBoardGetDTO.setGamesPlayed(player.getGamesPlayed());
-            if (actualRank == 1) leaderBoardGetDTO.setRank(1);
-            else {
-                if (listLB.get(actualRank-2).getScore()==player.getLeaderBoardScore()) leaderBoardGetDTO.setRank(displayRank);
-                else {
-                    displayRank=actualRank;
-                    leaderBoardGetDTO.setRank(displayRank);
-                }
-            }
-            listLB.add(leaderBoardGetDTO);
-            actualRank++;
-        }
-        return listLB;
-    }
-
     public PlayerEntity getPlayerById(long id){
         Optional<PlayerEntity> playerOp = playerRepository.findById(id);
         if (playerOp.isEmpty()) throw new NotFoundException("No Game Setup with this id exists!");

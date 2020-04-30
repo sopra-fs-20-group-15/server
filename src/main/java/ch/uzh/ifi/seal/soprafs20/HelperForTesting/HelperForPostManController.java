@@ -1,5 +1,6 @@
-package ch.uzh.ifi.seal.soprafs20.controller;
+package ch.uzh.ifi.seal.soprafs20.HelperForTesting;
 
+import ch.uzh.ifi.seal.soprafs20.HelperForTesting.GodService;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.service.*;
 import org.springframework.http.HttpStatus;
@@ -14,20 +15,10 @@ import static java.lang.Long.parseLong;
  */
 @RestController
 public class HelperForPostManController {
-    private final PlayerService playerService;
-    private final CardService cardService;
-    private final GameSetUpService gameService;
-    private final ValidationService validationService;
-    private final LogicService logicService;
     private final GodService godService;
 
 
-    HelperForPostManController(PlayerService playerService, CardService cardService, ValidationService validationService, GameSetUpService gameService, LogicService logicService, GodService godService) {
-        this.playerService = playerService;
-        this.cardService = cardService;
-        this.validationService = validationService;
-        this.gameService = gameService;
-        this.logicService = logicService;
+    HelperForPostManController(GodService godService) {
         this.godService = godService;
     }
 
