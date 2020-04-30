@@ -39,7 +39,7 @@ public class GameSetUpEntity {
     @Column(nullable = true)
     private String password;
 
-    @Column
+    @Column(nullable = true)
     private Long activeGameId;
 
     @Column(nullable = false)
