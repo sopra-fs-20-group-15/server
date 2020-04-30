@@ -11,6 +11,7 @@ import java.util.Random;
 public class Devil implements Bot {
     private String botName;
     private String botToken;
+    private Random rand=new Random();
 
 
     @Override
@@ -43,7 +44,6 @@ public class Devil implements Bot {
 
     private String randomWord(){
         List<String> rndWords = new ArrayList<>(Arrays.asList("Paris", "Africa", "Bread", "Money", "Garden", "House", "Tree", "Table", "Chair", "Police", "Weapon" ));
-        Random rand = new Random();
         return rndWords.get(rand.nextInt(rndWords.size()));
     }
 

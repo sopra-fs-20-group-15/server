@@ -24,6 +24,7 @@ import java.util.Random;
 public class CardService {
 
     private final CardRepository cardRepository;
+    private final Random rand = new Random();
 
     @Autowired
     public CardService(@Qualifier("cardRepository") CardRepository cardRepository) {
@@ -41,15 +42,15 @@ public class CardService {
         if (!(cardRepository.findAll().isEmpty())) {
             return;
         }
-        BufferedReader bufReader = new BufferedReader(new FileReader("cardsEn.txt"));
-        ArrayList<String> listOfLines = new ArrayList<>();
-        String line = bufReader.readLine();
-        while (line != null) {
-            listOfLines.add(line);
-            line = bufReader.readLine();
+        ArrayList<String> listOfLines;
+        try (BufferedReader bufReader = new BufferedReader(new FileReader("cardsEn.txt"))){
+            listOfLines = new ArrayList<>();
+            String line = bufReader.readLine();
+            while (line != null) {
+                listOfLines.add(line);
+                line = bufReader.readLine();
+            }
         }
-        bufReader.close();
-
         for (int i = 0; i < listOfLines.size(); i= i+6) {
             CardEntity card = new CardEntity();
             List<String> words = new ArrayList<>();
@@ -75,7 +76,6 @@ public class CardService {
         }
         List<Long> cardIds = new ArrayList<>();
         List<CardEntity> allCards = cardRepository.findAll();
-        Random rand = new Random();
         int stackSize = 13;
         for (int i = 0; i < stackSize; i++){
             int randomIndex = rand.nextInt(allCards.size());

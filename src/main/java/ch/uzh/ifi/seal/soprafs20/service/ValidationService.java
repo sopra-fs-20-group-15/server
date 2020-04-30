@@ -44,7 +44,7 @@ public class ValidationService {
         if (playerByToken ==null) throw new PlayerNotAvailable("No player with same token as your session exists.");
         //Check, that player is active Player of that game
         GameEntity game = gameOp.get();
-        if (game.getActivePlayerId() == playerByToken.getId())
+        if (game.getActivePlayerId().equals(playerByToken.getId()))
             return true;
         else
             throw new UnauthorizedException("This player is not the active player!");
@@ -87,7 +87,7 @@ public class ValidationService {
         if (playerByToken == null) throw new PlayerNotAvailable("No player with same token as your session exists.");
         GameEntity game = gameOp.get();
         //Check that player is part of the game
-        if (game.getPassivePlayerIds().contains(playerByToken.getId()) || game.getActivePlayerId() == playerByToken.getId())
+        if (game.getPassivePlayerIds().contains(playerByToken.getId()) || game.getActivePlayerId().equals(playerByToken.getId()))
             return true;
         else
             throw new UnauthorizedException("This player is not part of the game!");
