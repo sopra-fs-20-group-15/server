@@ -54,7 +54,55 @@ public class orderStatisticsGetDTOListUnitTest {
     }
 
     @Test
-    public void orderStatisticsGetDTOWorks(){
+    public void orderStatisticsGetDTOWorksWithPositiveScores(){
+        list=logicService.orderStatisticsGetDTOList(list);
+        assertEquals(list.get(0).getPlayerName(),s1.getPlayerName());
+        assertEquals(list.get(1).getPlayerName(),s2.getPlayerName());
+        assertEquals(list.get(2).getPlayerName(),s3.getPlayerName());
+        assertEquals(list.get(3).getPlayerName(),s4.getPlayerName());
+        assertEquals(list.get(4).getPlayerName(),s5.getPlayerName());
+    }
+
+    @Test
+    public void orderStatisticsGetDTOWorksWithNegativeScores(){
+        s1.setScore(-1);
+        s2.setScore(-2);
+        s3.setScore(-3);
+        s4.setScore(-4);
+        s5.setScore(-5);
+
+        list=logicService.orderStatisticsGetDTOList(list);
+        assertEquals(list.get(0).getPlayerName(),s1.getPlayerName());
+        assertEquals(list.get(1).getPlayerName(),s2.getPlayerName());
+        assertEquals(list.get(2).getPlayerName(),s3.getPlayerName());
+        assertEquals(list.get(3).getPlayerName(),s4.getPlayerName());
+        assertEquals(list.get(4).getPlayerName(),s5.getPlayerName());
+    }
+
+    @Test
+    public void orderStatisticsGetDTOListWorksWithPositiveAndNegativeNumbers(){
+        s1.setScore(15);
+        s2.setScore(7);
+        s3.setScore(0);
+        s4.setScore(-1);
+        s5.setScore(-5);
+
+        list=logicService.orderStatisticsGetDTOList(list);
+        assertEquals(list.get(0).getPlayerName(),s1.getPlayerName());
+        assertEquals(list.get(1).getPlayerName(),s2.getPlayerName());
+        assertEquals(list.get(2).getPlayerName(),s3.getPlayerName());
+        assertEquals(list.get(3).getPlayerName(),s4.getPlayerName());
+        assertEquals(list.get(4).getPlayerName(),s5.getPlayerName());
+    }
+
+    @Test
+    public void orderStatisticsGetDTOListWorksWithDuplicateScores(){
+        s1.setScore(15);
+        s2.setScore(15);
+        s3.setScore(0);
+        s4.setScore(-1);
+        s5.setScore(-5);
+
         list=logicService.orderStatisticsGetDTOList(list);
         assertEquals(list.get(0).getPlayerName(),s1.getPlayerName());
         assertEquals(list.get(1).getPlayerName(),s2.getPlayerName());
