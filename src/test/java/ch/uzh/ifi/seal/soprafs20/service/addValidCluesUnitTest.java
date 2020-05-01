@@ -4,30 +4,24 @@ import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.WordComparer;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.mockito.internal.matchers.Null;
-import org.mockito.internal.verification.Only;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import static org.mockito.Mockito.*;
-
-import org.springframework.expression.spel.ast.NullLiteral;
-import static org.mockito.BDDMockito.given;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 @Transactional
 @WebAppConfiguration
@@ -35,8 +29,6 @@ import java.util.Map;
 public class addValidCluesUnitTest {
     @Autowired
     LogicService logicService;
-    @MockBean
-    WordComparer wordComparer;
     @MockBean
     PlayerRepository playerRepository;
     GameEntity game=new GameEntity();
@@ -65,34 +57,60 @@ public class addValidCluesUnitTest {
 
     @Test
     public void worksWhenAllCluesAreValid(){
-        Map<String, Integer> analyzedClueMap=new HashMap<>();
-        analyzedClueMap.put("house",0);
-        analyzedClueMap.put("fire",1);
-        analyzedClueMap.put("two",2);
-
-        clueMap.put("1","clue1");
-        clueMap.put("a1","clue2");
-        clueMap.put("d1","clue3");
+        clueMap.put("1","One");
+        clueMap.put("a1","Two");
+        clueMap.put("d1","Three");
 
         game.setClueMap(clueMap);
 
-
-        given(wordComparer.compareClues(Mockito.any(), Mockito.anyString())).willReturn(analyzedClueMap);
-        given(playerRepository.findByToken(Mockito.anyString())).will((InvocationOnMock invocation)
-        -> invocation.getArgument(0).equals("1") ? p1 : null);
-
+        when(playerRepository.findByToken("1")).thenReturn(p1);
 
         logicService.addValidClues(game);
 
-        System.out.println(game.getAnalyzedClues().get("house"));
         assertTrue(game.getValidCluesAreSet());
         assertEquals(3,game.getValidClues().size());
         assertTrue(game.getValidClues().containsKey("angel"));
         assertTrue(game.getValidClues().containsKey("devil"));
         assertTrue(game.getValidClues().containsKey("One"));
-        assertEquals("clue1",game.getValidClues().get("One"));
-        assertEquals("clue2",game.getValidClues().get("angel"));
-        assertEquals("clue3",game.getValidClues().get("devil"));
+        assertEquals("One",game.getValidClues().get("One"));
+        assertEquals("Two",game.getValidClues().get("angel"));
+        assertEquals("Three",game.getValidClues().get("devil"));
+    }
+
+    @Test
+    public void worksWhenSomeCluesAreValid(){
+        clueMap.put("1","One");
+        clueMap.put("a1","One");
+        clueMap.put("d1","Three");
+
+        game.setClueMap(clueMap);
+
+        when(playerRepository.findByToken("1")).thenReturn(p1);
+
+        logicService.addValidClues(game);
+
+        System.out.println(game.getValidClues().entrySet().toString());
+        assertTrue(game.getValidCluesAreSet());
+        assertEquals(1,game.getValidClues().size());
+        assertTrue(game.getValidClues().containsKey("devil"));
+        assertEquals("Three",game.getValidClues().get("devil"));
+    }
+
+    @Test
+    public void worksWhenNoCluesAreValid(){
+        clueMap.put("1","One");
+        clueMap.put("a1","One");
+        clueMap.put("d1","One");
+
+        game.setClueMap(clueMap);
+
+        when(playerRepository.findByToken("1")).thenReturn(p1);
+
+        logicService.addValidClues(game);
+
+        System.out.println(game.getValidClues().entrySet().toString());
+        assertTrue(game.getValidCluesAreSet());
+        assertEquals(0,game.getValidClues().size());
     }
 
 }
