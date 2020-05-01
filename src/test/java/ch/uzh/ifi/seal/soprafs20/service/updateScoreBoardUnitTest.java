@@ -14,7 +14,7 @@ import java.util.*;
 @Transactional
 @WebAppConfiguration
 @SpringBootTest
-public class UpdateScoreBoardIntegrationTest extends TestSETUPCreatesActiveGame {
+public class updateScoreBoardUnitTest extends TestSETUPCreatesActiveGame {
 
     @BeforeEach
     public void setup2() {

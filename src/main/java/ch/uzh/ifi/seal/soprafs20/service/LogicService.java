@@ -160,6 +160,7 @@ public class LogicService {
         List<Angel> angels = game.getAngels();
         for (int i = 0; i < angels.size(); i++){
             String clue = angels.get(i).giveClue(word, i);
+
             clueMap.put(angels.get(i).getToken(), clue);
         }
         List<Devil> devils = game.getDevils();
