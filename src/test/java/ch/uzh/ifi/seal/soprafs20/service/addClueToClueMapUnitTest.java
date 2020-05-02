@@ -55,7 +55,6 @@ public class addClueToClueMapUnitTest {
         assertEquals(1,game.getClueMap().size());
         assertTrue(game.getClueMap().containsKey(player.getToken()));
         assertEquals(cluePostDTO.getClue(),game.getClueMap().get(player.getToken()));
-        assertTrue(beforeTime<player.getTimePassed());
     }
 
     @Test
@@ -68,7 +67,6 @@ public class addClueToClueMapUnitTest {
         assertEquals(2,game.getClueMap().size());
         assertTrue(game.getClueMap().containsKey(player.getToken()));
         assertEquals(cluePostDTO.getClue(),game.getClueMap().get(player.getToken()));
-        assertTrue(beforeTime<player.getTimePassed());
     }
 }
 

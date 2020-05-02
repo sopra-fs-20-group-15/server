@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @WebAppConfiguration
@@ -49,6 +49,7 @@ public class botsAddCluesUnitTest {
 
         assertEquals(1, game.getClueMap().size());
         assertTrue(game.getClueMap().containsKey(angel.getToken()));
+        assertFalse(game.getClueMap().get(angel.getToken()).isBlank());
     }
 
     @Test
@@ -58,6 +59,7 @@ public class botsAddCluesUnitTest {
 
         assertEquals(1, game.getClueMap().size());
         assertTrue(game.getClueMap().containsKey(devil.getToken()));
+        assertFalse(game.getClueMap().get(devil.getToken()).isBlank());
     }
 
     @Test
@@ -67,7 +69,41 @@ public class botsAddCluesUnitTest {
         assertEquals(2, game.getClueMap().size());
         assertTrue(game.getClueMap().containsKey(devil.getToken()));
         assertTrue(game.getClueMap().containsKey(angel.getToken()));
+        assertFalse(game.getClueMap().get(devil.getToken()).isBlank());
+        assertFalse(game.getClueMap().get(angel.getToken()).isBlank());
+
     }
+
+    @Test
+    public void multipleAngelsAndDevilsGiveClues(){
+        Angel angel2=new Angel();
+        angel2.setName("Angel2");
+        angel2.setToken("a2");
+        Devil devil2=new Devil();
+        devil2.setName("Devil2");
+        devil2.setToken("d2");
+
+        List<Angel> angels=game.getAngels();
+        angels.add(angel2);
+        game.setAngels(angels);
+        List<Devil> devils=game.getDevils();
+        devils.add(devil2);
+        game.setDevils(devils);
+
+        logicService.botsAddClues(game, mysteryWord);
+
+        assertEquals(4, game.getClueMap().size());
+        assertTrue(game.getClueMap().containsKey(devil.getToken()));
+        assertFalse(game.getClueMap().get(devil.getToken()).isBlank());
+        assertTrue(game.getClueMap().containsKey(devil2.getToken()));
+        assertFalse(game.getClueMap().get(devil2.getToken()).isBlank());
+        assertTrue(game.getClueMap().containsKey(angel.getToken()));
+        assertFalse(game.getClueMap().get(angel.getToken()).isBlank());
+        assertTrue(game.getClueMap().containsKey(angel2.getToken()));
+        assertFalse(game.getClueMap().get(angel2.getToken()).isBlank());
+    }
+
+
 
     @Test
     public void doesNothingIfNoBots(){
