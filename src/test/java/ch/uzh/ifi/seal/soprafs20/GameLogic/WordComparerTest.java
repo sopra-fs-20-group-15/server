@@ -216,6 +216,4 @@ class WordComparerTest {
 
         assertFalse(wordComparer.compareMysteryWords(word1, word2));
     }
-
-
 }
