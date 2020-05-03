@@ -139,7 +139,7 @@ class WordComparerTest {
         assertEquals(words.get(1), actual.get(1));
     }
 
-    @Test
+    @Test  /**Too close means, that two words have the same word stem or are from the same word family*/
     void notASuitableBotClueTwoWordsTooClose() {
         WordComparer wordComparer = new WordComparer();
         ArrayList<String> words = new ArrayList<>();
