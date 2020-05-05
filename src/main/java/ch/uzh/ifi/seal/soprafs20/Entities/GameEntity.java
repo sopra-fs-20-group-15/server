@@ -3,7 +3,6 @@ package ch.uzh.ifi.seal.soprafs20.Entities;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,150 +15,105 @@ public class GameEntity {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = true)
-    private Boolean hasBeenInitialized;
+    @Column
+    private PlayerCollection playerCollection=new PlayerCollection();
 
-    @Column(nullable = true)
-    private Long activeCardId;
+    @Column
+    private Cards cards=new Cards();
 
-    @Column(nullable = true)
-    private String activeMysteryWord;
+    @Column
+    private Clues clues=new Clues();
 
-    @Column(nullable = true)
-    private Long activePlayerId;
+    @Column
+    private Guess guess=new Guess();
 
-    @Column(nullable = true)
-    private Boolean rightGuess;
+    @Column
+    private Turn turn=new Turn();
 
-    @Column(nullable = true)
-    private Boolean validCluesAreSet = false;
-
-    @ElementCollection
-    List<PlayerEntity> players;
-
-    @ElementCollection
-    private List<Angel> angels;
-
-    @ElementCollection
-    private List<Devil> devils;
-
-    @ElementCollection
-    List<Long> passivePlayerIds;
-
-    @ElementCollection
-    List<Long> CardIds;
-
-    @ElementCollection
-    Map<String, String> clueMap;
-
-    @ElementCollection
-    Map<String,String> validClues;
-
-    @ElementCollection
-    Map<String,Integer> analyzedClues;
-
-    @Embedded
+    @Column
     private Scoreboard scoreboard;
 
-    @Column
-    private String Guess;
 
-    @Column
-    private boolean isValidGuess;
-
-    @Column
-    private Long timeStart;
-
-    @Column(nullable = true)
-    private Boolean hasEnded;
 
     public void setTimeStart(Long timeStart) {
-        this.timeStart = timeStart;
+        turn.setTimeStart(timeStart);
     }
 
     public Long getTimeStart() {
-        return timeStart;
+        return turn.getTimeStart();
     }
 
     public Map<String, Integer> getAnalyzedClues() {
-        return analyzedClues;
+        return clues.getAnalyzedClues();
     }
 
     public void setAnalyzedClues(Map<String, Integer> analyzedClues) {
-        this.analyzedClues = analyzedClues;
+        clues.setAnalyzedClues(analyzedClues);
     }
 
     public void setValidCluesAreSet(Boolean validCluesAreSet) {
-        this.validCluesAreSet = validCluesAreSet;
+        clues.setValidCluesAreSet(validCluesAreSet);
     }
 
     public Boolean getValidCluesAreSet() {
-        return validCluesAreSet;
+        return clues.getValidCluesAreSet();
     }
 
     public void setValidClues(Map<String, String> validClues) {
-        this.validClues = validClues;
+        clues.setValidClues(validClues);
     }
 
     public Map<String, String> getValidClues() {
-        return validClues;
+        return clues.getValidClues();
     }
 
     public void setClueMap(Map<String, String> clueList) {
-        this.clueMap = clueList;
+        clues.setClueMap(clueList);
     }
 
     public Map<String, String> getClueMap() {
-        return clueMap;
+        return clues.getClueMap();
     }
 
     public List<PlayerEntity> getPlayers() {
-        return players;
+        return playerCollection.getPlayers();
     }
 
     public void setPlayers(List<PlayerEntity> players) {
-        this.players = players;
+        this.playerCollection.setPlayers(players);
     }
 
 
     public Long getActiveCardId() {
-        return activeCardId;
+        return cards.getActiveCardId();
     }
 
     public void setActiveCardId(Long cardId) {
-        this.activeCardId = cardId;
+        cards.setActiveCardId(cardId);
     }
 
     public String getActiveMysteryWord() {
-        return activeMysteryWord;
+        return cards.getActiveMysteryWord();
     }
 
     public void setActiveMysteryWord(String activeMysteryWord) {
-        this.activeMysteryWord = activeMysteryWord;
+        cards.setActiveMysteryWord(activeMysteryWord);
     }
 
     public Long getActivePlayerId() {
-        return activePlayerId;
+        return playerCollection.getActivePlayerId();
     }
 
     public Long getId() {
         return id;
     }
 
-    public Boolean getRightGuess() {
-        return rightGuess;
-    }
-
-    public void setRightGuess(Boolean rightGuess) {
-        this.rightGuess = rightGuess;
-    }
-
     public Boolean getHasBeenInitialized() {
-        return hasBeenInitialized;
+        return turn.getHasBeenInitialized();
     }
 
     public void setHasBeenInitialized(Boolean hasBeenInitialized) {
-        this.hasBeenInitialized = hasBeenInitialized;
+        turn.setHasBeenInitialized(hasBeenInitialized);;
     }
 
     public void setScoreboard(Scoreboard scoreboard) {
@@ -167,15 +121,15 @@ public class GameEntity {
     }
 
     public List<Long> getCardIds() {
-        return CardIds;
+        return cards.getCardIds();
     }
 
     public List<Long> getPassivePlayerIds() {
-        return passivePlayerIds;
+        return playerCollection.getPassivePlayerIds();
     }
 
     public void setActivePlayerId(Long activePlayerId) {
-        this.activePlayerId = activePlayerId;
+        playerCollection.setActivePlayerId(activePlayerId);
     }
 
     public void setId(Long id) {
@@ -187,62 +141,59 @@ public class GameEntity {
     }
 
     public void setAngels(List<Angel> angels) {
-        this.angels = angels;
+        playerCollection.setAngels(angels);
     }
 
     public List<Angel> getAngels() {
-        return angels;
+        return playerCollection.getAngels();
     }
 
     public void setDevils(List<Devil> devils) {
-        this.devils = devils;
+        playerCollection.setDevils(devils);
     }
 
     public List<Devil> getDevils() {
-        return devils;
+        return playerCollection.getDevils();
     }
 
     public int getNumOfBots(){
-        return devils.size()+angels.size();
+        return playerCollection.getAngels().size()+playerCollection.getAngels().size();
     }
 
     public String getGuess() {
-        return Guess;
+        return guess.getGuess();
     }
 
     public void setGuess(String guess) {
-        Guess = guess;
+        this.guess.setGuess(guess);
     }
 
     public void setCardIds(List<Long> cardIds) {
-        CardIds = cardIds;
+        cards.setCardIds(cardIds);
     }
 
     public void setIsValidGuess(boolean validGuess) {
-        isValidGuess = validGuess;
+        guess.setValidGuess(validGuess);
     }
 
     public boolean getIsValidGuess(){
-        return this.isValidGuess;
+        return guess.getIsValidGuess();
     }
 
     public Boolean getHasEnded() {
-        return hasEnded;
+        return turn.getHasEnded();
     }
 
     public void setHasEnded(Boolean hasEnded) {
-        this.hasEnded = hasEnded;
+        turn.setHasEnded(hasEnded);
     }
 
     public List<Bot> getBots(){
-        List<Bot> bots = new ArrayList<>();
-        bots.addAll(angels);
-        bots.addAll(devils);
-        return bots;
+        return playerCollection.getBots();
     }
 
     public void setPassivePlayerIds(List<Long> passivePlayerIds) {
-        this.passivePlayerIds = passivePlayerIds;
+        playerCollection.setPassivePlayerIds(passivePlayerIds);
     }
 
 
