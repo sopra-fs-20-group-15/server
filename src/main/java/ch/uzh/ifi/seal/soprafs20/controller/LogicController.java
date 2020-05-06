@@ -145,9 +145,7 @@ public class LogicController {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPassivePlayerOfGame(cluePostDTO.getPlayerToken(), gameIdLong);
-        GameEntity game = activeGameService.getGameById(gameIdLong);
-        if(game.getActiveMysteryWord().isBlank()) throw new ConflictException("Turn order violated : Mystery Word has not been chosen yet!");
-        logicService.giveClue(game,cluePostDTO);
+        logicService.giveClue(gameIdLong,cluePostDTO);
     }
 
     /**Gets a list with the valid clues
@@ -164,8 +162,7 @@ public class LogicController {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
-        GameEntity game = activeGameService.getGameById(gameIdLong);
-        return logicService.getClues(game);
+        return logicService.getClues(gameIdLong);
     }
 
     /**Gets names of the players, that have already submitted a clue
@@ -183,8 +180,7 @@ public class LogicController {
         if(!stringIsALong(gameId)) throw new BadRequestException("GameId has wrong format.");
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
-        GameEntity game = activeGameService.getGameById(gameIdLong);
-        return logicService.getCluePlayers(game);
+        return logicService.getCluePlayers(gameIdLong);
     }
 
     /**sets the guess and checks, if the guess was correct (set points based on that)
@@ -203,14 +199,7 @@ public class LogicController {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
         validationService.checkPlayerIsActivePlayerOfGame(guessPostDTO.getPlayerToken(), gameIdLong);
-        GameEntity game = activeGameService.getGameById(gameIdLong);
-        if (!game.getValidCluesAreSet()) throw new ConflictException("Turn order violated : No valid clues have been provided to you yet");
-        if (!game.getActiveMysteryWord().isBlank()) {
-            if (game.getGuess().isBlank()) {
-                logicService.setGuess(game, guessPostDTO.getGuess());
-            } else throw new NoContentException("The Guess has already been set");
-        }
-        else throw new NoContentException("The MysteryWord has not been set yet");
+        logicService.setGuess(gameIdLong, guessPostDTO.getGuess());
     }
 
     /**Get the guess and check, if it was valid

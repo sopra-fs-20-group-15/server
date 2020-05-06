@@ -1,6 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.Entities;
 
 import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
+import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
+import ch.uzh.ifi.seal.soprafs20.service.State;
 
 import javax.persistence.*;
 import java.util.List;
@@ -33,7 +35,17 @@ public class GameEntity {
     @Column
     private Scoreboard scoreboard;
 
+    @Column
+    private State stateForLogicService;
 
+
+    public State getStateForLogicService() {
+        return stateForLogicService;
+    }
+
+    public void setStateForLogicService(State stateForLogicService) {
+        this.stateForLogicService = stateForLogicService;
+    }
 
     public void setTimeStart(Long timeStart) {
         turn.setTimeStart(timeStart);
@@ -196,5 +208,21 @@ public class GameEntity {
         playerCollection.setPassivePlayerIds(passivePlayerIds);
     }
 
+
+    /**Draws card from stack and sets it as the current active card
+     *@Param: GameEntity
+     *@Returns: GameEntity
+     *@Throws: 409: Empty stack
+     *     */
+    public GameEntity drawCardFromStack(){
+        if (this.getCardIds().size() > 0){
+            List<Long> cardIds = this.getCardIds();
+            this.setActiveCardId(cardIds.remove(cardIds.size()-1));
+            return this;
+        }
+        else{
+            throw new ConflictException("The CardStack is empty! The game should have ended already!");
+        }
+    }
 
 }
