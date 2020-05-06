@@ -110,6 +110,7 @@ public class LogicService {
                 for (PlayerEntity player: game.getPlayers()) {
                     player.setTimePassed(null);
                 }
+                game.setRightGuess(false);
                 game.setValidCluesAreSet(false);
                 game.setClueMap(new HashMap<String, String>());
                 game.setValidClues(new HashMap<String, String>());
