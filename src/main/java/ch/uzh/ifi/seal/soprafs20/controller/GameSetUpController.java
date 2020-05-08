@@ -1,13 +1,16 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
+import ch.uzh.ifi.seal.soprafs20.Entities.ChatEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
+import ch.uzh.ifi.seal.soprafs20.repository.ChatRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.service.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +27,8 @@ public class GameSetUpController {
     private final GameSetUpService gameService;
 
 
-    GameSetUpController(PlayerService playerService, GameSetUpService gameService) {
+
+    GameSetUpController(PlayerService playerService, GameSetUpService gameService ){
         this.playerService = playerService;
         this.gameService = gameService;
     }
@@ -156,6 +160,4 @@ public class GameSetUpController {
             //add cards to repository
             return gameService.getLobbyInfo(gsId, playerToken);
     }
-
-
 }

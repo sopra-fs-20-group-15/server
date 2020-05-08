@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.Entities;
 
 import ch.uzh.ifi.seal.soprafs20.constant.GameType;
+import ch.uzh.ifi.seal.soprafs20.repository.ChatRepository;
 
 import javax.persistence.*;
 import java.util.List;
@@ -49,6 +50,10 @@ public class GameSetUpEntity {
     @ElementCollection
     List<String> playerTokens;
 
+    @OneToOne
+    @JoinColumn
+    private ChatEntity chat;
+
     public Long getId() {
         return id;
     }
@@ -71,6 +76,14 @@ public class GameSetUpEntity {
 
     public void setGameName(String gameName) {
         this.gameName = gameName;
+    }
+
+    public void setChat(ChatEntity chat) {
+        this.chat = chat;
+    }
+
+    public ChatEntity getChat() {
+        return chat;
     }
 
     /**Getters and Setters*/

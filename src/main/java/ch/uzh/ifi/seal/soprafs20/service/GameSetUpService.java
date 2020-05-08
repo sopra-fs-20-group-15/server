@@ -2,14 +2,19 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
+import ch.uzh.ifi.seal.soprafs20.Entities.ChatEntity;
+import ch.uzh.ifi.seal.soprafs20.chat.ChatMessage;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.ChatGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.ChatPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyOverviewGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.LobbyGetDTOMapper;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.LobbyOverviewGetDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +31,13 @@ public class GameSetUpService {
 
     private final PlayerService playerService;
     private final GameSetUpRepository gameSetUpRepository;
+    private final ChatService chatService;
 
     @Autowired
-    public GameSetUpService(@Qualifier("playerService") PlayerService playerService, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository) {
+    public GameSetUpService(@Qualifier("playerService") PlayerService playerService, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("chatService") ChatService chatService) {
         this.playerService = playerService;
         this.gameSetUpRepository = gameSetUpRepository;
+        this.chatService=chatService;
     }
 
     /**Getters*/
@@ -57,6 +64,7 @@ public class GameSetUpService {
                     if (game.getGameType().name().equals("PRIVATE")) {
                         if (game.getPassword() != null && !game.getPassword().isEmpty()) {
                             GameSetUpEntity newGame = gameSetUpRepository.save(game);
+                            newGame.setChat(chatService.createChat());
                             gameSetUpRepository.flush();
                             return newGame;
                         }
@@ -67,6 +75,7 @@ public class GameSetUpService {
                     // If it is a public game
                     else {
                         GameSetUpEntity newGame = gameSetUpRepository.save(game);
+                        newGame.setChat(chatService.createChat());
                         gameSetUpRepository.flush();
                         return newGame;
                     }
@@ -198,5 +207,6 @@ public class GameSetUpService {
             throw new UnauthorizedException("Player has not joined the lobby and therefore can't access lobby information!");
         return LobbyGetDTOMapper.convertGameSetUpEntityToLobbyGetDTO(getGameSetupById(gameSetupId), playerService.getPlayerRepository());
     }
+
 
 }
