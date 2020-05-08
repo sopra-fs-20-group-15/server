@@ -137,12 +137,12 @@ public class ChatControllerTest {
         ChatGetDTO chatGetDTO=new ChatGetDTO();
         chatGetDTO.setMessage("1");
         chatGetDTO.setPlayerName("1");
-        chatGetDTO.setTime("1");
+        chatGetDTO.setTime(1L);
         list.add(chatGetDTO);
         chatGetDTO=new ChatGetDTO();
         chatGetDTO.setMessage("2");
         chatGetDTO.setPlayerName("2");
-        chatGetDTO.setTime("2");
+        chatGetDTO.setTime(2L);
         list.add(chatGetDTO);
 
         // mock the functions
@@ -155,7 +155,7 @@ public class ChatControllerTest {
         mockMvc.perform(postRequest).andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].playerName", is("1")))
                 .andExpect(jsonPath("$[0].message", is("1")))
-                .andExpect(jsonPath("$[0].time", is("1")))
+                .andExpect(jsonPath("$[0].time", is(1L)))
                 .andExpect(jsonPath("$[1].playerName", is("2")))
                 .andExpect(jsonPath("$[1].message", is("2")))
                 .andExpect(jsonPath("$[1].time", is("2")));

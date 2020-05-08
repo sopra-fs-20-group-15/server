@@ -3,7 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.rest.dto;
 public class ChatGetDTO {
     String playerName;
     String message;
-    String time;
+    Long time;
 
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
@@ -21,11 +21,11 @@ public class ChatGetDTO {
         return message;
     }
 
-    public void setTime(String time) {
+    public void setTime(Long time) {
         this.time = time;
     }
 
-    public String getTime() {
+    public Long getTime() {
         return time;
     }
 }
