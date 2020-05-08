@@ -155,10 +155,10 @@ public class ChatControllerTest {
         mockMvc.perform(postRequest).andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].playerName", is("1")))
                 .andExpect(jsonPath("$[0].message", is("1")))
-                .andExpect(jsonPath("$[0].time", is(1L)))
+                .andExpect(jsonPath("$[0].time", is(1)))
                 .andExpect(jsonPath("$[1].playerName", is("2")))
                 .andExpect(jsonPath("$[1].message", is("2")))
-                .andExpect(jsonPath("$[1].time", is("2")));
+                .andExpect(jsonPath("$[1].time", is(2)));
     }
 
     @Test
