@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.WordComparer;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
@@ -22,12 +23,12 @@ import java.util.*;
 public class LSSGiveClues implements LogicServiceState{
 
     private final WordComparer wordComparer;
-    private final PlayerRepository playerRepository;
+    private final PlayerService playerService;
 
     @Autowired
-    public LSSGiveClues(@Qualifier("playerRepository") PlayerRepository playerRepository) {
+    public LSSGiveClues(@Qualifier("playerService") PlayerService playerService) {
         this.wordComparer = new WordComparer();
-        this.playerRepository = playerRepository;
+        this.playerService = playerService;
     }
 
     /**sets the timer for game*/
@@ -45,7 +46,7 @@ public class LSSGiveClues implements LogicServiceState{
     }
 
     public String setMysteryWord(GameEntity game, Long wordId){
-        throw new ConflictException("The MysteryWord has already been set!");
+        throw new NoContentException("The MysteryWord has already been set!");
 
     }
 
@@ -64,8 +65,8 @@ public class LSSGiveClues implements LogicServiceState{
         Map<String,String> validClues = new HashMap<>();
         for (Map.Entry<String,String> entry: game.getClueMap().entrySet()){
             //put human players' clues into validClues
-            if (playerRepository.findByToken(entry.getKey())!=null) {
-                if (game.getAnalyzedClues().get(entry.getValue())==0) validClues.put(playerRepository.findByToken(entry.getKey()).getUsername(),
+            if (playerService.getPlayerByToken(entry.getKey())!=null) {
+                if (game.getAnalyzedClues().get(entry.getValue())==0) validClues.put(playerService.getPlayerByToken(entry.getKey()).getUsername(),
                         entry.getValue());
             }
             //put bots' clues into validClues
@@ -91,7 +92,8 @@ public class LSSGiveClues implements LogicServiceState{
         Map<String, String> clueMap =game.getClueMap();
         clueMap.put(cluePostDTO.getPlayerToken(),cluePostDTO.getClue());
         game.setClueMap(clueMap);
-        setTimePassed(game,playerRepository.findByToken(cluePostDTO.getPlayerToken()));
+
+        setTimePassed(game, playerService.getPlayerByToken(cluePostDTO.getPlayerToken()));
     }
 
     public void giveClue(GameEntity game, CluePostDTO cluePostDTO){

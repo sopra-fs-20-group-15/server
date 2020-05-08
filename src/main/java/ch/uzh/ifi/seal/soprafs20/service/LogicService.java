@@ -50,7 +50,7 @@ public class LogicService {
         this.gameService= gameService;
         this.playerService = playerService;
         this.possibleStates.put(State.ChooseMysteryWord, new LSStateChooseMysteryWord(cardService));
-        this.possibleStates.put(State.GiveClues, new LSSGiveClues( playerRepository));
+        this.possibleStates.put(State.GiveClues, new LSSGiveClues( playerService));
         this.possibleStates.put(State.GiveGuess, new LSSGiveGuess());
         this.possibleStates.put(State.WordReveal, new LSSWordReveal());
         this.possibleStates.put(State.hasEnded, new LSSGameHasEnded());

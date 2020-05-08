@@ -13,6 +13,7 @@ import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import ch.uzh.ifi.seal.soprafs20.service.ActiveGameService;
 import ch.uzh.ifi.seal.soprafs20.service.CardService;
+import ch.uzh.ifi.seal.soprafs20.service.State;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class LogicServiceIntegrationTestSetMysteryWord extends TestSETUPCreatesA
     CardEntity card;
     @BeforeEach
     public void setup2() {
+        createdActiveGame.setStateForLogicService(State.ChooseMysteryWord);
         createdActiveGame.setActiveMysteryWord("");
         createdActiveGame.drawCardFromStack();
         card=logicService.getCardFromGameById(createdActiveGame.getId());
@@ -96,7 +98,7 @@ public class LogicServiceIntegrationTestSetMysteryWord extends TestSETUPCreatesA
 
     @Test
     public void setMysteryWordsFailsBecauseMysteryWordAlreadySet() {
-        createdActiveGame.setActiveMysteryWord("Sugus");
+        logicService.setMysteryWord(createdActiveGame.getId(), 1L);
         assertThrows(NoContentException.class, ()->{logicService.setMysteryWord(createdActiveGame.getId(),1L);});
     }
 

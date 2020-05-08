@@ -49,7 +49,7 @@ public class LSSGiveGuess implements LogicServiceState{
     }
 
     public String setMysteryWord(GameEntity game, Long wordId){
-        throw new ConflictException("The MysteryWord has already been set!");
+        throw new NoContentException("The MysteryWord has already been set!");
 
     }
 

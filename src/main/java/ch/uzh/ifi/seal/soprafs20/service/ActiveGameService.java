@@ -145,6 +145,7 @@ public class ActiveGameService {
     /**Initializes Scoreboard, Clues and Guesses*/
     protected GameEntity furtherInitialize(GameEntity game){
         //further initialization
+        game.setStateForLogicService(State.WordReveal);
         game.setHasBeenInitialized(false);
         game.setHasEnded(false);
         game.setValidCluesAreSet(false);

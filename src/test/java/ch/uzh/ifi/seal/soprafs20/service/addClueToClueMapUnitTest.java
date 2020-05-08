@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
+import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class addClueToClueMapUnitTest {
     @MockBean
-    PlayerService playerService;
+    PlayerRepository playerRepository;
     @Autowired
     LSSGiveClues lSSGiveClues;
     GameEntity game=new GameEntity();
@@ -48,7 +49,7 @@ public class addClueToClueMapUnitTest {
     }
     @Test
     public void addClueToClueMapWorksCorrectlyOnEmptyMap(){
-        when(playerService.getPlayerByToken(Mockito.anyString())).thenReturn(player);
+        when(playerRepository.findByToken(Mockito.anyString())).thenReturn(player);
 
         lSSGiveClues.addClueToClueMap(game,cluePostDTO);
 
@@ -59,7 +60,7 @@ public class addClueToClueMapUnitTest {
 
     @Test
     public void addClueToClueMapWorksCorrectlyOnMapWithEntries(){
-        when(playerService.getPlayerByToken(Mockito.anyString())).thenReturn(player);
+        when(playerRepository.findByToken(Mockito.anyString())).thenReturn(player);
         game.getClueMap().put("pseudoToken","pseudoClue");
 
         lSSGiveClues.addClueToClueMap(game,cluePostDTO);

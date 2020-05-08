@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class LSSWordReveal implements LogicServiceState{
     }
 
     public String setMysteryWord(GameEntity game, Long wordId){
-        throw new ConflictException("The MysteryWord has already been set!");
+        throw new NoContentException("The MysteryWord has already been set!");
 
     }
 
