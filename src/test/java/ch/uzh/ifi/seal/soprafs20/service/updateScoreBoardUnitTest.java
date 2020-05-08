@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,16 +17,19 @@ import java.util.*;
 @SpringBootTest
 public class updateScoreBoardUnitTest extends TestSETUPCreatesActiveGame {
 
+    @Autowired
+    LSSGiveGuess lssGiveGuess;
+
     @BeforeEach
     public void setup2() {
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Gremlin");
-        logicService.giveClue(createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
 
         cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("Nutcracker");
-        logicService.giveClue(createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
 
         createdActiveGame.setGuess("Shoe");
         createdActiveGame.setIsValidGuess(true);
@@ -40,7 +44,7 @@ public class updateScoreBoardUnitTest extends TestSETUPCreatesActiveGame {
         Map scoreBefore= Map.copyOf(createdActiveGame.getScoreboard().getScore());
         Map scoreBoard=createdActiveGame.getScoreboard().getScore();
 
-        logicService.updateScoreboard(createdActiveGame);
+        lssGiveGuess.updateScoreboard(createdActiveGame);
 
         assertNotEquals(scoreBefore.get(p1.getUsername()),scoreBoard.get(p1.getUsername()));
         assertNotEquals(scoreBefore.get(p2.getUsername()),scoreBoard.get(p2.getUsername()));
@@ -72,7 +76,7 @@ public class updateScoreBoardUnitTest extends TestSETUPCreatesActiveGame {
         Map scoreBefore= Map.copyOf(createdActiveGame.getScoreboard().getScore());
         Map scoreBoard=createdActiveGame.getScoreboard().getScore();
 
-        logicService.updateScoreboard(createdActiveGame);
+        lssGiveGuess.updateScoreboard(createdActiveGame);
 
         assertNotEquals(scoreBefore.get(p1.getUsername()),scoreBoard.get(p1.getUsername()));
         assertNotEquals(scoreBefore.get(p2.getUsername()),scoreBoard.get(p2.getUsername()));
@@ -106,7 +110,7 @@ public class updateScoreBoardUnitTest extends TestSETUPCreatesActiveGame {
 
         createdActiveGame.setIsValidGuess(false);
 
-        logicService.updateScoreboard(createdActiveGame);
+        lssGiveGuess.updateScoreboard(createdActiveGame);
 
         assertEquals(scoreBefore.get(p1.getUsername()),scoreBoard.get(p1.getUsername()));
         assertNotEquals(scoreBefore.get(p2.getUsername()),scoreBoard.get(p2.getUsername()));

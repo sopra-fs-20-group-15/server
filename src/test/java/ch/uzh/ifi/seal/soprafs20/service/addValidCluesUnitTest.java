@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class addValidCluesUnitTest {
     @Autowired
-    LogicService logicService;
+    LSSGiveClues lSSGiveClues;
     @MockBean
     PlayerRepository playerRepository;
     GameEntity game=new GameEntity();
@@ -65,7 +65,7 @@ public class addValidCluesUnitTest {
 
         when(playerRepository.findByToken("1")).thenReturn(p1);
 
-        logicService.addValidClues(game);
+        lSSGiveClues.addValidClues(game);
 
         assertTrue(game.getValidCluesAreSet());
         assertEquals(3,game.getValidClues().size());
@@ -87,7 +87,7 @@ public class addValidCluesUnitTest {
 
         when(playerRepository.findByToken("1")).thenReturn(p1);
 
-        logicService.addValidClues(game);
+        lSSGiveClues.addValidClues(game);
 
         System.out.println(game.getValidClues().entrySet().toString());
         assertTrue(game.getValidCluesAreSet());
@@ -106,7 +106,7 @@ public class addValidCluesUnitTest {
 
         when(playerRepository.findByToken("1")).thenReturn(p1);
 
-        logicService.addValidClues(game);
+        lSSGiveClues.addValidClues(game);
 
         System.out.println(game.getValidClues().entrySet().toString());
         assertTrue(game.getValidCluesAreSet());

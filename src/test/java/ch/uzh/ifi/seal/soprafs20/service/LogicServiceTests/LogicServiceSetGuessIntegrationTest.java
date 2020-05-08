@@ -48,7 +48,7 @@ public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveG
     public void setup2() {
         createdActiveGame.setActiveMysteryWord("");
         createdActiveGame.setTimeStart(123L);
-        logicService.drawCardFromStack(createdActiveGame);
+        createdActiveGame.drawCardFromStack();
         card=logicService.getCardFromGameById(createdActiveGame.getId());
         List<String> list=new ArrayList<>();
         list.add("Elf");
@@ -62,11 +62,11 @@ public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveG
         CluePostDTO cluePostDTO=new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Gremlin");
-        logicService.giveClue(createdActiveGame,cluePostDTO);
+        logicService.giveClue(createdActiveGame.getId(),cluePostDTO);
 
         cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("Nutcracker");
-        logicService.giveClue(createdActiveGame,cluePostDTO);
+        logicService.giveClue(createdActiveGame.getId(),cluePostDTO);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveG
         GuessPostDTO guessPostDTO = new GuessPostDTO();
         guessPostDTO.setPlayerToken("One");
         guessPostDTO.setGuess("Shoe");
-        logicService.setGuess(createdActiveGame, guessPostDTO.getGuess());
+        logicService.setGuess(createdActiveGame.getId(), guessPostDTO.getGuess());
         assertEquals(createdActiveGame.getGuess(), "Shoe");
         assertTrue(createdActiveGame.getIsValidGuess());
         for (Map.Entry<String, Integer> entry: scoresBefore.entrySet()) {
@@ -91,7 +91,7 @@ public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveG
         GuessPostDTO guessPostDTO = new GuessPostDTO();
         guessPostDTO.setPlayerToken("Two");
         guessPostDTO.setGuess("Tree");
-        logicService.setGuess(createdActiveGame, guessPostDTO.getGuess());
+        logicService.setGuess(createdActiveGame.getId(), guessPostDTO.getGuess());
         assertEquals(createdActiveGame.getGuess(), "Tree");
         assertFalse(createdActiveGame.getIsValidGuess());
         assertEquals(0,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("TwoName"));
@@ -106,7 +106,7 @@ public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveG
         GuessPostDTO guessPostDTO = new GuessPostDTO();
         guessPostDTO.setPlayerToken("Two");
         guessPostDTO.setGuess("Tree");
-        logicService.setGuess(createdActiveGame, guessPostDTO.getGuess());
+        logicService.setGuess(createdActiveGame.getId(), guessPostDTO.getGuess());
         assertEquals(createdActiveGame.getGuess(), "Tree");
         assertFalse(createdActiveGame.getIsValidGuess());
         assertEquals(0,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("TwoName"));

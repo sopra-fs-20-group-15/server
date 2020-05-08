@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.ScoreCalculator;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
@@ -35,6 +36,20 @@ public class LSStateChooseMysteryWord implements LogicServiceState {
         throw new ConflictException("You cannot initialize in this phase!");
     }
 
+    protected void botsAddClues(GameEntity game, String word){
+        Map<String, String> clueMap =game.getClueMap();
+        List<Angel> angels = game.getAngels();
+        for (int i = 0; i < angels.size(); i++){
+            String clue = angels.get(i).giveClue(word, i);
+            clueMap.put(angels.get(i).getToken(), clue);
+        }
+        List<Devil> devils = game.getDevils();
+        for (int j = 0; j < devils.size(); j++){
+            String clue = devils.get(j).giveClue(word, j);
+            clueMap.put(devils.get(j).getToken(), clue);
+        }
+    }
+
     public String setMysteryWord(GameEntity game, Long wordId){
         //set mystery word
         CardEntity card = cardService.getCardById(game.getActiveCardId());
@@ -42,6 +57,8 @@ public class LSStateChooseMysteryWord implements LogicServiceState {
         game.setActiveMysteryWord(word);
         //Switch over to the next state
         game.setStateForLogicService(State.GiveClues);
+        // let bots give their clues
+        botsAddClues(game, game.getActiveMysteryWord());
         return word;
 
     }

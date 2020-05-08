@@ -95,16 +95,17 @@ public class LSSGiveClues implements LogicServiceState{
     }
 
     public void giveClue(GameEntity game, CluePostDTO cluePostDTO){
-        //Check if player has already given clue, if not let him commit a clue
-        if (game.getClueMap().get(cluePostDTO.getPlayerToken())==null) {
-            addClueToClueMap(game,cluePostDTO);
-        }
-        else throw new UnauthorizedException("You have already submitted a clue for this round!");
         //Check if all players have given clues, if so set validClues
         if (game.getClueMap().size()==game.getPlayers().size()+game.getNumOfBots()-1){
             addValidClues(game);
             setTimeStart(game);
+            game.setStateForLogicService(State.GiveGuess);
         }
+        //Check if player has already given clue, if not let him commit a clue
+        else if (game.getClueMap().get(cluePostDTO.getPlayerToken())==null) {
+            addClueToClueMap(game,cluePostDTO);
+        }
+        else throw new UnauthorizedException("You have already submitted a clue for this round!");
     }
 
     public List<ClueGetDTO> getClues(GameEntity game)

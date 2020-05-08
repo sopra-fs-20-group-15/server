@@ -37,7 +37,7 @@ public class LogicServiceIntegrationTestSetMysteryWord extends TestSETUPCreatesA
     @BeforeEach
     public void setup2() {
         createdActiveGame.setActiveMysteryWord("");
-        logicService.drawCardFromStack(createdActiveGame);
+        createdActiveGame.drawCardFromStack();
         card=logicService.getCardFromGameById(createdActiveGame.getId());
         List<String> list=new ArrayList<>();
         list.add("Elf");

@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 public class createListOfCluesGetDTOsUnitTest {
     @Autowired
+    LSSGiveGuess lssGiveGuess;
+    @Autowired
     LogicService logicService;
     GameEntity game=new GameEntity();
     Map<String, String> validClues=new HashMap<>();
@@ -36,7 +38,7 @@ public class createListOfCluesGetDTOsUnitTest {
 
     @Test
     public void createListOfCluesGetDTOWorksWithFilledMap(){
-        List<ClueGetDTO> list=logicService.createListOfClueGetDTOs(game);
+        List<ClueGetDTO> list=lssGiveGuess.createListOfClueGetDTOs(game);
         assertEquals(3, list.size());
         assertEquals("Joe",list.get(0).getPlayerName());
         assertEquals("clue1",list.get(0).getClue());
@@ -49,7 +51,7 @@ public class createListOfCluesGetDTOsUnitTest {
     @Test
     public void createListOfCluesGetDTOWorksWithEmptyMap(){
         game.setValidClues(new HashMap<>());
-        List<ClueGetDTO> list=logicService.createListOfClueGetDTOs(game);
+        List<ClueGetDTO> list=lssGiveGuess.createListOfClueGetDTOs(game);
         assertTrue(list.isEmpty());
     }
 }

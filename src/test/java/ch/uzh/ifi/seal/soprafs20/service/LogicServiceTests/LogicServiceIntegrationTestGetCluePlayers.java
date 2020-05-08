@@ -125,17 +125,17 @@ public class LogicServiceIntegrationTestGetCluePlayers {
 
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("TwoClue");
-        logicService.giveClue(createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
 
         cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("ThreeClue");
-        logicService.giveClue(createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
         Map<String,String> test= createdActiveGame.getClueMap();
         test.put("Angel_1", "Test");
         createdActiveGame.setClueMap(test);
         assertTrue(createdActiveGame.getValidClues().isEmpty());
 
-        List<PlayerNameDTO> playerNames= logicService.getCluePlayers(createdActiveGame);
+        List<PlayerNameDTO> playerNames= logicService.getCluePlayers(createdActiveGame.getId());
         assertEquals(3, playerNames.size());
         assertEquals(playerNames.get(0).getPlayerName(), "Angel_Nr_1");
         assertEquals(playerNames.get(1).getPlayerName(), p2.getUsername());
@@ -148,7 +148,7 @@ public class LogicServiceIntegrationTestGetCluePlayers {
 
         assertTrue(createdActiveGame.getValidClues().isEmpty());
 
-        List<PlayerNameDTO> playerNames= logicService.getCluePlayers(createdActiveGame);
+        List<PlayerNameDTO> playerNames= logicService.getCluePlayers(createdActiveGame.getId());
         assertEquals(0, playerNames.size());
         assertNotNull(playerNames);
     }

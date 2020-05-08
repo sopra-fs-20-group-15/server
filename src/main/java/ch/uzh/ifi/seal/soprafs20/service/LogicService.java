@@ -38,7 +38,7 @@ public class LogicService {
     private final ActiveGameService gameService;
     private final PlayerService playerService;
 
-    private HashMap<State, LogicServiceState> possibleStates;
+    private HashMap<State, LogicServiceState> possibleStates = new HashMap<>();
     private LogicServiceState state;
 
     @Autowired
@@ -53,7 +53,7 @@ public class LogicService {
         this.possibleStates.put(State.GiveClues, new LSSGiveClues( playerRepository));
         this.possibleStates.put(State.GiveGuess, new LSSGiveGuess());
         this.possibleStates.put(State.WordReveal, new LSSWordReveal());
-        this.possibleStates.put(State.hasEnded, new LSSWordReveal());
+        this.possibleStates.put(State.hasEnded, new LSSGameHasEnded());
     }
 
     protected GameEntity getGame(Long gameId){
@@ -115,15 +115,14 @@ public class LogicService {
     public String setMysteryWord(Long gameId, Long wordId){
         GameEntity game = getGame(gameId);
             //set mystery word
-            state.setMysteryWord(game, wordId);
-            /**Kaffeeeis why heere?*/
-            // let bots give their clues
-            botsAddClues(game, game.getActiveMysteryWord());
+            String word = state.setMysteryWord(game, wordId);
+            //Update State
+            game = getGame(gameId);
             //check if active player is playing a game exclusively with bots, if so set validClues
             if (game.getPassivePlayerIds().isEmpty()){
-                addValidClues(game);
-                setTimeStart(game);
+                state.giveClue(game, new CluePostDTO());
             }
+            return word;
     }
 
     /**Get Mystery Word
@@ -193,7 +192,7 @@ public class LogicService {
 
 
     /**Orders the items of a list*/
-    protected List<StatisticsGetDTO> orderStatisticsGetDTOList(List<StatisticsGetDTO> rankScorePlayerNameList){
+    public List<StatisticsGetDTO> orderStatisticsGetDTOList(List<StatisticsGetDTO> rankScorePlayerNameList){
         //Sort with insertion sort (since max. 7 human players, time complexity is not that important(if more players, quick sort would have been used))
         for(int i = 1; i < rankScorePlayerNameList.size(); i++){
             StatisticsGetDTO current = rankScorePlayerNameList.get(i);

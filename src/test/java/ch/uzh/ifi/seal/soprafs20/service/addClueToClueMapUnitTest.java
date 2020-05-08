@@ -27,7 +27,7 @@ public class addClueToClueMapUnitTest {
     @MockBean
     PlayerService playerService;
     @Autowired
-    LogicService logicService;
+    LSSGiveClues lSSGiveClues;
     GameEntity game=new GameEntity();
     Map<String, String> clueMap=new HashMap<>();
     CluePostDTO cluePostDTO=new CluePostDTO();
@@ -50,7 +50,7 @@ public class addClueToClueMapUnitTest {
     public void addClueToClueMapWorksCorrectlyOnEmptyMap(){
         when(playerService.getPlayerByToken(Mockito.anyString())).thenReturn(player);
 
-        logicService.addClueToClueMap(game,cluePostDTO);
+        lSSGiveClues.addClueToClueMap(game,cluePostDTO);
 
         assertEquals(1,game.getClueMap().size());
         assertTrue(game.getClueMap().containsKey(player.getToken()));
@@ -62,7 +62,7 @@ public class addClueToClueMapUnitTest {
         when(playerService.getPlayerByToken(Mockito.anyString())).thenReturn(player);
         game.getClueMap().put("pseudoToken","pseudoClue");
 
-        logicService.addClueToClueMap(game,cluePostDTO);
+        lSSGiveClues.addClueToClueMap(game,cluePostDTO);
 
         assertEquals(2,game.getClueMap().size());
         assertTrue(game.getClueMap().containsKey(player.getToken()));

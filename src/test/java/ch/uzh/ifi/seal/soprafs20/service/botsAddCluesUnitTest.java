@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class botsAddCluesUnitTest {
     @Autowired
-    LogicService logicService;
+    LSStateChooseMysteryWord lsStateChooseMysteryWord;
     Angel angel=new Angel();
     Devil devil=new Devil();
     GameEntity game=new GameEntity();
@@ -45,7 +45,7 @@ public class botsAddCluesUnitTest {
     @Test
     public void angelGivesClue(){
         game.setDevils(new ArrayList<>());
-        logicService.botsAddClues(game, mysteryWord);
+        lsStateChooseMysteryWord.botsAddClues(game, mysteryWord);
 
         assertEquals(1, game.getClueMap().size());
         assertTrue(game.getClueMap().containsKey(angel.getToken()));
@@ -55,7 +55,7 @@ public class botsAddCluesUnitTest {
     @Test
     public void devilGivesClue(){
         game.setAngels(new ArrayList<>());
-        logicService.botsAddClues(game, mysteryWord);
+        lsStateChooseMysteryWord.botsAddClues(game, mysteryWord);
 
         assertEquals(1, game.getClueMap().size());
         assertTrue(game.getClueMap().containsKey(devil.getToken()));
@@ -64,7 +64,7 @@ public class botsAddCluesUnitTest {
 
     @Test
     public void angelAndDevilGiveClue(){
-        logicService.botsAddClues(game, mysteryWord);
+        lsStateChooseMysteryWord.botsAddClues(game, mysteryWord);
 
         assertEquals(2, game.getClueMap().size());
         assertTrue(game.getClueMap().containsKey(devil.getToken()));
@@ -90,7 +90,7 @@ public class botsAddCluesUnitTest {
         devils.add(devil2);
         game.setDevils(devils);
 
-        logicService.botsAddClues(game, mysteryWord);
+        lsStateChooseMysteryWord.botsAddClues(game, mysteryWord);
 
         assertEquals(4, game.getClueMap().size());
         assertTrue(game.getClueMap().containsKey(devil.getToken()));
@@ -109,7 +109,7 @@ public class botsAddCluesUnitTest {
     public void doesNothingIfNoBots(){
         game.setAngels(new ArrayList<>());
         game.setDevils(new ArrayList<>());
-        logicService.botsAddClues(game, mysteryWord);
+        lsStateChooseMysteryWord.botsAddClues(game, mysteryWord);
 
         assertEquals(0, game.getClueMap().size());
     }

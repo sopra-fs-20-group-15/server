@@ -30,7 +30,7 @@ public class LogicServiceIntegrationTestGetClues extends TestSETUPCreatesActiveG
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Clue");
         createdActiveGame.setTimeStart(123L);
-        logicService.giveClue(createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
     }
 
     @Test
@@ -40,10 +40,10 @@ public class LogicServiceIntegrationTestGetClues extends TestSETUPCreatesActiveG
 
         cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("Table");
-        logicService.giveClue(createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
 
         assertFalse(createdActiveGame.getValidClues().isEmpty());
-        List<ClueGetDTO> listOfClues = logicService.getClues(createdActiveGame);
+        List<ClueGetDTO> listOfClues = logicService.getClues(createdActiveGame.getId());
 
         assertEquals(2, listOfClues.size());
 
@@ -88,10 +88,10 @@ public class LogicServiceIntegrationTestGetClues extends TestSETUPCreatesActiveG
 
         cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("Table");
-        logicService.giveClue(createdActiveGame, cluePostDTO);
+        logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
 
         assertFalse(createdActiveGame.getValidClues().isEmpty());
-        List<ClueGetDTO> listOfClues = logicService.getClues(createdActiveGame);
+        List<ClueGetDTO> listOfClues = logicService.getClues(createdActiveGame.getId());
 
         assertEquals(4, listOfClues.size());
 
@@ -110,7 +110,7 @@ public class LogicServiceIntegrationTestGetClues extends TestSETUPCreatesActiveG
 
     @Test
     public void validCluesHaveNotBeenSetYet() {
-        assertThrows(NoContentException.class, () -> {logicService.getClues(createdActiveGame); });
+        assertThrows(NoContentException.class, () -> {logicService.getClues(createdActiveGame.getId()); });
     }
 
 }

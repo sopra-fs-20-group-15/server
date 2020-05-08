@@ -23,7 +23,7 @@ public class LogicServiceIntegrationTestHasGameEnded extends TestSETUPCreatesAct
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Clue");
-        logicService.giveClue( createdActiveGame, cluePostDTO);
+        logicService.giveClue( createdActiveGame.getId(), cluePostDTO);
         logicService.initializeTurn(createdActiveGame.getId());
     }
 
