@@ -26,6 +26,8 @@ public class LogicServiceIntegrationTestInizializeTurn extends TestSETUPCreatesA
         //Evaluation
         assertEquals(initializedGame.getActiveMysteryWord(), "");
         assertEquals(initializedGame.getHasEnded(), false);
+        assertEquals(initializedGame.getRightGuess(), false);
+        assertEquals(initializedGame.getRightGuess(), false);
         assertEquals(initializedGame.getValidCluesAreSet(), false);
         assertEquals(initializedGame.getClueMap(), new HashMap<String, String>());
         assertEquals(initializedGame.getValidClues(), new HashMap<String, String>());

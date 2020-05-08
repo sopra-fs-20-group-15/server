@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
+import ch.uzh.ifi.seal.soprafs20.chat.ChatMessage;
 import ch.uzh.ifi.seal.soprafs20.constant.GameType;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import org.mapstruct.Mapper;
@@ -71,5 +72,10 @@ public interface DTOMapper {
 
     @Mapping(source = "username", target = "playerName")
     PlayerNameDTO convertPlayerEntityToPlayerNameDTO(PlayerEntity playerEntity);
+
+    @Mapping(source = "playerName", target = "playerName")
+    @Mapping(source = "message", target = "message")
+    @Mapping(source = "time", target = "time")
+    ChatGetDTO convertChatMessageToChatGetDTO(ChatMessage chatMessage);
 
 }
