@@ -27,20 +27,12 @@ public class WordComparer {
         } catch(IOException ex) {
             mysteryStem = mysteryWord.toLowerCase();
         }
-        ArrayList<String> wordStems = new ArrayList<>();
-        for (String word : clues) {
-            String stem;
-            try {
-                stem = apiRequester.getWordStem(word.toLowerCase());
-            } catch(IOException ex) {
-                stem = word.toLowerCase();
-            }//get the word stem from API
-            wordStems.add(stem);    //add stem to stemList
-        }
+        ArrayList<String> wordStems = this.getClueStems(clues);
+
         for (int i = 0; i < clues.size(); i++) {
             int count = -1;
             //check that it doesn't contain mysteryWord
-            if (clues.get(i).toLowerCase().contains(mysteryStem) || wordStems.get(i).equals(mysteryStem)){
+            if (this.toCloseToMysteryWord(mysteryWord, mysteryStem, clues.get(i), wordStems.get(i))){
                 count++;
             }
             for (int j = 0; j < clues.size(); j++) {
@@ -53,6 +45,60 @@ public class WordComparer {
         }
 
         return returnMap;
+    }
+
+    //for efficiency reason we give this method the stems, so we minimize api Requests
+    protected boolean toCloseToMysteryWord(String mWord, String mStem, String clue, String clueStem){
+        mWord = mWord.toLowerCase();
+        clue = clue.toLowerCase();
+        //Compare their stems
+        if(clue.contains(mStem) || mWord.contains(clueStem)||clueStem.equals(mStem)){
+            return true;
+        }
+        //make sure clue doesn't contain MysteryWord, neither in reversed
+        if (this.containsMysteryWord(mWord, clue)){
+            return true;
+        }
+        //Checks that it's not to close to mysteryWord
+        if (this.closeWords(mWord, clue)) {
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean containsMysteryWord(String mWord, String clue){
+        if (mWord.length() == 0 ){  //makes sure there is no out of bounds error
+            return true;
+        }
+        int j = mWord.length()-1;
+        int i = 0;
+        for (char c : clue.toLowerCase().toCharArray()){
+            if (c == mWord.toLowerCase().charAt(i)){
+                i++;
+            }
+            if (c == mWord.toLowerCase().charAt(j)){
+                j--;
+            }
+            if (i == mWord.length() || j == -1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private ArrayList<String> getClueStems(List<String> clues) {
+        ApiRequester apiRequester = new ApiRequester();
+        ArrayList<String> wordStems = new ArrayList<>();
+        for (String word : clues) {
+            String stem;
+            try {
+                stem = apiRequester.getWordStem(word.toLowerCase());
+            } catch(IOException ex) {
+                stem = word.toLowerCase();
+            }//get the word stem from API
+            wordStems.add(stem);    //add stem to stemList
+        }
+        return wordStems;
     }
 
     public List<String> notSuitableBotClue(List<String> words, String mysteryWord){

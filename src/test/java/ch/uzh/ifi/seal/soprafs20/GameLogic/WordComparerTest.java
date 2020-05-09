@@ -12,6 +12,26 @@ class WordComparerTest {
 
 
     @Test
+    void clueContainsMysteryWord() {
+        WordComparer wordComparer = new WordComparer();
+        String clue1 = "Love";
+        String clue2 = "Lemflowervaarre";
+        String mWord = "love";
+        assertTrue(wordComparer.containsMysteryWord(mWord, clue1));
+        assertTrue(wordComparer.containsMysteryWord(mWord, clue2));
+    }
+
+    @Test
+    void clueContainsReversedMysteryWord() {
+        WordComparer wordComparer = new WordComparer();
+        String clue1 = "evoL";
+        String clue2 = "eeVvooLL";
+        String mWord = "love";
+        assertTrue(wordComparer.containsMysteryWord(mWord, clue1));
+        assertTrue(wordComparer.containsMysteryWord(mWord, clue2));
+    }
+
+    @Test
     void noDuplicateInClues() {
         WordComparer wordComparer = new WordComparer();
         ArrayList<String> words = new ArrayList<>();
