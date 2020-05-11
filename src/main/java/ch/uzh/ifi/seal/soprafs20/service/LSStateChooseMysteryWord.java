@@ -57,6 +57,7 @@ public class LSStateChooseMysteryWord implements LogicServiceState {
         game.setActiveMysteryWord(word);
         //Switch over to the next state
         game.setStateForLogicService(State.GiveClues);
+        game.setTimeStart(System.currentTimeMillis());
         // let bots give their clues
         botsAddClues(game, game.getActiveMysteryWord());
         return word;
@@ -67,7 +68,7 @@ public class LSStateChooseMysteryWord implements LogicServiceState {
         throw new ConflictException("The MysteryWord has not been set yet!");
     }
 
-    public void giveClue(GameEntity game, CluePostDTO cluePostDTO){
+    public void giveClue(Long GameId, CluePostDTO cluePostDTO){
         throw new ConflictException("The MysteryWord has to be chosen first!");
     }
 

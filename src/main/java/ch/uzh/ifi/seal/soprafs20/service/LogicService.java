@@ -36,24 +36,24 @@ public class LogicService {
     private final GameRepository gameRepository;
     private final CardService cardService;
     private final ActiveGameService gameService;
-    private final PlayerRepository playerService;
+    private final PlayerService playerService;
 
     private HashMap<State, LogicServiceState> possibleStates = new HashMap<>();
     private LogicServiceState state;
 
     @Autowired
-    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository, CardService cardService, ActiveGameService gameService, PlayerRepository playerService) {
+    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository, CardService cardService, ActiveGameService gameService, PlayerService playerService, LSStateChooseMysteryWord lsStateChooseMysteryWord, LSSGiveClues lssGiveClues, LSSGiveGuess lssGiveGuess, LSSWordReveal lssWordReveal, LSSGameHasEnded lssGameHasEnded) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.wordComparer = new WordComparer();
         this.cardService = cardService;
         this.gameService= gameService;
         this.playerService = playerService;
-        this.possibleStates.put(State.ChooseMysteryWord, new LSStateChooseMysteryWord(cardService));
-        this.possibleStates.put(State.GiveClues, new LSSGiveClues( playerService));
-        this.possibleStates.put(State.GiveGuess, new LSSGiveGuess());
-        this.possibleStates.put(State.WordReveal, new LSSWordReveal());
-        this.possibleStates.put(State.hasEnded, new LSSGameHasEnded());
+        this.possibleStates.put(State.ChooseMysteryWord, lsStateChooseMysteryWord);
+        this.possibleStates.put(State.GiveClues, lssGiveClues);
+        this.possibleStates.put(State.GiveGuess, lssGiveGuess);
+        this.possibleStates.put(State.WordReveal, lssWordReveal);
+        this.possibleStates.put(State.hasEnded, lssGameHasEnded);
     }
 
     protected GameEntity getGame(Long gameId){
@@ -120,7 +120,7 @@ public class LogicService {
             game = getGame(gameId);
             //check if active player is playing a game exclusively with bots, if so set validClues
             if (game.getPassivePlayerIds().isEmpty()){
-                state.giveClue(game, new CluePostDTO());
+                state.giveClue(game.getId(), new CluePostDTO());
             }
             return word;
     }
@@ -142,7 +142,7 @@ public class LogicService {
      *      * */
     public void giveClue(Long gameId, CluePostDTO cluePostDTO){
         GameEntity game = getGame(gameId);
-        state.giveClue(game, cluePostDTO);
+        state.giveClue(game.getId(), cluePostDTO);
     }
 
     /**Let's players get the valid clues
@@ -256,7 +256,9 @@ public class LogicService {
             updateLeaderBoard(game);
             return true;
         }
-        else return false;
+        else {
+            state.initializeTurn(game);
+            return false;}
     }
 
     /**Get amount of remaining cards

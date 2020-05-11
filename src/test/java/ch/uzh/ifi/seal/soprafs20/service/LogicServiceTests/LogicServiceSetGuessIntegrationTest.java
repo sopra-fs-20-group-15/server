@@ -14,6 +14,7 @@ import ch.uzh.ifi.seal.soprafs20.rest.dto.GuessPostDTO;
 import ch.uzh.ifi.seal.soprafs20.service.ActiveGameService;
 import ch.uzh.ifi.seal.soprafs20.service.GameSetUpService;
 import ch.uzh.ifi.seal.soprafs20.service.LogicService;
+import ch.uzh.ifi.seal.soprafs20.service.State;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveG
 
     @BeforeEach
     public void setup2() {
+        createdActiveGame.setStateForLogicService(State.ChooseMysteryWord);
         createdActiveGame.setActiveMysteryWord("");
         createdActiveGame.setTimeStart(123L);
         createdActiveGame.drawCardFromStack();

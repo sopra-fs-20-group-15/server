@@ -114,8 +114,8 @@ public class LogicServiceIntegrationTestGetCluePlayers {
         createdGame =gameSetUpService.createGame(game);
 
         createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
-        createdActiveGame.setActiveMysteryWord("Test");
-        createdActiveGame.setTimeStart(123L);
+        logicService.initializeTurn(createdActiveGame.getId());
+        logicService.setMysteryWord(createdActiveGame.getId(), 1L);
     }
 
     @Test

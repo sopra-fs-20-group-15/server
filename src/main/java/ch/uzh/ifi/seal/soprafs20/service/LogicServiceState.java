@@ -13,7 +13,7 @@ public interface LogicServiceState {
 
     public String getMysteryWord(GameEntity game);
 
-    public void giveClue(GameEntity game, CluePostDTO cluePostDTO);
+    public void giveClue(Long gameId, CluePostDTO cluePostDTO);
 
     public List<ClueGetDTO> getClues(GameEntity game);
 

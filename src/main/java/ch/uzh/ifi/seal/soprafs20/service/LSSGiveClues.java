@@ -24,11 +24,13 @@ public class LSSGiveClues implements LogicServiceState{
 
     private final WordComparer wordComparer;
     private final PlayerRepository playerRepository;
+    private final ActiveGameService gameService;
 
     @Autowired
-    public LSSGiveClues(@Qualifier("playerRepository") PlayerRepository playerRepository) {
+    public LSSGiveClues(@Qualifier("playerRepository") PlayerRepository playerRepository, ActiveGameService gameService) {
         this.wordComparer = new WordComparer();
         this.playerRepository = playerRepository;
+        this.gameService = gameService;
     }
 
     /**sets the timer for game*/
@@ -96,7 +98,8 @@ public class LSSGiveClues implements LogicServiceState{
         setTimePassed(game, playerRepository.findByToken(cluePostDTO.getPlayerToken()));
     }
 
-    public void giveClue(GameEntity game, CluePostDTO cluePostDTO){
+    public void giveClue(Long gameId, CluePostDTO cluePostDTO){
+        GameEntity game = gameService.getGameById(gameId);
         //Check if player has already given clue, if not let him commit a clue
         if (game.getClueMap().get(cluePostDTO.getPlayerToken())==null) {
             addClueToClueMap(game,cluePostDTO);

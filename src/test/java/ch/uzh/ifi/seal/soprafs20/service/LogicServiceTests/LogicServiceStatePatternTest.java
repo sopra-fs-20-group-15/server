@@ -32,7 +32,40 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @SpringBootTest
 public class LogicServiceStatePatternTest {
 
-    
+    protected GameSetUpEntity game = new GameSetUpEntity();
+
+    protected GameSetUpEntity createdGame;
+    protected GameEntity  createdActiveGame;
+
+    protected PlayerEntity p1;
+    protected PlayerEntity p2;
+    protected PlayerEntity p3;
+
+    //Services
+    protected final GameSetUpService gameSetUpService;
+    protected final LogicService logicService;
+    protected final PlayerService playerService;
+    protected final CardService cardService;
+    protected final ActiveGameService gameService;
+    protected final LSSGiveClues lssGiveClues;
+
+    //Repositories
+    protected final PlayerRepository playerRepository;
+    protected final GameSetUpRepository gameSetUpRepository;
+    protected final GameRepository gameRepository;
+
+    @Autowired
+    public LogicServiceStatePatternTest(@Qualifier("cardService") CardService cardService, @Qualifier("logicService") LogicService logicService, @Qualifier("gameSetUpService") GameSetUpService gameSetUpService,  @Qualifier("playerService") PlayerService playerService, @Qualifier("playerRepository") PlayerRepository playerRepository, ActiveGameService activeGameService, @Qualifier("gameRepository") GameRepository gameRepository ,@Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("LSSGiveClues")LSSGiveClues lssGiveClues) {
+        this.cardService = cardService;
+        this.logicService = logicService;
+        this.gameSetUpService = gameSetUpService;
+        this.playerService = playerService;
+        this.playerRepository = playerRepository;
+        this.gameService = activeGameService;
+        this.gameRepository = gameRepository;
+        this.gameSetUpRepository = gameSetUpRepository;
+        this.lssGiveClues =lssGiveClues;
+    }
 
     @BeforeTransaction
     public void clean(){
@@ -90,7 +123,7 @@ public class LogicServiceStatePatternTest {
 
     @Test
     public void ChangesStateCorrectly() {
-        System.out.println(createdActiveGame.getActiveCardId());
+
         logicService.setMysteryWord(createdActiveGame.getId(), 1L);
         assertEquals(createdActiveGame.getStateForLogicService(), State.GiveClues);
 
@@ -99,13 +132,16 @@ public class LogicServiceStatePatternTest {
         cluePostDTO.setPlayerToken("One");
         cluePostDTO.setClue("Pancake");
         logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
-        cluePostDTO.setPlayerToken("Two");
+        cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("Table");
         logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
-        cluePostDTO.setPlayerToken("Three");
-        cluePostDTO.setClue("Mole");
-        logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
         assertEquals(createdActiveGame.getStateForLogicService(), State.GiveGuess);
+
+        logicService.setGuess(createdActiveGame.getId(), "123");
+        assertEquals(createdActiveGame.getStateForLogicService(), State.WordReveal);
+
+        logicService.hasGameEnded(createdActiveGame.getId());
+        assertEquals(createdActiveGame.getStateForLogicService(), State.ChooseMysteryWord);
 
 
     }

@@ -57,7 +57,7 @@ public class LSSGiveGuess implements LogicServiceState{
         return game.getActiveMysteryWord();
     }
 
-    public void giveClue(GameEntity game, CluePostDTO cluePostDTO){
+    public void giveClue(Long GameId, CluePostDTO cluePostDTO){
         throw new ConflictException("All clues have already been given!");
     }
 

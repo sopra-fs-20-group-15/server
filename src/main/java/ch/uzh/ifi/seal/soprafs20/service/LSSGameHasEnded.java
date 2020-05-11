@@ -25,7 +25,7 @@ public class LSSGameHasEnded implements LogicServiceState{
         throw new ConflictException("The game has ended!");
     }
 
-    public void giveClue(GameEntity game, CluePostDTO cluePostDTO){
+    public void giveClue(Long GameId, CluePostDTO cluePostDTO){
         throw new ConflictException("The game has ended!");
     }
 
