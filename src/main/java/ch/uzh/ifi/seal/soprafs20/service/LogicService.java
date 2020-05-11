@@ -257,7 +257,6 @@ public class LogicService {
             return true;
         }
         else {
-            state.initializeTurn(game);
             return false;}
     }
 

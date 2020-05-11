@@ -143,7 +143,6 @@ public class GameServiceIntegrationCreateActiveGameTest {
         assertNull(createdActiveGame.getTimeStart());
         assertEquals(createdActiveGame.getAnalyzedClues(), new HashMap<String, Integer>());
         assertEquals(createdActiveGame.getValidClues(), new HashMap<String, String>());
-        assertFalse(createdActiveGame.getHasBeenInitialized());
     }
 
     @Test

@@ -19,9 +19,6 @@ public class GameEntity {
     private Long id;
 
     @Column(nullable = true)
-    private Boolean hasBeenInitialized;
-
-    @Column(nullable = true)
     private Long activeCardId;
 
     @Column(nullable = true)
@@ -29,12 +26,6 @@ public class GameEntity {
 
     @Column(nullable = true)
     private Long activePlayerId;
-
-    @Column(nullable = true)
-    private Boolean rightGuess;
-
-    @Column(nullable = true)
-    private Boolean validCluesAreSet = false;
 
     @ElementCollection
     List<PlayerEntity> players;
@@ -104,14 +95,6 @@ public class GameEntity {
         this.analyzedClues = analyzedClues;
     }
 
-    public void setValidCluesAreSet(Boolean validCluesAreSet) {
-        this.validCluesAreSet = validCluesAreSet;
-    }
-
-    public Boolean getValidCluesAreSet() {
-        return validCluesAreSet;
-    }
-
     public void setValidClues(Map<String, String> validClues) {
         this.validClues = validClues;
     }
@@ -159,22 +142,6 @@ public class GameEntity {
 
     public Long getId() {
         return id;
-    }
-
-    public Boolean getRightGuess() {
-        return rightGuess;
-    }
-
-    public void setRightGuess(Boolean rightGuess) {
-        this.rightGuess = rightGuess;
-    }
-
-    public Boolean getHasBeenInitialized() {
-        return hasBeenInitialized;
-    }
-
-    public void setHasBeenInitialized(Boolean hasBeenInitialized) {
-        this.hasBeenInitialized = hasBeenInitialized;
     }
 
     public void setScoreboard(Scoreboard scoreboard) {

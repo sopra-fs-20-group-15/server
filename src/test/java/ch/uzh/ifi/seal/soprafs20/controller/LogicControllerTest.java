@@ -167,8 +167,6 @@ public class LogicControllerTest {
         Map<String, String> map= new HashMap<>();
         map.put("Test", "Test");
         game.setValidClues(map);
-        game.setValidCluesAreSet(true);
-
         /**
          doReturn(true).when(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.any(),Mockito.any()));
          doReturn(game).when(gameService.getGameById(Mockito.any()));*/
@@ -428,7 +426,6 @@ public class LogicControllerTest {
     @Test
     public void validCluesNotSetYet() throws Exception {
         GameEntity game=new GameEntity();
-        game.setValidCluesAreSet(false);
 
 
         given(validationService.checkPlayerIsPartOfGame(Mockito.anyString(),Mockito.anyLong())).willReturn(true);

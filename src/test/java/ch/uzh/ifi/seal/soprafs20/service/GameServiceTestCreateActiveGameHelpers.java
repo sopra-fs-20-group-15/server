@@ -103,9 +103,6 @@ public class GameServiceTestCreateActiveGameHelpers{
 
         gameService.furtherInitialize(game);
 
-        assertFalse(game.getHasBeenInitialized());
-        assertFalse(game.getHasEnded());
-        assertFalse(game.getValidCluesAreSet());
         assertNotNull(game.getClueMap());
         assertNotNull(game.getScoreboard());
         assertNotNull(game.getValidClues());

@@ -146,9 +146,6 @@ public class ActiveGameService {
     protected GameEntity furtherInitialize(GameEntity game){
         //further initialization
         game.setStateForLogicService(State.WordReveal);
-        game.setHasBeenInitialized(false);
-        game.setHasEnded(false);
-        game.setValidCluesAreSet(false);
         game.setClueMap(new HashMap<String,String>());
         game.setScoreboard(new Scoreboard());
         game.getScoreboard().initializeMap(game.getPlayers());
@@ -210,7 +207,7 @@ public class ActiveGameService {
      * */
     public void deleteActiveGame(long gameId){
         GameEntity game = getGameById(gameId);
-        if (!game.getHasEnded()){throw new ConflictException("The game cannot be deleted before it has ended");}
+        if (game.getStateForLogicService() != State.hasEnded){throw new ConflictException("The game cannot be deleted before it has ended");}
         gameRepository.deleteById(game.getId());
     }
 

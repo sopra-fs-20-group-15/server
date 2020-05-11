@@ -5,9 +5,14 @@ import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
 import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
-import ch.uzh.ifi.seal.soprafs20.service.State;
+import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs20.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +26,11 @@ import java.util.Map;
 @Transactional
 @SpringBootTest
 public class LogicServiceIntegrationTestSetMysteryWord extends TestSETUPCreatesActiveGame {
+
+    @Autowired
+    public LogicServiceIntegrationTestSetMysteryWord(@Qualifier("cardService") CardService cardService, @Qualifier("gameSetUpService") GameSetUpService gameSetUpService, @Qualifier("logicService") LogicService logicService, @Qualifier("playerService") PlayerService playerService, @Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("gameRepository") GameRepository gameRepository, @Qualifier("activeGameService") ActiveGameService activeGameService, LSStateChooseMysteryWord lsStateChooseMysteryWord, LSSGiveClues lssGiveClues, LSSGiveGuess lssGiveGuess, LSSWordReveal lssWordReveal, LSSGameHasEnded lssGameHasEnded) {
+        super(cardService, logicService, gameSetUpService, playerService, playerRepository, activeGameService, gameRepository, gameSetUpRepository, lsStateChooseMysteryWord, lssGiveClues, lssGiveGuess, lssWordReveal, lssGameHasEnded);
+    }
 
     CardEntity card;
     @BeforeEach
@@ -40,14 +50,13 @@ public class LogicServiceIntegrationTestSetMysteryWord extends TestSETUPCreatesA
 
     @Test
     public void setMysteryWordsWorksWithOnlyHumanPlayers() {
-
         logicService.setMysteryWord(createdActiveGame.getId(),1L);
         assertEquals(createdActiveGame.getActiveMysteryWord(), logicService.getCardFromGameById(createdActiveGame.getId()).getWords().get(0));
-        assertFalse(createdActiveGame.getValidCluesAreSet());
     }
 
     @Test
     public void setMysteryWordWorksWithBotsOnlyAsPassivePlayers() {
+        logicService.setMysteryWord(createdActiveGame.getId(),1L);
         // remove human players and add bots
         createdActiveGame.setPassivePlayerIds(new ArrayList<>());
 
@@ -78,9 +87,7 @@ public class LogicServiceIntegrationTestSetMysteryWord extends TestSETUPCreatesA
         createdActiveGame.getPlayers().remove(1);
 
         //check that mysteryWord is set and that validClues are set bc there are no human players aside from the active one
-        logicService.setMysteryWord(createdActiveGame.getId(),1L);
         assertEquals(createdActiveGame.getActiveMysteryWord(), card.getWords().get(0));
-        assertTrue(createdActiveGame.getValidCluesAreSet());
         assertNotNull(createdActiveGame.getTimeStart());
     }
 

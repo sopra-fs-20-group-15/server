@@ -11,10 +11,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GuessPostDTO;
-import ch.uzh.ifi.seal.soprafs20.service.ActiveGameService;
-import ch.uzh.ifi.seal.soprafs20.service.GameSetUpService;
-import ch.uzh.ifi.seal.soprafs20.service.LogicService;
-import ch.uzh.ifi.seal.soprafs20.service.State;
+import ch.uzh.ifi.seal.soprafs20.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +32,11 @@ import java.util.Map;
 @WebAppConfiguration
 @SpringBootTest
 public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveGame{
+
+    @Autowired
+    public LogicServiceSetGuessIntegrationTest(@Qualifier("cardService") CardService cardService, @Qualifier("gameSetUpService") GameSetUpService gameSetUpService, @Qualifier("logicService") LogicService logicService, @Qualifier("playerService") PlayerService playerService, @Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("gameRepository") GameRepository gameRepository, @Qualifier("activeGameService") ActiveGameService activeGameService, LSStateChooseMysteryWord lsStateChooseMysteryWord, LSSGiveClues lssGiveClues, LSSGiveGuess lssGiveGuess, LSSWordReveal lssWordReveal, LSSGameHasEnded lssGameHasEnded) {
+        super(cardService, logicService, gameSetUpService, playerService, playerRepository, activeGameService, gameRepository, gameSetUpRepository, lsStateChooseMysteryWord, lssGiveClues, lssGiveGuess, lssWordReveal, lssGameHasEnded);
+    }
 
     protected CardEntity card;
 
@@ -84,7 +86,6 @@ public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveG
             assertNotEquals(entry.getValue(),createdActiveGame.getScoreboard().getScore().get(entry.getKey()));
         }
         assertEquals(1,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("OneName"));
-        assertEquals(false,createdActiveGame.getHasBeenInitialized());
         assertEquals(12, createdActiveGame.getCardIds().size());
     }
 
@@ -97,7 +98,6 @@ public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveG
         assertEquals(createdActiveGame.getGuess(), "Tree");
         assertFalse(createdActiveGame.getIsValidGuess());
         assertEquals(0,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("TwoName"));
-        assertFalse(createdActiveGame.getHasBeenInitialized());
         assertEquals(11, createdActiveGame.getCardIds().size());
     }
 
@@ -112,7 +112,6 @@ public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveG
         assertEquals(createdActiveGame.getGuess(), "Tree");
         assertFalse(createdActiveGame.getIsValidGuess());
         assertEquals(0,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("TwoName"));
-        assertFalse(createdActiveGame.getHasBeenInitialized());
         assertEquals(0, createdActiveGame.getCardIds().size());
     }
 }

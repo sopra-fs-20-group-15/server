@@ -26,9 +26,7 @@ public class LSSWordReveal implements LogicServiceState{
     }
 
     public GameEntity initializeTurn(GameEntity game) {
-        game.setHasBeenInitialized(true);
         game.setActiveMysteryWord("");
-        game.setHasEnded(false);
         //Update the players
         goOnePlayerFurther(game);
         //Update Cards
@@ -36,7 +34,6 @@ public class LSSWordReveal implements LogicServiceState{
         for (PlayerEntity player : game.getPlayers()) {
             player.setTimePassed(null);
         }
-        game.setValidCluesAreSet(false);
         game.setClueMap(new HashMap<String, String>());
         game.setValidClues(new HashMap<String, String>());
         game.setAnalyzedClues(new HashMap<String, Integer>());

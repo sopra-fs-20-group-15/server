@@ -14,37 +14,52 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.transaction.BeforeTransaction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 
 public class TestSETUPCreatesActiveGame {
-    @Qualifier("playerRepository")
-    @Autowired
-    protected PlayerRepository playerRepository;
-    protected GameEntity createdActiveGame;
-    protected PlayerEntity p2;
-    @Autowired
-    protected ActiveGameService gameService;
-    @Autowired
-    protected GameSetUpService gameSetUpService;
     protected GameSetUpEntity game = new GameSetUpEntity();
+
     protected GameSetUpEntity createdGame;
+    protected GameEntity  createdActiveGame;
+
     protected PlayerEntity p1;
+    protected PlayerEntity p2;
     protected PlayerEntity p3;
 
-    @Autowired
-    protected GameSetUpRepository gameSetUpRepository;
+    //Services
+    protected final GameSetUpService gameSetUpService;
+    protected final LogicService logicService;
+    protected final PlayerService playerService;
+    protected final CardService cardService;
+    protected final ActiveGameService gameService;
 
-    @Qualifier("gameRepository")
-    @Autowired
-    protected GameRepository gameRepository;
+    //Helpers for LogicService
+    protected HashMap<State, LogicServiceState> possibleStates = new HashMap<>();
+
+    //Repositories
+    protected final PlayerRepository playerRepository;
+    protected final GameSetUpRepository gameSetUpRepository;
+    protected final GameRepository gameRepository;
 
     @Autowired
-    protected LogicService logicService;
-
-    @Autowired
-    protected LSSWordReveal lssWordReveal;
+    public TestSETUPCreatesActiveGame(@Qualifier("cardService") CardService cardService, @Qualifier("logicService") LogicService logicService, @Qualifier("gameSetUpService") GameSetUpService gameSetUpService,  @Qualifier("playerService") PlayerService playerService, @Qualifier("playerRepository") PlayerRepository playerRepository, ActiveGameService activeGameService, @Qualifier("gameRepository") GameRepository gameRepository ,@Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository,  LSStateChooseMysteryWord lsStateChooseMysteryWord, LSSGiveClues lssGiveClues, LSSGiveGuess lssGiveGuess, LSSWordReveal lssWordReveal, LSSGameHasEnded lssGameHasEnded) {
+        this.cardService = cardService;
+        this.logicService = logicService;
+        this.gameSetUpService = gameSetUpService;
+        this.playerService = playerService;
+        this.playerRepository = playerRepository;
+        this.gameService = activeGameService;
+        this.gameRepository = gameRepository;
+        this.gameSetUpRepository = gameSetUpRepository;
+        this.possibleStates.put(State.ChooseMysteryWord, lsStateChooseMysteryWord);
+        this.possibleStates.put(State.GiveClues, lssGiveClues);
+        this.possibleStates.put(State.GiveGuess, lssGiveGuess);
+        this.possibleStates.put(State.WordReveal, lssWordReveal);
+        this.possibleStates.put(State.hasEnded, lssGameHasEnded);
+    }
 
     @BeforeTransaction
     public void clean(){

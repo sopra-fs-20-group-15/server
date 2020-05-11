@@ -9,9 +9,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerNameDTO;
-import ch.uzh.ifi.seal.soprafs20.service.ActiveGameService;
-import ch.uzh.ifi.seal.soprafs20.service.GameSetUpService;
-import ch.uzh.ifi.seal.soprafs20.service.LogicService;
+import ch.uzh.ifi.seal.soprafs20.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,93 +32,16 @@ import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 @Transactional
 @WebAppConfiguration
 @SpringBootTest
-public class LogicServiceIntegrationTestGetCluePlayers {
+public class LogicServiceIntegrationTestGetCluePlayers extends TestSETUPCreatesActiveGame{
 
     @Autowired
-    private GameSetUpRepository gameSetUpRepository;
-
-    @Qualifier("playerRepository")
-    @Autowired
-    private PlayerRepository playerRepository;
-
-    @Qualifier("gameRepository")
-    @Autowired
-    private GameRepository gameRepository;
-
-    @Autowired
-    private ActiveGameService gameService;
-
-    @Autowired
-    private GameSetUpService gameSetUpService;
-
-    @Autowired
-    private LogicService logicService;
-
-    private GameSetUpEntity game = new GameSetUpEntity();
-
-    private GameSetUpEntity createdGame;
-    private GameEntity  createdActiveGame;
-
-    private PlayerEntity p1;
-    private PlayerEntity p2;
-    private PlayerEntity p3;
-
-    @BeforeTransaction
-    public void clean(){
-        gameSetUpRepository.deleteAll();
-        gameRepository.deleteAll();
-        playerRepository.deleteAll();
-    }
-
-    @BeforeEach
-    public void setup() {
-        game.setNumberOfPlayers(5L);
-        game.setNumberOfAngles(1L);
-        game.setNumberOfDevils(0L);
-        game.setGameType(PRIVATE);
-        game.setPassword("Cara");
-        PlayerEntity playerOne= new PlayerEntity();
-        PlayerEntity playerTwo= new PlayerEntity();
-        PlayerEntity playerThree= new PlayerEntity();
-
-        playerOne.setUsername("OneName");
-        playerOne.setPassword("One");
-        playerOne.setToken("One");
-        playerOne.setStatus(PlayerStatus.ONLINE);
-        p1=playerRepository.save(playerOne);
-
-        playerTwo.setUsername("TwoName");
-        playerTwo.setPassword("Two");
-        playerTwo.setToken("Two");
-        playerTwo.setStatus(PlayerStatus.ONLINE);
-        p2=playerRepository.save(playerTwo);
-
-        playerThree.setUsername("ThreeName");
-        playerThree.setToken("Three");
-        playerThree.setPassword("Three");
-        playerThree.setStatus(PlayerStatus.ONLINE);
-        p3=playerRepository.save(playerThree);
-
-        List<String> playerTokens=new ArrayList<>();
-        playerTokens.add("One");
-        playerTokens.add("Two");
-        playerTokens.add("Three");
-
-
-        game.setPlayerTokens(playerTokens);
-
-        game.setHostName(p1.getUsername());
-        game.setGameName("GameName");
-
-        createdGame =gameSetUpService.createGame(game);
-
-        createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());
-        logicService.initializeTurn(createdActiveGame.getId());
-        logicService.setMysteryWord(createdActiveGame.getId(), 1L);
+    public LogicServiceIntegrationTestGetCluePlayers(@Qualifier("cardService") CardService cardService, @Qualifier("gameSetUpService") GameSetUpService gameSetUpService, @Qualifier("logicService") LogicService logicService, @Qualifier("playerService") PlayerService playerService, @Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("gameRepository") GameRepository gameRepository, @Qualifier("activeGameService") ActiveGameService activeGameService, LSStateChooseMysteryWord lsStateChooseMysteryWord, LSSGiveClues lssGiveClues, LSSGiveGuess lssGiveGuess, LSSWordReveal lssWordReveal, LSSGameHasEnded lssGameHasEnded) {
+        super(cardService, logicService, gameSetUpService, playerService, playerRepository, activeGameService, gameRepository, gameSetUpRepository, lsStateChooseMysteryWord, lssGiveClues, lssGiveGuess, lssWordReveal, lssGameHasEnded);
     }
 
     @Test
     public void getCluePlayersWorksWithMultipleCluesGiven() {
+
         createdActiveGame.setActiveMysteryWord("Test");
         CluePostDTO cluePostDTO = new CluePostDTO();
 
