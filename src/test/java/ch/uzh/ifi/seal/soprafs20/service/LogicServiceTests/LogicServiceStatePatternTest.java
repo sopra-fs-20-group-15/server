@@ -32,32 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @SpringBootTest
 public class LogicServiceStatePatternTest {
 
-    @Qualifier("playerRepository")
-    @Autowired
-    protected PlayerRepository playerRepository;
-
-    @Autowired
-    protected PlayerService playerService;
-    protected GameEntity createdActiveGame;
-    protected PlayerEntity p2;
-    @Autowired
-    protected ActiveGameService gameService;
-    @Autowired
-    protected GameSetUpService gameSetUpService;
-    protected GameSetUpEntity game = new GameSetUpEntity();
-    protected GameSetUpEntity createdGame;
-    protected PlayerEntity p1;
-    protected PlayerEntity p3;
-
-    @Autowired
-    protected GameSetUpRepository gameSetUpRepository;
-
-    @Qualifier("gameRepository")
-    @Autowired
-    protected GameRepository gameRepository;
-
-    @Autowired
-    protected LogicService logicService;
+    
 
     @BeforeTransaction
     public void clean(){
@@ -115,6 +90,7 @@ public class LogicServiceStatePatternTest {
 
     @Test
     public void ChangesStateCorrectly() {
+        System.out.println(createdActiveGame.getActiveCardId());
         logicService.setMysteryWord(createdActiveGame.getId(), 1L);
         assertEquals(createdActiveGame.getStateForLogicService(), State.GiveClues);
 

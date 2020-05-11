@@ -67,7 +67,6 @@ public class addValidCluesUnitTest {
 
         lSSGiveClues.addValidClues(game);
 
-        assertTrue(game.getValidCluesAreSet());
         assertEquals(3,game.getValidClues().size());
         assertTrue(game.getValidClues().containsKey("angel"));
         assertTrue(game.getValidClues().containsKey("devil"));
@@ -90,7 +89,6 @@ public class addValidCluesUnitTest {
         lSSGiveClues.addValidClues(game);
 
         System.out.println(game.getValidClues().entrySet().toString());
-        assertTrue(game.getValidCluesAreSet());
         assertEquals(1,game.getValidClues().size());
         assertTrue(game.getValidClues().containsKey("devil"));
         assertEquals("Three",game.getValidClues().get("devil"));
@@ -108,8 +106,6 @@ public class addValidCluesUnitTest {
 
         lSSGiveClues.addValidClues(game);
 
-        System.out.println(game.getValidClues().entrySet().toString());
-        assertTrue(game.getValidCluesAreSet());
         assertEquals(0,game.getValidClues().size());
     }
 

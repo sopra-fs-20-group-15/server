@@ -23,12 +23,12 @@ import java.util.*;
 public class LSSGiveClues implements LogicServiceState{
 
     private final WordComparer wordComparer;
-    private final PlayerService playerService;
+    private final PlayerRepository playerRepository;
 
     @Autowired
-    public LSSGiveClues(@Qualifier("playerService") PlayerService playerService) {
+    public LSSGiveClues(@Qualifier("playerRepository") PlayerRepository playerRepository) {
         this.wordComparer = new WordComparer();
-        this.playerService = playerService;
+        this.playerRepository = playerRepository;
     }
 
     /**sets the timer for game*/
@@ -65,8 +65,8 @@ public class LSSGiveClues implements LogicServiceState{
         Map<String,String> validClues = new HashMap<>();
         for (Map.Entry<String,String> entry: game.getClueMap().entrySet()){
             //put human players' clues into validClues
-            if (playerService.getPlayerByToken(entry.getKey())!=null) {
-                if (game.getAnalyzedClues().get(entry.getValue())==0) validClues.put(playerService.getPlayerByToken(entry.getKey()).getUsername(),
+            if (playerRepository.findByToken(entry.getKey())!=null) {
+                if (game.getAnalyzedClues().get(entry.getValue())==0) validClues.put(playerRepository.findByToken(entry.getKey()).getUsername(),
                         entry.getValue());
             }
             //put bots' clues into validClues
@@ -93,21 +93,20 @@ public class LSSGiveClues implements LogicServiceState{
         clueMap.put(cluePostDTO.getPlayerToken(),cluePostDTO.getClue());
         game.setClueMap(clueMap);
 
-        setTimePassed(game, playerService.getPlayerByToken(cluePostDTO.getPlayerToken()));
+        setTimePassed(game, playerRepository.findByToken(cluePostDTO.getPlayerToken()));
     }
 
     public void giveClue(GameEntity game, CluePostDTO cluePostDTO){
+        //Check if player has already given clue, if not let him commit a clue
+        if (game.getClueMap().get(cluePostDTO.getPlayerToken())==null) {
+            addClueToClueMap(game,cluePostDTO);
+        }
+        else throw new UnauthorizedException("You have already submitted a clue for this round!");
         //Check if all players have given clues, if so set validClues
         if (game.getClueMap().size()==game.getPlayers().size()+game.getNumOfBots()-1){
             addValidClues(game);
             setTimeStart(game);
-            game.setStateForLogicService(State.GiveGuess);
         }
-        //Check if player has already given clue, if not let him commit a clue
-        else if (game.getClueMap().get(cluePostDTO.getPlayerToken())==null) {
-            addClueToClueMap(game,cluePostDTO);
-        }
-        else throw new UnauthorizedException("You have already submitted a clue for this round!");
     }
 
     public List<ClueGetDTO> getClues(GameEntity game)

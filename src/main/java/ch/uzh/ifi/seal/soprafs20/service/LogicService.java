@@ -36,13 +36,13 @@ public class LogicService {
     private final GameRepository gameRepository;
     private final CardService cardService;
     private final ActiveGameService gameService;
-    private final PlayerService playerService;
+    private final PlayerRepository playerService;
 
     private HashMap<State, LogicServiceState> possibleStates = new HashMap<>();
     private LogicServiceState state;
 
     @Autowired
-    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository, CardService cardService, ActiveGameService gameService, PlayerService playerService) {
+    public LogicService(@Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameRepository") GameRepository gameRepository, CardService cardService, ActiveGameService gameService, PlayerRepository playerService) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.wordComparer = new WordComparer();
