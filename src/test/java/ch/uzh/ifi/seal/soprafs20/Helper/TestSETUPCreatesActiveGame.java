@@ -7,10 +7,7 @@ import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs20.service.ActiveGameService;
-import ch.uzh.ifi.seal.soprafs20.service.GameSetUpService;
-import ch.uzh.ifi.seal.soprafs20.service.LogicService;
-import ch.uzh.ifi.seal.soprafs20.service.State;
+import ch.uzh.ifi.seal.soprafs20.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -45,6 +42,9 @@ public class TestSETUPCreatesActiveGame {
 
     @Autowired
     protected LogicService logicService;
+
+    @Autowired
+    protected LSSWordReveal lssWordReveal;
 
     @BeforeTransaction
     public void clean(){

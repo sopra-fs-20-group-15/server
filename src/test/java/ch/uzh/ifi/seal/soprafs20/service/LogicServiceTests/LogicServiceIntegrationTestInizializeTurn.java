@@ -23,6 +23,7 @@ public class LogicServiceIntegrationTestInizializeTurn extends TestSETUPCreatesA
 
         GameEntity initializedGame = logicService.initializeTurn(createdActiveGame.getId());
 
+
         //ActiveCard, CardIds, ActivePlayerId and PassivePlayerIds get already tested in LogicServiceTestInitializeTurn by analysing the helper functions
         //Evaluation
         assertEquals(initializedGame.getActiveMysteryWord(), "");
