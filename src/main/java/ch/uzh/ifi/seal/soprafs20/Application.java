@@ -1,4 +1,3 @@
-//test kai
 package ch.uzh.ifi.seal.soprafs20;
 
 import org.springframework.boot.SpringApplication;

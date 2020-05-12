@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.constant.GameType;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.repository.ChatRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ChatGetDTO;
@@ -15,6 +16,7 @@ import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.ChatService;
 import ch.uzh.ifi.seal.soprafs20.service.GameSetUpService;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,16 +49,24 @@ public class ChatServiceGetChatMessagesIntegrationTest {
     @Autowired
     private GameSetUpService gameSetUpService;
 
+    @Qualifier("gameRepository")
+    @Autowired
+    private GameRepository gameRepository;
+
     private PlayerEntity one;
     private PlayerEntity two;
     private GameSetUpEntity gameSetUpEntity;
 
     @BeforeTransaction
-    public void setUp(){
+    public void clean(){
+        gameRepository.deleteAll();
         gameSetUpRepository.deleteAll();
         chatRepository.deleteAll();
         playerRepository.deleteAll();
+    }
 
+    @BeforeEach
+    public void setUp(){
         PlayerEntity p1=new PlayerEntity();
         p1.setStatus(PlayerStatus.ONLINE);
         p1.setUsername("1");
