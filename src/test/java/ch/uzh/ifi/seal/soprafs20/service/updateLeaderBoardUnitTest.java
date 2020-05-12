@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
 import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
+import ch.uzh.ifi.seal.soprafs20.service.LogicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

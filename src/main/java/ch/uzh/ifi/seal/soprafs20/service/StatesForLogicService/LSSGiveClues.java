@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.service;
+package ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
@@ -11,6 +11,8 @@ import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
+import ch.uzh.ifi.seal.soprafs20.service.ActiveGameService;
+import ch.uzh.ifi.seal.soprafs20.service.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -44,7 +46,7 @@ public class LSSGiveClues implements LogicServiceState{
     }
 
     public GameEntity initializeTurn(GameEntity game){
-        throw new ConflictException("You cannot initialize before the turn has ended!");
+        throw new NoContentException("You cannot initialize before the turn has ended!");
     }
 
     public String setMysteryWord(GameEntity game, Long wordId){
@@ -85,6 +87,7 @@ public class LSSGiveClues implements LogicServiceState{
         }
         //update validClues of game and set flag
         game.setValidClues(validClues);
+        setTimeStart(game);
         game.setStateForLogicService(State.GiveGuess);
     }
 
@@ -100,28 +103,32 @@ public class LSSGiveClues implements LogicServiceState{
 
     public void giveClue(Long gameId, CluePostDTO cluePostDTO){
         GameEntity game = gameService.getGameById(gameId);
-        //Check if player has already given clue, if not let him commit a clue
-        if (game.getClueMap().get(cluePostDTO.getPlayerToken())==null) {
-            addClueToClueMap(game,cluePostDTO);
-        }
-        else throw new UnauthorizedException("You have already submitted a clue for this round!");
-        //Check if all players have given clues, if so set validClues
-        if (game.getClueMap().size()==game.getPlayers().size()+game.getNumOfBots()-1){
+        if (game.getPassivePlayerIds().equals(0L)){
             addValidClues(game);
-            setTimeStart(game);
+        }
+        else{
+            //Check if player has already given clue, if not let him commit a clue
+            if (game.getClueMap().get(cluePostDTO.getPlayerToken())==null) {
+                addClueToClueMap(game,cluePostDTO);
+            }
+            else throw new UnauthorizedException("You have already submitted a clue for this round!");
+            //Check if all players have given clues, if so set validClues
+            if (game.getClueMap().size()==game.getPlayers().size()+game.getNumOfBots()-1){
+                addValidClues(game);
+            }
         }
     }
 
     public List<ClueGetDTO> getClues(GameEntity game)
-    {throw new ConflictException("The MysteryWord has to be chosen first!");
+    {throw new NoContentException("The MysteryWord has to be chosen first!");
     }
 
     public void setGuess(GameEntity game, String guess) {
-        throw new ConflictException("The clues have to be set first!");
+        throw new NoContentException("The clues have to be set first!");
     }
 
 
     public String getGuess(GameEntity game) {
-        throw new ConflictException("The clues have to be set first!");
+        throw new NoContentException("The clues have to be set first!");
     }
 }

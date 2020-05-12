@@ -1,21 +1,16 @@
 package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 
-import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
-import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
-import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.constant.PlayerStatus;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerNameDTO;
 import ch.uzh.ifi.seal.soprafs20.service.*;
-import org.junit.jupiter.api.BeforeEach;
+import ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
@@ -23,11 +18,8 @@ import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 
 @Transactional
 @WebAppConfiguration

@@ -1,24 +1,20 @@
-package ch.uzh.ifi.seal.soprafs20.service;
+package ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.ScoreCalculator;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.WordComparer;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
-import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
+import ch.uzh.ifi.seal.soprafs20.service.State;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +41,7 @@ public class LSSGiveGuess implements LogicServiceState{
     }
 
     public GameEntity initializeTurn(GameEntity game){
-        throw new ConflictException("You cannot initialize in this phase!");
+        throw new NoContentException("You cannot initialize in this phase!");
     }
 
     public String setMysteryWord(GameEntity game, Long wordId){
@@ -58,7 +54,7 @@ public class LSSGiveGuess implements LogicServiceState{
     }
 
     public void giveClue(Long GameId, CluePostDTO cluePostDTO){
-        throw new ConflictException("All clues have already been given!");
+        throw new NoContentException("All clues have already been given!");
     }
 
     protected List<ClueGetDTO> createListOfClueGetDTOs (GameEntity game){
@@ -124,6 +120,6 @@ public class LSSGiveGuess implements LogicServiceState{
 
 
     public String getGuess(GameEntity game) {
-        throw new ConflictException("The guess has to be set first!");
+        throw new NoContentException("The guess has to be set first!");
     }
 }

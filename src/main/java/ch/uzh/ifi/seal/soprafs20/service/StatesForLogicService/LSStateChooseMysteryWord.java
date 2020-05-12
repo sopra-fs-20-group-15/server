@@ -1,21 +1,15 @@
-package ch.uzh.ifi.seal.soprafs20.service;
+package ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
-import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.ScoreCalculator;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
-import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
+import ch.uzh.ifi.seal.soprafs20.service.CardService;
+import ch.uzh.ifi.seal.soprafs20.service.State;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +27,7 @@ public class LSStateChooseMysteryWord implements LogicServiceState {
     }
 
     public GameEntity initializeTurn(GameEntity game){
-        throw new ConflictException("You cannot initialize in this phase!");
+        throw new NoContentException("You cannot initialize in this phase!");
     }
 
     protected void botsAddClues(GameEntity game, String word){
@@ -65,24 +59,24 @@ public class LSStateChooseMysteryWord implements LogicServiceState {
     }
 
     public String getMysteryWord(GameEntity game){
-        throw new ConflictException("The MysteryWord has not been set yet!");
+        throw new NoContentException("The MysteryWord has not been set yet!");
     }
 
     public void giveClue(Long GameId, CluePostDTO cluePostDTO){
-        throw new ConflictException("The MysteryWord has to be chosen first!");
+        throw new NoContentException("The MysteryWord has to be chosen first!");
     }
 
     public List<ClueGetDTO> getClues(GameEntity game)
-    {throw new ConflictException("The MysteryWord has to be chosen first!");
+    {throw new NoContentException("The MysteryWord has to be chosen first!");
     }
 
     public void setGuess(GameEntity game, String guess) {
-        throw new ConflictException("The MysteryWord has to be chosen first!");
+        throw new NoContentException("The MysteryWord has to be chosen first!");
     }
 
 
     public String getGuess(GameEntity game) {
-        throw new ConflictException("The MysteryWord has to be chosen first!");
+        throw new NoContentException("The MysteryWord has to be chosen first!");
     }
 
 

@@ -11,6 +11,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
+import ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,28 +170,6 @@ public class LogicService {
         return state.getGuess(game);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**Orders the items of a list*/
     public List<StatisticsGetDTO> orderStatisticsGetDTOList(List<StatisticsGetDTO> rankScorePlayerNameList){
         //Sort with insertion sort (since max. 7 human players, time complexity is not that important(if more players, quick sort would have been used))
@@ -301,6 +280,15 @@ public class LogicService {
             }
         }
         return  list;
+    }
+
+    /** returns the gamePhase a game is currently in
+     * @Param: Long gameId
+     * @Returns: Enum State
+     * @Throws: 404 if game is not found
+    */
+    public State getGamePhase(long gameId){
+        return getGame(gameId).getStateForLogicService();
     }
 
 }

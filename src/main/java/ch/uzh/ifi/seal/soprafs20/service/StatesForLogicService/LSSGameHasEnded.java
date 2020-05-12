@@ -1,7 +1,8 @@
-package ch.uzh.ifi.seal.soprafs20.service;
+package ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import org.springframework.stereotype.Service;
@@ -14,31 +15,31 @@ import java.util.List;
 public class LSSGameHasEnded implements LogicServiceState{
 
     public GameEntity initializeTurn(GameEntity game) {
-        throw new ConflictException("The game has ended!");
+        throw new NoContentException("The game has ended!");
     }
 
     public String setMysteryWord(GameEntity game, Long wordId){
-        throw new ConflictException("The game has ended!");
+        throw new NoContentException("The game has ended!");
     }
 
     public String getMysteryWord(GameEntity game){
-        throw new ConflictException("The game has ended!");
+        throw new NoContentException("The game has ended!");
     }
 
     public void giveClue(Long GameId, CluePostDTO cluePostDTO){
-        throw new ConflictException("The game has ended!");
+        throw new NoContentException("The game has ended!");
     }
 
     public List<ClueGetDTO> getClues(GameEntity game){
-        throw new ConflictException("The game has ended!");
+        throw new NoContentException("The game has ended!");
     }
 
     public void setGuess(GameEntity game, String guess){
-        throw new ConflictException("The game has ended!");
+        throw new NoContentException("The game has ended!");
     }
 
     public String getGuess(GameEntity game){
-        throw new ConflictException("The game has ended!");
+        throw new NoContentException("The game has ended!");
     }
 
 }

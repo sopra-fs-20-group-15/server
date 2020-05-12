@@ -257,5 +257,20 @@ public class LogicController {
             return logicService.getStatistics(gameIdLong);
     }
 
+    /**Returns the gamePhase
+     * @Returns: GamePhaseDTO: String phase (there are the phases ChooseAMysteryWord, GiveClue, GiveGuess, WordReveal and GameHasEnded)
+     * @Throws: 404: Game with specified Id cannot be found
+     * */
+    @GetMapping("/games/{gameId}/phases")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GamePhaseDTO getGamePhase(@PathVariable String gameId) {
+        stringIsALong(gameId);
+        Long gameIdLong = parseLong(gameId);
+        GamePhaseDTO gamePhaseDTO = new GamePhaseDTO();
+        gamePhaseDTO.setPhase(logicService.getGamePhase(gameIdLong).toString());
+        return gamePhaseDTO;
+    }
+
 
 }

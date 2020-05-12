@@ -8,6 +8,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.service.*;
+import ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -45,7 +46,7 @@ public class TestSETUPCreatesActiveGame {
     protected final GameRepository gameRepository;
 
     @Autowired
-    public TestSETUPCreatesActiveGame(@Qualifier("cardService") CardService cardService, @Qualifier("logicService") LogicService logicService, @Qualifier("gameSetUpService") GameSetUpService gameSetUpService,  @Qualifier("playerService") PlayerService playerService, @Qualifier("playerRepository") PlayerRepository playerRepository, ActiveGameService activeGameService, @Qualifier("gameRepository") GameRepository gameRepository ,@Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository,  LSStateChooseMysteryWord lsStateChooseMysteryWord, LSSGiveClues lssGiveClues, LSSGiveGuess lssGiveGuess, LSSWordReveal lssWordReveal, LSSGameHasEnded lssGameHasEnded) {
+    public TestSETUPCreatesActiveGame(@Qualifier("cardService") CardService cardService, @Qualifier("logicService") LogicService logicService, @Qualifier("gameSetUpService") GameSetUpService gameSetUpService, @Qualifier("playerService") PlayerService playerService, @Qualifier("playerRepository") PlayerRepository playerRepository, ActiveGameService activeGameService, @Qualifier("gameRepository") GameRepository gameRepository , @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, LSStateChooseMysteryWord lsStateChooseMysteryWord, LSSGiveClues lssGiveClues, LSSGiveGuess lssGiveGuess, LSSWordReveal lssWordReveal, LSSGameHasEnded lssGameHasEnded) {
         this.cardService = cardService;
         this.logicService = logicService;
         this.gameSetUpService = gameSetUpService;

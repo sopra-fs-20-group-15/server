@@ -54,6 +54,8 @@ public class ChatServiceAddChatMessageIntegrationTest {
     private PlayerEntity two;
     private GameSetUpEntity gameSetUpEntity;
 
+
+
     @BeforeTransaction
     public void setUp(){
         gameSetUpRepository.deleteAll();

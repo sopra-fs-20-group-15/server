@@ -8,6 +8,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.service.*;
+import ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -50,7 +51,7 @@ public class LogicServiceIntegrationTestInizializeTurn extends TestSETUPCreatesA
     @Test
     public void InitializeTurnErrorBecauseGameHasAlreadyBeenInitialized() {
 
-        assertThrows(ConflictException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
+        assertThrows(NoContentException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
     }
 
     /**Initialize Turn does not work since the game has already been initialized*/
@@ -58,7 +59,7 @@ public class LogicServiceIntegrationTestInizializeTurn extends TestSETUPCreatesA
     public void InitializeTurnErrorBecauseGameIsInChooseMysteryWord() {
         createdActiveGame.setStateForLogicService(State.ChooseMysteryWord);
 
-        assertThrows(ConflictException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
+        assertThrows(NoContentException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
     }
 
     /**Initialize Turn does not work since the game has already been initialized*/
@@ -66,7 +67,7 @@ public class LogicServiceIntegrationTestInizializeTurn extends TestSETUPCreatesA
     public void InitializeTurnErrorBecauseGameIsInGiveClues() {
         createdActiveGame.setStateForLogicService(State.GiveClues);
 
-        assertThrows(ConflictException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
+        assertThrows(NoContentException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
     }
 
     /**Initialize Turn does not work since the game has already been initialized*/
@@ -74,7 +75,7 @@ public class LogicServiceIntegrationTestInizializeTurn extends TestSETUPCreatesA
     public void InitializeTurnErrorBecauseGameIsInGiveGuess() {
         createdActiveGame.setStateForLogicService(State.GiveGuess);
 
-        assertThrows(ConflictException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
+        assertThrows(NoContentException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
     }
 
 }

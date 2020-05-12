@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.service;
+package ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
+import ch.uzh.ifi.seal.soprafs20.service.State;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +57,7 @@ public class LSSWordReveal implements LogicServiceState{
     }
 
     public void giveClue(Long GameId, CluePostDTO cluePostDTO){
-        throw new ConflictException("All clues have already been given!");
+        throw new NoContentException("All clues have already been given!");
     }
 
     protected List<ClueGetDTO> createListOfClueGetDTOs (GameEntity game){
@@ -75,7 +76,7 @@ public class LSSWordReveal implements LogicServiceState{
     }
 
     public void setGuess(GameEntity game, String guess){
-        throw new ConflictException("the guess has already been set!");
+        throw new NoContentException("the guess has already been set!");
     }
 
 
