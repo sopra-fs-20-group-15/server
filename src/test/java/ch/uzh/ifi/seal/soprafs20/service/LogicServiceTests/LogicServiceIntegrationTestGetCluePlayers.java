@@ -45,23 +45,21 @@ public class LogicServiceIntegrationTestGetCluePlayers extends TestSETUPCreatesA
         createdActiveGame.setActiveMysteryWord("Test");
         CluePostDTO cluePostDTO = new CluePostDTO();
 
-        cluePostDTO.setPlayerToken("Two");
-        cluePostDTO.setClue("TwoClue");
+        cluePostDTO.setPlayerToken("One");
+        cluePostDTO.setClue("OneClue");
         logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
 
         cluePostDTO.setPlayerToken("Three");
         cluePostDTO.setClue("ThreeClue");
         logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
         Map<String,String> test= createdActiveGame.getClueMap();
-        test.put("Angel_1", "Test");
+
         createdActiveGame.setClueMap(test);
-        assertTrue(createdActiveGame.getValidClues().isEmpty());
 
         List<PlayerNameDTO> playerNames= logicService.getCluePlayers(createdActiveGame.getId());
-        assertEquals(3, playerNames.size());
-        assertEquals(playerNames.get(0).getPlayerName(), "Angel_Nr_1");
-        assertEquals(playerNames.get(1).getPlayerName(), p2.getUsername());
-        assertEquals(playerNames.get(2).getPlayerName(), p3.getUsername());
+        assertEquals(2, playerNames.size());
+        assertEquals(playerNames.get(0).getPlayerName(), p1.getUsername());
+        assertEquals(playerNames.get(1).getPlayerName(), p3.getUsername());
     }
 
     @Test

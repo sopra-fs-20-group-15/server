@@ -40,10 +40,6 @@ public class LSSGiveClues implements LogicServiceState{
 
     /**sets the timer for the player*/
     protected void setTimePassed(GameEntity game, PlayerEntity player){
-        System.out.println(game.getTimeStart());
-        System.out.println(player.getUsername());
-        System.out.println(game.getId());
-
         player.setTimePassed(System.currentTimeMillis()-game.getTimeStart());
     }
 
