@@ -103,6 +103,24 @@ public class LogicServiceIntegrationTestSetMysteryWord extends TestSETUPCreatesA
         assertThrows(NotFoundException.class, ()->{logicService.setMysteryWord(55L,1L);});
     }
 
+    @Test
+    public void setMysteryWordsFailsBecauseInPhaseGiveGuess() {
+        createdActiveGame.setStateForLogicService(State.GiveGuess);
+        assertThrows(NoContentException.class, ()->{logicService.setMysteryWord(createdActiveGame.getId(),1L);});
+    }
+
+    @Test
+    public void setMysteryWordsFailsBecauseInPhaseWordReveal() {
+        createdActiveGame.setStateForLogicService(State.WordReveal);
+        assertThrows(NoContentException.class, ()->{logicService.setMysteryWord(createdActiveGame.getId(),1L);});
+    }
+
+    @Test
+    public void setMysteryWordsFailsBecauseGameHasEnded() {
+        createdActiveGame.setStateForLogicService(State.hasEnded);
+        assertThrows(NoContentException.class, ()->{logicService.setMysteryWord(createdActiveGame.getId(),1L);});
+    }
+
 }
 
 

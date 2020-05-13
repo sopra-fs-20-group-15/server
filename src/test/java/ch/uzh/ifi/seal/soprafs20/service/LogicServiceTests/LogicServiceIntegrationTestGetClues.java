@@ -65,6 +65,17 @@ public class LogicServiceIntegrationTestGetClues extends TestSETUPCreatesActiveG
 
         assertEquals("Table", listOfClues.get(1).getClue());
         assertEquals(p3.getUsername(), listOfClues.get(1).getPlayerName());
+
+        //Check the phase (should be GiveGuess since all clues have been set)
+        assertEquals(State.GiveGuess, createdActiveGame.getStateForLogicService());
+
+        //Check if the clues are still accessible in WordReveal
+        createdActiveGame.setStateForLogicService(State.WordReveal);
+        List<ClueGetDTO> clueGetDTOS = logicService.getClues(createdActiveGame.getId());
+        assertEquals("Clue", clueGetDTOS.get(0).getClue());
+        assertEquals(p2.getUsername(), clueGetDTOS.get(0).getPlayerName());
+        assertEquals("Table", clueGetDTOS.get(1).getClue());
+        assertEquals(p3.getUsername(), listOfClues.get(1).getPlayerName());
     }
 
     @Test
@@ -121,8 +132,24 @@ public class LogicServiceIntegrationTestGetClues extends TestSETUPCreatesActiveG
         assertEquals(p3.getUsername(), listOfClues.get(2).getPlayerName());
     }
 
+
+    /**During ChooseMysteryWord*/
+    @Test
+    public void validCluesHaveNotBeenSetYetChooseMysteryWord() {
+        createdActiveGame.setStateForLogicService(State.ChooseMysteryWord);
+        assertThrows(NoContentException.class, () -> {logicService.getClues(createdActiveGame.getId()); });
+    }
+
+    /**During GiveClues*/
     @Test
     public void validCluesHaveNotBeenSetYet() {
+        assertThrows(NoContentException.class, () -> {logicService.getClues(createdActiveGame.getId()); });
+    }
+
+    /**During GameHasEnded*/
+    @Test
+    public void gameHasEnded() {
+        createdActiveGame.setStateForLogicService(State.hasEnded);
         assertThrows(NoContentException.class, () -> {logicService.getClues(createdActiveGame.getId()); });
     }
 

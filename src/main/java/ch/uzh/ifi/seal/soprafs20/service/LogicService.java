@@ -22,10 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 /**
- * PlayerEntity Service
+ * LogicService
 
- * This class is the "worker" and responsible for all functionality related to the user
- * (e.g., it creates, modifies, deletes, finds). The result will be passed back to the caller.
+ * Is responsible for all functions that have to do with playing a round of Just One.
+ * Partly implemented with State pattern.
+ * IMPORTANT: games always have to be retrieved with the GetGame method so that the state is initialized as well
  */
 @Service
 @Transactional
@@ -57,22 +58,15 @@ public class LogicService {
         this.possibleStates.put(State.hasEnded, lssGameHasEnded);
     }
 
+    /**IMPORTANT: games always have to be retrieved with this method so that the state is initialized as well*/
+    /**Gets game and initializes state*/
     protected GameEntity getGame(Long gameId){
         GameEntity game = gameService.getGameById(gameId);
         state = possibleStates.get(game.getStateForLogicService());
         return game;
     }
 
-
-    /**Puts the active player at the end of the passive Players List, takes the passive Player at 0 and make him the active player*/
-    protected GameEntity goOnePlayerFurther(GameEntity game){
-        List<Long> passivePlayerIds = game.getPassivePlayerIds();
-        passivePlayerIds.add(game.getActivePlayerId());
-        Long playerId = passivePlayerIds.remove(0);
-        game.setActivePlayerId(playerId);
-        game.setPassivePlayerIds(passivePlayerIds);
-        return game;
-    }
+    /**Implemented with state pattern -> Package StatesForLogicService*/
 
     /**Initializes Turn
      *@Param: Long
@@ -84,27 +78,6 @@ public class LogicService {
     public GameEntity initializeTurn(Long gameId){
         GameEntity game = getGame(gameId);
         return this.state.initializeTurn(game);
-    }
-
-    /**Get's active card
-     *@Param: Long
-     *@Returns: CardEntity
-     *@Throws: 404: No game with specified id found
-     *@Throws: 404: No active card set and therefore not found.
-     * */
-    public CardEntity getCardFromGameById(Long gameId){
-        //Get Game
-        Optional<GameEntity> gameOp = gameRepository.findById(gameId);
-        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
-        GameEntity game = gameOp.get();
-        //Check if activeCard has already been set and if so, get the Card
-        Long cardId = game.getActiveCardId();
-        CardEntity card;
-        if (cardId != null){
-            card = cardService.getCardById(cardId);
-            return card;
-        }
-        else {throw new NotFoundException("The active Card of this game has not been set yet!");}
     }
 
     /**Set Mystery Word
@@ -168,6 +141,29 @@ public class LogicService {
     public String getGuess(Long gameId){
         GameEntity game = getGame(gameId);
         return state.getGuess(game);
+    }
+
+    /**NOT implemented with State Pattern*/
+
+    /**Get's active card
+     *@Param: Long
+     *@Returns: CardEntity
+     *@Throws: 404: No game with specified id found
+     *@Throws: 404: No active card set and therefore not found.
+     * */
+    public CardEntity getCardFromGameById(Long gameId){
+        //Get Game
+        Optional<GameEntity> gameOp = gameRepository.findById(gameId);
+        if (gameOp.isEmpty()) throw new NotFoundException("No game with this id exists");
+        GameEntity game = gameOp.get();
+        //Check if activeCard has already been set and if so, get the Card
+        Long cardId = game.getActiveCardId();
+        CardEntity card;
+        if (cardId != null){
+            card = cardService.getCardById(cardId);
+            return card;
+        }
+        else {throw new NotFoundException("The active Card of this game has not been set yet!");}
     }
 
     /**Orders the items of a list*/
@@ -287,8 +283,12 @@ public class LogicService {
      * @Returns: Enum State
      * @Throws: 404 if game is not found
     */
-    public State getGamePhase(long gameId){
-        return getGame(gameId).getStateForLogicService();
+    public GamePhaseDTO getGamePhase(long gameId){
+        State state = getGame(gameId).getStateForLogicService();
+        GamePhaseDTO gamePhaseDTO = new GamePhaseDTO();
+        gamePhaseDTO.setPhase(state.toString());
+        gamePhaseDTO.setPhaseNumber(state.getNumVal());
+        return gamePhaseDTO;
     }
 
 }

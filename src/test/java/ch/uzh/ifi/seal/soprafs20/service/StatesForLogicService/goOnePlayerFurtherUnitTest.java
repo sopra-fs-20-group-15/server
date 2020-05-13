@@ -1,6 +1,8 @@
-package ch.uzh.ifi.seal.soprafs20.service;
+package ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
+import ch.uzh.ifi.seal.soprafs20.service.LogicService;
+import ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService.LSSWordReveal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,6 +21,8 @@ import java.util.List;
 public class goOnePlayerFurtherUnitTest {
     @Autowired
     LogicService logicService;
+    @Autowired
+    LSSWordReveal lssWordReveal;
     List<Long> passivePlayers=new ArrayList<>();
     GameEntity game=new GameEntity();
 
@@ -31,7 +35,7 @@ public class goOnePlayerFurtherUnitTest {
 
     @Test
     public void worksWithTwoHumanPlayers(){
-        logicService.goOnePlayerFurther(game);
+        lssWordReveal.goOnePlayerFurther(game);
 
         assertEquals(1,game.getPassivePlayerIds().size());
         assertEquals(0L,game.getPassivePlayerIds().get(0));
@@ -43,7 +47,7 @@ public class goOnePlayerFurtherUnitTest {
         passivePlayers.add(2L);
         game.setPassivePlayerIds(passivePlayers);
 
-        logicService.goOnePlayerFurther(game);
+        lssWordReveal.goOnePlayerFurther(game);
 
         assertEquals(2,game.getPassivePlayerIds().size());
         assertEquals(2L,game.getPassivePlayerIds().get(0));
@@ -55,7 +59,7 @@ public class goOnePlayerFurtherUnitTest {
     public void worksWithOnePlayerWhenHeIsPlayingWithBots(){
         game.setPassivePlayerIds(new ArrayList<>());
 
-        logicService.goOnePlayerFurther(game);
+        lssWordReveal.goOnePlayerFurther(game);
 
         assertEquals(0,game.getPassivePlayerIds().size());
         assertEquals(0L,game.getActivePlayerId());

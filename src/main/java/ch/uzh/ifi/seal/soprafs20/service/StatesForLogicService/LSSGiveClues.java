@@ -103,7 +103,7 @@ public class LSSGiveClues implements LogicServiceState{
 
     public void giveClue(Long gameId, CluePostDTO cluePostDTO){
         GameEntity game = gameService.getGameById(gameId);
-        if (game.getPassivePlayerIds().equals(0L)){
+        if (game.getPassivePlayerIds().size() == 0){
             addValidClues(game);
         }
         else{

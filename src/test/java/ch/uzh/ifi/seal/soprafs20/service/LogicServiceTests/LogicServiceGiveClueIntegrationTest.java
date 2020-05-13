@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
 import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UnauthorizedException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
@@ -200,5 +201,34 @@ public class LogicServiceGiveClueIntegrationTest extends TestSETUPCreatesActiveG
         assertTrue(createdActiveGame.getValidClues().isEmpty());
         assertTrue(!createdActiveGame.getValidClues().containsValue("Tower")
                 && !createdActiveGame.getValidClues().containsValue("towering"));
+    }
+    /**Should only work in correct phase*/
+
+    @Test
+    public void giveClueDoesNotWorkInChooseMysteryWord() {
+        createdActiveGame.setStateForLogicService(State.ChooseMysteryWord);
+
+        assertThrows(NoContentException.class, () -> {logicService.giveClue(createdActiveGame.getId(), new CluePostDTO());});
+    }
+
+    @Test
+    public void giveClueDoesNotWorkInGiveGuess() {
+        createdActiveGame.setStateForLogicService(State.GiveGuess);
+
+        assertThrows(NoContentException.class, () -> {logicService.giveClue(createdActiveGame.getId(), new CluePostDTO());});
+    }
+
+    @Test
+    public void giveClueDoesNotWorkInWordReveal() {
+        createdActiveGame.setStateForLogicService(State.WordReveal);
+
+        assertThrows(NoContentException.class, () -> {logicService.giveClue(createdActiveGame.getId(), new CluePostDTO());});
+    }
+
+    @Test
+    public void giveClueDoesNotWorkInHasEnded() {
+        createdActiveGame.setStateForLogicService(State.hasEnded);
+
+        assertThrows(NoContentException.class, () -> {logicService.giveClue(createdActiveGame.getId(), new CluePostDTO());});
     }
 }

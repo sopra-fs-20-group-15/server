@@ -60,9 +60,9 @@ public class GodService {
         PlayerEntity p2;
         PlayerEntity p3;
 
-        game.setNumberOfPlayers(5L);
-        game.setNumberOfAngles(1L);
-        game.setNumberOfDevils(1L);
+        game.setNumberOfPlayers(3L);
+        game.setNumberOfAngles(2L);
+        game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
         PlayerEntity playerOne= new PlayerEntity();
@@ -92,8 +92,6 @@ public class GodService {
 
         List<String> playerTokens=new ArrayList<>();
         playerTokens.add("One");
-        playerTokens.add("Two");
-        playerTokens.add("Three");
 
 
         game.setPlayerTokens(playerTokens);

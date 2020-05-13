@@ -267,9 +267,7 @@ public class LogicController {
     public GamePhaseDTO getGamePhase(@PathVariable String gameId) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
-        GamePhaseDTO gamePhaseDTO = new GamePhaseDTO();
-        gamePhaseDTO.setPhase(logicService.getGamePhase(gameIdLong).toString());
-        return gamePhaseDTO;
+        return logicService.getGamePhase(gameIdLong);
     }
 
 

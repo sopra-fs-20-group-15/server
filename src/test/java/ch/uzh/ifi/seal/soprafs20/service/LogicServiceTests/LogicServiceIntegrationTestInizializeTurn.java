@@ -78,4 +78,12 @@ public class LogicServiceIntegrationTestInizializeTurn extends TestSETUPCreatesA
         assertThrows(NoContentException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
     }
 
+    /**Initialize Turn does not work since the game has ended*/
+    @Test
+    public void InitializeTurnErrorBecauseGameIsInHasEnded() {
+        createdActiveGame.setStateForLogicService(State.hasEnded);
+
+        assertThrows(NoContentException.class, () -> {logicService.initializeTurn(createdActiveGame.getId());});
+    }
+
 }

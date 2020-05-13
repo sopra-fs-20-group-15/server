@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
@@ -27,10 +28,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @WebAppConfiguration
 @SpringBootTest
-public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveGame{
+public class LogicServiceIntegrationTestSetGuess extends TestSETUPCreatesActiveGame{
 
     @Autowired
-    public LogicServiceSetGuessIntegrationTest(@Qualifier("cardService") CardService cardService, @Qualifier("gameSetUpService") GameSetUpService gameSetUpService, @Qualifier("logicService") LogicService logicService, @Qualifier("playerService") PlayerService playerService, @Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("gameRepository") GameRepository gameRepository, @Qualifier("activeGameService") ActiveGameService activeGameService, LSStateChooseMysteryWord lsStateChooseMysteryWord, LSSGiveClues lssGiveClues, LSSGiveGuess lssGiveGuess, LSSWordReveal lssWordReveal, LSSGameHasEnded lssGameHasEnded) {
+    public LogicServiceIntegrationTestSetGuess(@Qualifier("cardService") CardService cardService, @Qualifier("gameSetUpService") GameSetUpService gameSetUpService, @Qualifier("logicService") LogicService logicService, @Qualifier("playerService") PlayerService playerService, @Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("gameRepository") GameRepository gameRepository, @Qualifier("activeGameService") ActiveGameService activeGameService, LSStateChooseMysteryWord lsStateChooseMysteryWord, LSSGiveClues lssGiveClues, LSSGiveGuess lssGiveGuess, LSSWordReveal lssWordReveal, LSSGameHasEnded lssGameHasEnded) {
         super(cardService, logicService, gameSetUpService, playerService, playerRepository, activeGameService, gameRepository, gameSetUpRepository, lsStateChooseMysteryWord, lssGiveClues, lssGiveGuess, lssWordReveal, lssGameHasEnded);
     }
 
@@ -109,5 +110,29 @@ public class LogicServiceSetGuessIntegrationTest extends TestSETUPCreatesActiveG
         assertFalse(createdActiveGame.getIsValidGuess());
         assertEquals(0,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("TwoName"));
         assertEquals(0, createdActiveGame.getCardIds().size());
+    }
+
+    /**Not possible in every phase except GiveGuess*/
+
+    @Test
+    public void giveGuessFailsInChooseMysteryWord() {
+        createdActiveGame.setStateForLogicService(State.ChooseMysteryWord);
+        assertThrows(NoContentException.class, () -> {logicService.setGuess(createdActiveGame.getId(), "Test"); });
+    }
+
+    @Test
+    public void giveGuessFailsInGiveClue() {
+        createdActiveGame.setStateForLogicService(State.GiveClues);
+        assertThrows(NoContentException.class, () -> {logicService.setGuess(createdActiveGame.getId(), "Test"); });
+    }
+    @Test
+    public void giveGuessFailsWordReveal() {
+        createdActiveGame.setStateForLogicService(State.WordReveal);
+        assertThrows(NoContentException.class, () -> {logicService.setGuess(createdActiveGame.getId(), "Test"); });
+    }
+    @Test
+    public void giveGuessFailsInHasEnded() {
+        createdActiveGame.setStateForLogicService(State.hasEnded);
+        assertThrows(NoContentException.class, () -> {logicService.setGuess(createdActiveGame.getId(), "Test"); });
     }
 }

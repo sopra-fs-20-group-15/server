@@ -573,13 +573,21 @@ public class LogicControllerTest {
     /**Tests if the game phase can correctly be retrieved*/
     @Test
     public void GETPhaseWorks() throws Exception {
-        given(logicService.getGamePhase(anyLong())).willReturn(State.ChooseMysteryWord);
+        //Returns
+        GamePhaseDTO gamePhaseDTO = new GamePhaseDTO();
+        gamePhaseDTO.setPhaseNumber(1);
+        gamePhaseDTO.setPhase("ChooseMysteryWord");
+
+        //mock
+        given(logicService.getGamePhase(anyLong())).willReturn(gamePhaseDTO);
         // when/then -> do the request + validate the result
 
-        MockHttpServletRequestBuilder postRequest = get("/games/{gameId}/phases", "1");
+        MockHttpServletRequestBuilder getRequest = get("/games/{gameId}/phases", "1");
         // then
-        mockMvc.perform(postRequest)
-                .andExpect(status().isOk());
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.phaseNumber", is(gamePhaseDTO.getPhaseNumber())))
+                .andExpect(jsonPath("$.phase", is(gamePhaseDTO.getPhase())));
 
     }
 
