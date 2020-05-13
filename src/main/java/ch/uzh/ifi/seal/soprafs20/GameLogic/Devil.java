@@ -19,23 +19,29 @@ public class Devil implements Bot {
         ApiRequester apiRequester = new ApiRequester();
         WordComparer wordComparer = new WordComparer();
         String returnClue = this.randomWord();
-        List<String> relWords = new ArrayList<>();
+        List<String> relWords;
         try {
             relWords = apiRequester.getFiveWordsFromDatamuseApi(mysteryWord, "ml");
         } catch (IOException ex) {
             return returnClue;
         }
         if (relWords.size() < 3) {return returnClue;}
-        List<String> relRelWords = new ArrayList<>();
+        List<String> relRelWords;
         try {
             relRelWords = apiRequester.getFiveWordsFromDatamuseApi(relWords.get(1), "ml");
-            if (relRelWords.isEmpty()) {
+            if (relRelWords.isEmpty()) {        //safety feature if DataMuse doesn't contain answer for above word
                 relRelWords = apiRequester.getFiveWordsFromDatamuseApi(relWords.get(2), "ml");
             }
         } catch (IOException ex) {
             return returnClue;
         }
-        relWords = wordComparer.notSuitableBotClue(relRelWords, mysteryWord);
+        List<String> notTooCloseWords = new ArrayList<>();
+        for (String word : relRelWords){
+            if (!relWords.contains(word)) {
+                notTooCloseWords.add(word);
+            }
+        }
+        relWords = wordComparer.notSuitableBotClue(notTooCloseWords, mysteryWord);
         if (n+1 < relWords.size()) {
             return relWords.get(n+1);
         }
