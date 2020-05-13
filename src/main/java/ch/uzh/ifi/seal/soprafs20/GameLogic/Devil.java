@@ -43,7 +43,7 @@ public class Devil implements Bot {
     }
 
     private String randomWord(){
-        List<String> rndWords = new ArrayList<>(Arrays.asList("Paris", "Africa", "Bread", "Money", "Garden", "House", "Tree", "Table", "Chair", "Police", "Weapon" ));
+        List<String> rndWords = new ArrayList<>(Arrays.asList("Paris", "blue", "green", "white", "yellow", "purple", "smelly", "unpopular", "cheap", "death", "Religion", "Africa", "Bread", "Money", "Garden", "House", "Tree", "Table", "Chair", "Police", "Weapon" ));
         return rndWords.get(rand.nextInt(rndWords.size()));
     }
 
