@@ -123,54 +123,61 @@ class WordComparerTest {
     void notASuitableBotClueOkClue() {
         WordComparer wordComparer = new WordComparer();
         ArrayList<String> words = new ArrayList<>();
+        List<String> actual = new ArrayList<>();
+        actual.add("house");
+        actual.add(("Tree"));
         words.add("house");
         words.add("Tree");
         String mysteryWord = "live";
-        List<String> actual = wordComparer.notSuitableBotClue(words, mysteryWord);
-        assertEquals(words.get(0), actual.get(0));
-        assertEquals(words.get(1), actual.get(1));
+        wordComparer.notSuitableBotClue(words, mysteryWord);
+        assertEquals(actual.get(0), words.get(0));
+        assertEquals(actual.get(1), words.get(1));
     }
 
     @Test
     void notASuitableBotClueOneWordIsMW() {
         WordComparer wordComparer = new WordComparer();
         ArrayList<String> words = new ArrayList<>();
+        List<String> actual = new ArrayList<>();
+        actual.add("house");
+        actual.add("Tree");
         words.add("live");
         words.add("house");
         words.add("Tree");
         String mysteryWord = "live";
-        List<String> actual = wordComparer.notSuitableBotClue(words, mysteryWord);
-        words.remove("live");
-        assertEquals(words.get(0), actual.get(0));
-        assertEquals(words.get(1), actual.get(1));
+        wordComparer.notSuitableBotClue(words, mysteryWord);
+        assertEquals(actual.get(0), words.get(0));
+        assertEquals(actual.get(1), words.get(1));
     }
 
     @Test
     void notASuitableBotClueOneWordTooClose() {
         WordComparer wordComparer = new WordComparer();
         ArrayList<String> words = new ArrayList<>();
+        List<String> actual = new ArrayList<>();
+        actual.add("house");
+        actual.add("Tree");
         words.add("living");
         words.add("house");
         words.add("Tree");
         String mysteryWord = "live";
-        List<String> actual = wordComparer.notSuitableBotClue(words, mysteryWord);
-        words.remove("living");
-        assertEquals(words.get(0), actual.get(0));
-        assertEquals(words.get(1), actual.get(1));
+        wordComparer.notSuitableBotClue(words, mysteryWord);
+        assertEquals(actual.get(0), words.get(0));
+        assertEquals(actual.get(1), words.get(1));
     }
 
     @Test  /**Too close means, that two words have the same word stem or are from the same word family*/
     void notASuitableBotClueTwoWordsTooClose() {
         WordComparer wordComparer = new WordComparer();
         ArrayList<String> words = new ArrayList<>();
+        List<String> actual = new ArrayList<>();
+        actual.add("Tree");
         words.add("living");
         words.add("live");
         words.add("Tree");
         String mysteryWord = "live";
-        List<String> actual = wordComparer.notSuitableBotClue(words, mysteryWord);
-        words.remove("living");
-        words.remove("live");
-        assertEquals(words.get(0), actual.get(0));
+        wordComparer.notSuitableBotClue(words, mysteryWord);
+        assertEquals(actual.get(0), words.get(0));
     }
 
     @Test
