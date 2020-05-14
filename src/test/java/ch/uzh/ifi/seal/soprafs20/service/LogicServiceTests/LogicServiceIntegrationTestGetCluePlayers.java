@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 
+import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
@@ -18,6 +19,7 @@ import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
 import static org.junit.jupiter.api.Assertions.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +34,8 @@ public class LogicServiceIntegrationTestGetCluePlayers extends TestSETUPCreatesA
     }
 
     @Test
-    public void getCluePlayersWorksWithMultipleCluesGiven() {
 
+    public void getCluePlayersWorksWithMultipleCluesGiven() {
         createdActiveGame.setActiveMysteryWord("Test");
         CluePostDTO cluePostDTO = new CluePostDTO();
 
@@ -45,21 +47,13 @@ public class LogicServiceIntegrationTestGetCluePlayers extends TestSETUPCreatesA
         cluePostDTO.setClue("ThreeClue");
         logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
         Map<String,String> test= createdActiveGame.getClueMap();
-        test.put(createdActiveGame.getBots().get(0).getToken(), "CaillouTheBaldBoy");
+
         createdActiveGame.setClueMap(test);
 
-        List<PlayerNameDTO> playerNames= logicService.getCluePlayers(createdActiveGame);
-        assertEquals(3, playerNames.size());
-        //create list with player names and bot names for assertion
-        List<String> names =new ArrayList<>();
-        names.add("TwoName");
-        names.add("ThreeName");
-        names.add(createdActiveGame.getBots().get(0).getName());
-        //check that all playerNames are the expected ones
-        for (PlayerNameDTO pn: playerNames) {
-            assertTrue(names.contains(pn.getPlayerName()));
-        }
-
+        List<PlayerNameDTO> playerNames= logicService.getCluePlayers(createdActiveGame.getId());
+        assertEquals(2, playerNames.size());
+        assertEquals(playerNames.get(0).getPlayerName(), p1.getUsername());
+        assertEquals(playerNames.get(1).getPlayerName(), p3.getUsername());
     }
 
     @Test
