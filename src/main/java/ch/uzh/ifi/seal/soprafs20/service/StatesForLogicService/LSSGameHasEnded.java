@@ -15,31 +15,31 @@ import java.util.List;
 public class LSSGameHasEnded implements LogicServiceState{
 
     public GameEntity initializeTurn(GameEntity game) {
-        throw new NoContentException("The game has ended!");
+        throw new NoContentException("The game has ended! Cannot initialize");
     }
 
     public String setMysteryWord(GameEntity game, Long wordId){
-        throw new NoContentException("The game has ended!");
+        throw new NoContentException("The game has ended! Cannot Set MysteryWord");
     }
 
     public String getMysteryWord(GameEntity game){
-        throw new NoContentException("The game has ended!");
+        throw new NoContentException("The game has ended! Cannot get mysteryWord");
     }
 
     public void giveClue(Long GameId, CluePostDTO cluePostDTO){
-        throw new NoContentException("The game has ended!");
+        throw new NoContentException("The game has ended! Cannot give clue");
     }
 
     public List<ClueGetDTO> getClues(GameEntity game){
-        throw new NoContentException("The game has ended!");
+        throw new NoContentException("The game has ended! Cannot get clues");
     }
 
     public void setGuess(GameEntity game, String guess){
-        throw new NoContentException("The game has ended!");
+        throw new NoContentException("The game has ended! Cannot get guess");
     }
 
     public String getGuess(GameEntity game){
-        throw new NoContentException("The game has ended!");
+        throw new NoContentException("The game has ended! Cannot get guess");
     }
 
 }
