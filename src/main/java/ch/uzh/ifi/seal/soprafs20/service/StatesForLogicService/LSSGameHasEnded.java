@@ -38,8 +38,9 @@ public class LSSGameHasEnded implements LogicServiceState{
         throw new NoContentException("The game has ended! Cannot get guess");
     }
 
-    public String getGuess(GameEntity game){
-        throw new NoContentException("The game has ended! Cannot get guess");
+    public String getGuess(GameEntity game) {
+        return game.getGuess();
     }
+
 
 }

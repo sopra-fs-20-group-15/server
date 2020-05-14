@@ -228,11 +228,6 @@ public class LogicService {
         if (game.getStateForLogicService() == State.hasEnded){
             return true;
         }
-        if ( game.getCardIds().size() == 0){
-            game.setStateForLogicService(State.hasEnded);
-            updateLeaderBoard(game);
-            return true;
-        }
         else {
             return false;}
     }

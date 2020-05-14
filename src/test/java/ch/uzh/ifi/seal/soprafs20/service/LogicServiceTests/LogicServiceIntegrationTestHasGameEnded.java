@@ -40,7 +40,7 @@ public class LogicServiceIntegrationTestHasGameEnded extends TestSETUPCreatesAct
     @Test
     public void GameHasEnded() {
 
-        createdActiveGame.setCardIds(new ArrayList<Long>());
+        createdActiveGame.setStateForLogicService(State.hasEnded);
         //c
         Boolean hasEnded = logicService.hasGameEnded(createdActiveGame.getId());
 

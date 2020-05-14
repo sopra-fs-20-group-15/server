@@ -116,6 +116,9 @@ public class LSSGiveGuess implements LogicServiceState{
         //Time to dish out some points fam!
         updateScoreboard(game);
         game.setStateForLogicService(State.WordReveal);
+        if ( game.getCardIds().size() == 0){
+            game.setStateForLogicService(State.hasEnded);
+        }
     }
 
 

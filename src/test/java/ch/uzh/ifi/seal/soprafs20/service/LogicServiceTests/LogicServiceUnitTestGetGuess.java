@@ -81,14 +81,18 @@ public class LogicServiceUnitTestGetGuess {
 
 
     @Test
-    public void getGuessFailsInHasEnded(){
+    public void getGuessWorksInHasEnded(){
         //GameEntity that shall be returned
         GameEntity game = new GameEntity();
         game.setActiveMysteryWord("Test");
+        game.setGuess("Test");
         game.setStateForLogicService(State.hasEnded);
 
         given(activeGameService.getGameById(anyLong())).willReturn(game);
-        assertThrows(NoContentException.class, () -> {logicService.getGuess(2L);});
+        String actualGuess = logicService.getGuess(2L);
+
+        assertEquals("Test", actualGuess);
+
 
     }
 
