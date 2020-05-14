@@ -40,6 +40,7 @@ class AngelTest {
         String actual1 = angel.giveClue("Smoke", 0);
         String actual2 = angel.giveClue("Smoke", 1);
 
+
         assertNotNull(actual1);
         assertNotNull(actual2);
         assertNotEquals(actual1, actual2);

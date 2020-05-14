@@ -18,7 +18,7 @@ public class Angel implements Bot {
     public String giveClue(String mysteryWord, int n) {
         ApiRequester apiRequester = new ApiRequester();
         WordComparer wordComparer = new WordComparer();
-        String returnClue = "Earth";
+        String returnClue = this.apiFailureClue();
         List<String> clues = new ArrayList<>();
         try { clues = apiRequester.getFiveWordsFromDatamuseApi(mysteryWord, "rel_trg");
         } catch (IOException ex) {
@@ -31,7 +31,7 @@ public class Angel implements Bot {
                 returnClue = this.apiFailureClue();
             }
         }
-        clues = wordComparer.notSuitableBotClue(clues, mysteryWord);
+        wordComparer.notSuitableBotClue(clues, mysteryWord);
         if (n < clues.size()) {
             return clues.get(n);
         }
