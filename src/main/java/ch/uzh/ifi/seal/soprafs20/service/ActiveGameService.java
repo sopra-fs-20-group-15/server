@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Bot;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
+import ch.uzh.ifi.seal.soprafs20.botCreator.BotCreator;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
@@ -91,29 +92,6 @@ public class ActiveGameService {
 
     /**Create active game with helpers*/
 
-    /**Adds requested number of bots to a game (angels and devils)*/
-    protected GameEntity addBots(GameEntity game, int numOfDevils, int numOfAngels){
-        List<Angel> angels=new ArrayList<>();
-        List<Devil> devils=new ArrayList<>();
-        //Add angles
-        for (int i = 1; i <= numOfAngels; i++) {
-            Angel bot = new Angel();
-            bot.setName("Angel_Nr_" + String.valueOf(i));
-            bot.setToken("Angel_" + String.valueOf(i));
-            angels.add(bot);
-        }
-        //Add devils
-        for (int i = 1; i <= numOfDevils; i++) {
-            Devil bot = new Devil();
-            bot.setName("Devil_Nr_" + String.valueOf(i));
-            bot.setToken("Devil_" + String.valueOf(i));
-            devils.add(bot);
-        }
-        game.setAngels(angels);
-        game.setDevils(devils);
-        return game;
-    }
-
     /**Adds the human players to a game*/
     protected GameEntity addHumanPlayers(GameEntity game, List<String> playerTokens, String hostToken){
         //Add playerEntities
@@ -187,8 +165,9 @@ public class ActiveGameService {
                 >2 && gameSetUpEntity.getPlayerTokens().size()+gameSetUpEntity.getNumberOfDevils()+gameSetUpEntity.getNumberOfAngles()<8) {
             //game initialization
             GameEntity game = new GameEntity();
-            addBots(game, gameSetUpEntity.getNumberOfDevils().intValue(), gameSetUpEntity.getNumberOfAngles().intValue());
             addHumanPlayers(game, gameSetUpEntity.getPlayerTokens(), pt);
+            BotCreator botCreator=new BotCreator();
+            botCreator.addBots(game, gameSetUpEntity.getNumberOfDevils().intValue(), gameSetUpEntity.getNumberOfAngles().intValue());
             addCards(game);
             furtherInitialize(game);
             //Save and flush
