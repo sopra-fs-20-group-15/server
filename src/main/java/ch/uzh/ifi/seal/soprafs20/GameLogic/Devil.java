@@ -2,10 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 import javax.persistence.Embeddable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Embeddable
 public class Devil implements Bot {
@@ -19,27 +16,41 @@ public class Devil implements Bot {
         ApiRequester apiRequester = new ApiRequester();
         WordComparer wordComparer = new WordComparer();
         String returnClue = this.randomWord();
-        List<String> relWords = new ArrayList<>();
+        List<String> relWords;
         try {
             relWords = apiRequester.getFiveWordsFromDatamuseApi(mysteryWord, "ml");
         } catch (IOException ex) {
             return returnClue;
         }
         if (relWords.size() < 3) {return returnClue;}
-        List<String> relRelWords = new ArrayList<>();
+        List<String> moleClues;
         try {
-            relRelWords = apiRequester.getFiveWordsFromDatamuseApi(relWords.get(1), "ml");
-            if (relRelWords.isEmpty()) {
-                relRelWords = apiRequester.getFiveWordsFromDatamuseApi(relWords.get(2), "ml");
+            moleClues = apiRequester.getFiveWordsFromDatamuseApi(relWords.get(1), "ml");
+            if (moleClues.isEmpty()) {        //safety feature if DataMuse doesn't contain answer for above word
+                moleClues = apiRequester.getFiveWordsFromDatamuseApi(relWords.get(2), "ml");
             }
         } catch (IOException ex) {
             return returnClue;
         }
-        relWords = wordComparer.notSuitableBotClue(relRelWords, mysteryWord);
+
+        this.removeToHelpfulClues(relWords, moleClues);
+
+        wordComparer.notSuitableBotClue(moleClues, mysteryWord);
         if (n+1 < relWords.size()) {
             return relWords.get(n+1);
         }
         return returnClue;
+    }
+
+    protected void removeToHelpfulClues(List<String> tooCloseWords, List<String> moleClues) {
+        Iterator<String> i = moleClues.iterator();
+        while (i.hasNext()) {
+            String s = i.next();
+            if (tooCloseWords.contains(s)) {
+                i.remove();
+            }
+        }
+
     }
 
     private String randomWord(){
