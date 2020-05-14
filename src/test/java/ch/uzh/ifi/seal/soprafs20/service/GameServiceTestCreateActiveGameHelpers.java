@@ -31,37 +31,6 @@ public class GameServiceTestCreateActiveGameHelpers{
     GameEntity game = new GameEntity();
 
 
-    /**Tests for addBots*/
-
-    @Test
-    public void GameServiceAddBotsWithOneAngel() {
-
-        gameService.addBots(game, 0, 1);
-
-        assertTrue(game.getAngels().size() == 1);
-        assertTrue(game.getDevils().size() == 0);
-        assertTrue(game.getAngels().get(0).getName().equals("Angel_Nr_1"));
-    }
-
-    @Test
-    public void GameServiceAddBotsWithOneDevil() {
-
-        gameService.addBots(game, 1, 0);
-
-        assertTrue(game.getAngels().size() == 0);
-        assertTrue(game.getDevils().size() == 1);
-        assertTrue(game.getDevils().get(0).getName().equals("Devil_Nr_1"));
-    }
-
-    @Test
-    public void GameServiceAddBotsNoBots() {
-
-        gameService.addBots(game, 0, 0);
-
-        assertTrue(game.getAngels().size() == 0);
-        assertTrue(game.getDevils().size() == 0);
-    }
-
     /**Tests for addPlayers*/
     @Test
     public void GameServiceAddHumanPlayers() {

@@ -131,15 +131,22 @@ public class LogicServiceIntegrationTestGetCluePlayers {
         cluePostDTO.setClue("ThreeClue");
         logicService.giveClue(createdActiveGame, cluePostDTO);
         Map<String,String> test= createdActiveGame.getClueMap();
-        test.put("Angel_1", "Test");
+        test.put(createdActiveGame.getBots().get(0).getToken(), "CaillouTheBaldBoy");
         createdActiveGame.setClueMap(test);
         assertTrue(createdActiveGame.getValidClues().isEmpty());
 
         List<PlayerNameDTO> playerNames= logicService.getCluePlayers(createdActiveGame);
         assertEquals(3, playerNames.size());
-        assertEquals(playerNames.get(0).getPlayerName(), "Angel_Nr_1");
-        assertEquals(playerNames.get(1).getPlayerName(), p2.getUsername());
-        assertEquals(playerNames.get(2).getPlayerName(), p3.getUsername());
+        //create list with player names and bot names for assertion
+        List<String> names =new ArrayList<>();
+        names.add("TwoName");
+        names.add("ThreeName");
+        names.add(createdActiveGame.getBots().get(0).getName());
+        //check that all playerNames are the expected ones
+        for (PlayerNameDTO pn: playerNames) {
+            assertTrue(names.contains(pn.getPlayerName()));
+        }
+
     }
 
     @Test

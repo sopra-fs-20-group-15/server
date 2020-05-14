@@ -27,9 +27,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
 import static org.junit.jupiter.api.Assertions.*;
@@ -160,9 +158,12 @@ public class GameServiceIntegrationCreateActiveGameTest {
         list.add("OneName");
         list.add("TwoName");
         list.add("ThreeName");
-        list.add("Angel_Nr_1");
-        list.add("Devil_Nr_1");
-        assertTrue(activeGamePostDTO.getPlayerNames().containsAll(list));
+        String[] names = {"Jill","Albert","Chris","Leon", "Claire", "Ada","Rebecca", "Barry", "Sheva", "Carlos", "Sherry",
+                "Ashley", "Jack", "Hunk", "Helena", "Marvin", "Anette"};
+        List<String> nameList= new LinkedList<>(Arrays.asList(names));
+        for (String name:activeGamePostDTO.getPlayerNames()) {
+            assertTrue(list.contains(name)||nameList.contains(name));
+        }
     }
 
     @Test
