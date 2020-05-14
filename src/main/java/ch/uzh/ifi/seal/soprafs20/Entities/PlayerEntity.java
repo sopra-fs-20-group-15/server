@@ -41,7 +41,6 @@ public class PlayerEntity implements Serializable, Comparable<PlayerEntity> {
     @Column(nullable = false)
     private int gamesPlayed=0;
 
-
     @Column
     private Long timePassed;
 
