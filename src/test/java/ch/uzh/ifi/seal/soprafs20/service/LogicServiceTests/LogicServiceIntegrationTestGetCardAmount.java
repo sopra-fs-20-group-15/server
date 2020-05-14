@@ -28,14 +28,14 @@ public class LogicServiceIntegrationTestGetCardAmount extends TestSETUPCreatesAc
 
     @Test
     public void getCardAmountWorksOnStart() {
-        assertEquals(13,logicService.getCardAmount(createdActiveGame.getId()).getCardsOnStack());
+        assertEquals(23,logicService.getCardAmount(createdActiveGame.getId()).getCardsOnStack());
     }
 
     @Transactional
     @Test
     public void getCardAmountWorksAfterChange() {
-        assertEquals(13,logicService.getCardAmount(createdActiveGame.getId()).getCardsOnStack());
+        assertEquals(33,logicService.getCardAmount(createdActiveGame.getId()).getCardsOnStack());
         createdActiveGame.drawCardFromStack();
-        assertEquals(12,logicService.getCardAmount(createdActiveGame.getId()).getCardsOnStack());
+        assertEquals(2,logicService.getCardAmount(createdActiveGame.getId()).getCardsOnStack());
     }
 }
