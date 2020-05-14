@@ -2,10 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 import javax.persistence.Embeddable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Embeddable
 public class WordComparer {
@@ -101,28 +98,30 @@ public class WordComparer {
         return wordStems;
     }
 
-    public List<String> notSuitableBotClue(List<String> words, String mysteryWord){
+    public void notSuitableBotClue(List<String> words, String mysteryWord){
         ApiRequester apiRequester = new ApiRequester();
 
-        List<String> okWords = new ArrayList<>();
         String mysteryStem;
         try {
             mysteryStem = apiRequester.getWordStem(mysteryWord.toLowerCase());
         } catch(IOException ex) {
             mysteryStem = mysteryWord.toLowerCase();
         }
-        for(String word: words){
+
+        Iterator<String> i = words.iterator();
+        while (i.hasNext()) {
+            String word = i.next();
             String stem;
             try {
                 stem = apiRequester.getWordStem(word.toLowerCase());
             } catch(IOException ex) {
                 stem = word.toLowerCase();
             }//get the word stem from API
-            if (!(word.toLowerCase().contains(mysteryStem) || mysteryWord.toLowerCase().contains(stem) || stem.equals(mysteryStem) ||word.contains(" "))) {
-                okWords.add(word);
+            if ((word.toLowerCase().contains(mysteryStem) || mysteryWord.toLowerCase().contains(stem) || stem.equals(mysteryStem) ||word.contains(" "))) {
+                i.remove();
+
             }
         }
-        return okWords;
     }
 
     public boolean compareMysteryWords(String guess, String mysteryWord){
