@@ -2,10 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
 import javax.persistence.Embeddable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Embeddable
 public class Devil implements Bot {
@@ -26,26 +23,34 @@ public class Devil implements Bot {
             return returnClue;
         }
         if (relWords.size() < 3) {return returnClue;}
-        List<String> relRelWords;
+        List<String> moleClues;
         try {
-            relRelWords = apiRequester.getFiveWordsFromDatamuseApi(relWords.get(1), "ml");
-            if (relRelWords.isEmpty()) {        //safety feature if DataMuse doesn't contain answer for above word
-                relRelWords = apiRequester.getFiveWordsFromDatamuseApi(relWords.get(2), "ml");
+            moleClues = apiRequester.getFiveWordsFromDatamuseApi(relWords.get(1), "ml");
+            if (moleClues.isEmpty()) {        //safety feature if DataMuse doesn't contain answer for above word
+                moleClues = apiRequester.getFiveWordsFromDatamuseApi(relWords.get(2), "ml");
             }
         } catch (IOException ex) {
             return returnClue;
         }
-        List<String> notTooCloseWords = new ArrayList<>();
-        for (String word : relRelWords){
-            if (!relWords.contains(word)) {
-                notTooCloseWords.add(word);
-            }
-        }
-        relWords = wordComparer.notSuitableBotClue(notTooCloseWords, mysteryWord);
+
+        this.removeToHelpfulClues(relWords, moleClues);
+
+        wordComparer.notSuitableBotClue(moleClues, mysteryWord);
         if (n+1 < relWords.size()) {
             return relWords.get(n+1);
         }
         return returnClue;
+    }
+
+    protected void removeToHelpfulClues(List<String> tooCloseWords, List<String> moleClues) {
+        Iterator<String> i = moleClues.iterator();
+        while (i.hasNext()) {
+            String s = i.next();
+            if (tooCloseWords.contains(s)) {
+                i.remove();
+            }
+        }
+
     }
 
     private String randomWord(){

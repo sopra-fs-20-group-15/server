@@ -1,11 +1,50 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
+import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import org.junit.jupiter.api.Test;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DevilTest {
 
+    /*  This test is here to let a devil bot run on some of the mystery words to check it's performance
+    @Test
+    void testSomeWords(){
+        Devil devil = new Devil();
+
+        ArrayList<String> listOfLines = new ArrayList<>();
+        try (BufferedReader bufReader = new BufferedReader(new FileReader("cardsEn.txt"))){
+            String line = bufReader.readLine();
+            while (line != null) {
+                listOfLines.add(line);
+                line = bufReader.readLine();
+            }
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < 100; i++) {
+            if (listOfLines.get(i).isBlank()) {
+                continue;
+            }
+            System.out.print(listOfLines.get(i)+ "    ");
+            System.out.print(devil.giveClue(listOfLines.get(i), 0) + "    ");
+            System.out.print(devil.giveClue(listOfLines.get(i), 1) + "    ");
+            System.out.println(devil.giveClue(listOfLines.get(i), 2));
+        }
+
+    }
+        */
     @Test
     void testGiveClueGivesAnswerForNormalWord(){
         Devil devil = new Devil();
