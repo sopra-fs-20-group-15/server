@@ -76,7 +76,7 @@ public class CardService {
         }
         List<Long> cardIds = new ArrayList<>();
         List<CardEntity> allCards = cardRepository.findAll();
-        int stackSize = 3;
+        int stackSize = 13;
         for (int i = 0; i < stackSize; i++){
             int randomIndex = rand.nextInt(allCards.size());
             CardEntity randomCard = allCards.get(randomIndex);
