@@ -17,7 +17,7 @@ public class CluePostDTO {
         this.clue = clue;
     }
 
-    public void setPlayerToken(String playerName) {
-        this.playerToken = playerName;
+    public void setPlayerToken(String playerToken) {
+        this.playerToken = playerToken;
     }
 }

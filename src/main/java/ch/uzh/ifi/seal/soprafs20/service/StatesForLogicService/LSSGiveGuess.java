@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 @Service
@@ -121,8 +122,12 @@ public class LSSGiveGuess implements LogicServiceState{
         }
     }
 
-
     public String getGuess(GameEntity game) {
         throw new NoContentException("The guess has to be set first!");
+    }
+
+    /**If active does not give a guess in time, do this automatically*/
+    public void endRoundAutomatically(GameEntity game){
+        setGuess(game ,"invalid_guess");
     }
 }

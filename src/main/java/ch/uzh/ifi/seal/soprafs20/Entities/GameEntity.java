@@ -42,6 +42,7 @@ public class GameEntity {
     @ElementCollection
     List<Long> CardIds;
 
+    /**PlayerToken / Clue*/
     @ElementCollection
     Map<String, String> clueMap;
 

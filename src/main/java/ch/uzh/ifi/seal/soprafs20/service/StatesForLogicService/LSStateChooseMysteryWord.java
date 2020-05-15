@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @Transactional
@@ -77,6 +78,12 @@ public class LSStateChooseMysteryWord implements LogicServiceState {
 
     public String getGuess(GameEntity game) {
         throw new NoContentException("The MysteryWord has to be chosen first!");
+    }
+
+    /**if the human player is inactive, choose a random number between one and five and choose the mysteryWord based on that number*/
+    public void endRoundAutomatically(GameEntity game){
+        int randomNum = ThreadLocalRandom.current().nextInt(1,  6);
+        setMysteryWord(game, (long) randomNum);
     }
 
 

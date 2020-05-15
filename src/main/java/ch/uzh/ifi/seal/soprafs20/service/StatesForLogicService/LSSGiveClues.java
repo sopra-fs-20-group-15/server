@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @Transactional
@@ -127,8 +128,22 @@ public class LSSGiveClues implements LogicServiceState{
         throw new NoContentException("The clues have to be set first!");
     }
 
-
     public String getGuess(GameEntity game) {
         throw new NoContentException("The clues have to be set first!");
+    }
+
+    /**if a human player is inactive, check who has not submitted a clue yet and give an invalid clue for him or her*/
+    public void endRoundAutomatically(GameEntity game){
+        Map<String, String> clueMap = game.getClueMap();
+        for (PlayerEntity player : game.getPlayers()){
+            //If the clueMap does not contain a clue yet
+            if (!clueMap.containsKey(player.getToken())){
+                CluePostDTO cluePostDTO = new CluePostDTO();
+                cluePostDTO.setPlayerToken(player.getToken());
+                //Take the active mystery word as clue so that the clue is invalid ()
+                cluePostDTO.setClue(game.getActiveMysteryWord());
+                giveClue(game.getId(), cluePostDTO);
+            }
+        }
     }
 }

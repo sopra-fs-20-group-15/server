@@ -42,5 +42,9 @@ public class LSSGameHasEnded implements LogicServiceState{
         return game.getGuess();
     }
 
+    public void endRoundAutomatically(GameEntity game){
+       throw new NoContentException("The game has ended!");
+    }
+
 
 }

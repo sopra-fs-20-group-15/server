@@ -270,5 +270,16 @@ public class LogicController {
         return logicService.getGamePhase(gameIdLong);
     }
 
+    /** confirm that the player is still online
+     * */
+    @PutMapping("/games/{gameId}/phases")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void setStillAlive(@PathVariable String gameId, @RequestBody StillAliveDTO stillAliveDTO) {
+        stringIsALong(gameId);
+        Long gameIdLong = parseLong(gameId);
+        logicService.checkThatPhaseHasNotEndedYet(gameIdLong);
+    }
+
 
 }

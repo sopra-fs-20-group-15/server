@@ -21,6 +21,8 @@ public interface LogicServiceState {
 
     public String getGuess(GameEntity game);
 
+    public void endRoundAutomatically(GameEntity game);
+
 }
 
 

@@ -79,8 +79,12 @@ public class LSSWordReveal implements LogicServiceState{
         throw new NoContentException("the guess has already been set!");
     }
 
-
     public String getGuess(GameEntity game) {
         return game.getGuess();
+    }
+
+    /**if no player initializes, do this automatically*/
+    public void endRoundAutomatically(GameEntity game){
+        initializeTurn(game);
     }
 }

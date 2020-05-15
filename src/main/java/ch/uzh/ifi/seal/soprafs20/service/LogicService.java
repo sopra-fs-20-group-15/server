@@ -278,4 +278,12 @@ public class LogicService {
         return gamePhaseDTO;
     }
 
+    public void checkThatPhaseHasNotEndedYet(Long gameId){
+        GameEntity game = getGame(gameId);
+        int threshold = 5000;
+        // if the round has already taken longer than the intended duration of that phase plus a threshold, finish the phase automatically
+        if(System.currentTimeMillis() < (game.getTimeStart()+game.getStateForLogicService().getPhaseDuration()+threshold))
+            state.endRoundAutomatically(game);
+    }
+
 }
