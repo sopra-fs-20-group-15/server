@@ -12,6 +12,7 @@ import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ActiveGamePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import org.slf4j.Logger;
@@ -36,13 +37,15 @@ public class ActiveGameService {
     private final GameRepository gameRepository;
     private final GameSetUpService gameSetUpService;
     private final CardService cardService;
+    private final PlayerRepository playerRepository;
 
     @Autowired
-    public ActiveGameService(@Qualifier("cardService") CardService cardService, @Qualifier("playerService") PlayerService playerService, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("gameRepository") GameRepository gameRepository, GameSetUpService gameSetUpService) {
+    public ActiveGameService(@Qualifier("cardService") CardService cardService, @Qualifier("playerService") PlayerService playerService, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("gameRepository") GameRepository gameRepository, GameSetUpService gameSetUpService, @Qualifier("playerRepository") PlayerRepository playerRepository) {
         this.cardService = cardService;
         this.playerService = playerService;
         this.gameRepository = gameRepository;
         this.gameSetUpService = gameSetUpService;
+        this.playerRepository = playerRepository;
     }
     /**Get an active game by its Id or throw 404 in case the game is not found
      *  @Param: Long id; Id of the active game that should be retrieved
@@ -179,6 +182,19 @@ public class ActiveGameService {
         else throw new ConflictException("Not enough or too many players to start game!");
     }
 
+
+    protected void updateLeaderBoard (GameEntity game){
+        Map<String, Integer> sb= game.getScoreboard().getScore();
+        //update the leader board scores for every human player in game
+        for (PlayerEntity player: game.getPlayers()) {
+            int score=sb.get(player.getUsername());
+            player.setLeaderBoardScore(player.getLeaderBoardScore()+score);
+            player.setGamesPlayed(player.getGamesPlayed()+1);
+            playerRepository.saveAndFlush(player);
+        }
+    }
+
+
     /**Deletes an active game once it has ended
      * @Param: String gameId
      * @Returns: void
@@ -187,6 +203,7 @@ public class ActiveGameService {
     public void deleteActiveGame(long gameId){
         GameEntity game = getGameById(gameId);
         if (game.getStateForLogicService() != State.hasEnded){throw new ConflictException("The game cannot be deleted before it has ended");}
+        updateLeaderBoard(game);
         gameRepository.deleteById(game.getId());
     }
 

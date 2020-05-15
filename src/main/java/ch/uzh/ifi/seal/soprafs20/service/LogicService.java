@@ -206,16 +206,6 @@ public class LogicService {
         return rankScorePlayerNameList;
     }
 
-    protected void updateLeaderBoard (GameEntity game){
-        Map<String, Integer> sb= game.getScoreboard().getScore();
-        //update the leader board scores for every human player in game
-        for (PlayerEntity player: game.getPlayers()) {
-            int score=sb.get(player.getUsername());
-            player.setLeaderBoardScore(player.getLeaderBoardScore()+score);
-            player.setGamesPlayed(player.getGamesPlayed()+1);
-            playerRepository.saveAndFlush(player);
-        }
-    }
 
     /**Returns whether the game has already ended or not
      *@Param: GameId

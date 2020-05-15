@@ -19,6 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @WebAppConfiguration
 @SpringBootTest
 public class updateLeaderBoardUnitTest {
+
+    @Autowired
+    ActiveGameService activeGameService;
     @Autowired
     LogicService logicService;
     GameEntity game=new GameEntity();
@@ -60,7 +63,7 @@ public class updateLeaderBoardUnitTest {
 
     @Test
     public void updateLeaderBoardWorks(){
-        logicService.updateLeaderBoard(game);
+        activeGameService.updateLeaderBoard(game);
         assertEquals(1,p1.getLeaderBoardScore());
         assertEquals(1, p1.getGamesPlayed());
         assertEquals(2,p2.getLeaderBoardScore());
