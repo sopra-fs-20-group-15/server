@@ -136,13 +136,15 @@ public class LSSGiveClues implements LogicServiceState{
     public void endRoundAutomatically(GameEntity game){
         Map<String, String> clueMap = game.getClueMap();
         for (PlayerEntity player : game.getPlayers()){
-            //If the clueMap does not contain a clue yet
-            if (!clueMap.containsKey(player.getToken())){
-                CluePostDTO cluePostDTO = new CluePostDTO();
-                cluePostDTO.setPlayerToken(player.getToken());
-                //Take the active mystery word as clue so that the clue is invalid ()
-                cluePostDTO.setClue(game.getActiveMysteryWord());
-                giveClue(game.getId(), cluePostDTO);
+            if (!player.getId().equals(game.getActivePlayerId())) {
+                //If the clueMap does not contain a clue yet
+                if (!clueMap.containsKey(player.getToken())) {
+                    CluePostDTO cluePostDTO = new CluePostDTO();
+                    cluePostDTO.setPlayerToken(player.getToken());
+                    //Take the active mystery word as clue so that the clue is invalid ()
+                    cluePostDTO.setClue(game.getActiveMysteryWord());
+                    giveClue(game.getId(), cluePostDTO);
+                }
             }
         }
     }

@@ -38,7 +38,7 @@ public class LSSWordReveal implements LogicServiceState{
         game.setClueMap(new HashMap<String, String>());
         game.setValidClues(new HashMap<String, String>());
         game.setAnalyzedClues(new HashMap<String, Integer>());
-        game.setTimeStart(null);
+        game.setTimeStart(System.currentTimeMillis());
         game.setGuess("");
         game.setIsValidGuess(false);
 

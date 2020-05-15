@@ -591,5 +591,18 @@ public class LogicControllerTest {
 
     }
 
+    /**Tests if the endpoint for the timer works correctly*/
+    @Test
+    public void PUTStillAliveWorks() throws Exception {
+        //Returns
+        StillAliveDTO stillAliveDTO = new StillAliveDTO();
+
+        MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/phases", "1");
+        // then
+        mockMvc.perform(putRequest)
+                .andExpect(status().isOk());
+
+    }
+
 }
 
