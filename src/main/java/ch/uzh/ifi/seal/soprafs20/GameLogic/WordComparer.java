@@ -46,38 +46,63 @@ public class WordComparer {
 
     //for efficiency reason we give this method the stems, so we minimize api Requests
     protected boolean toCloseToMysteryWord(String mWord, String mStem, String clue, String clueStem){
+        //if mystery wod consists of 2 words, recursively call this method
+        if (mWord.contains(" ")){
+            int ind = mWord.indexOf(" ");
+            String s2 = mWord.toLowerCase().substring(ind+1);
+            String s1 = mWord.toLowerCase().substring(0, ind);
+            if (this.toCloseToMysteryWord(s1, s1, clue, clueStem) || this.toCloseToMysteryWord(s2, s2, clue, clueStem)) {
+                return true;
+            }
+        }
+
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
         mWord = mWord.toLowerCase();
         clue = clue.toLowerCase();
         //Compare their stems
         if(clue.contains(mStem) || mWord.contains(clueStem)||clueStem.equals(mStem)){
             return true;
         }
-        //make sure clue doesn't contain MysteryWord, neither in reversed
-        if (this.containsMysteryWord(mWord, clue)){
+        //make sure clue doesn't contain MysteryWord, neither in reverse
+        if (this.containsMysteryWordMinusO(mWord, clue, this.strictness(mWord))){
             return true;
         }
         //Checks that it's not to close to mysteryWord
-        if (this.closeWords(mWord, clue)) {
+        if (editDistanceCalculator.calculate1337EditDistance(clue, mWord) < this.strictness(mWord)*2) {
             return true;
         }
         return false;
     }
 
-    protected boolean containsMysteryWord(String mWord, String clue){
+    private int strictness(String s){
+        int strictness;
+        if (s.length() > 5) {
+            strictness = 2;
+        } else {
+            strictness = 1;
+        }
+        return strictness;
+    }
+
+    protected boolean containsMysteryWordMinusO(String mWord, String clue, int o){
+        EditDistanceCalculator editCal = new EditDistanceCalculator();
         if (mWord.length() == 0 ){  //makes sure there is no out of bounds error
             return true;
         }
         int j = mWord.length()-1;
-        int i = 0;
-        for (char c : clue.toLowerCase().toCharArray()){
-            if (c == mWord.toLowerCase().charAt(i)){
-                i++;
-            }
-            if (c == mWord.toLowerCase().charAt(j)){
-                j--;
-            }
-            if (i == mWord.length() || j == -1) {
-                return true;
+        int i;
+        for (int x = 0; x < o+1; x++) {
+            i =  x;
+            for (char c : clue.toLowerCase().toCharArray()) {
+                if (editCal.convertCharFromLeet(c) == mWord.toLowerCase().charAt(i)) {
+                    i++;
+                }
+                if (editCal.convertCharFromLeet(c) == mWord.toLowerCase().charAt(j)) {
+                    j--;
+                }
+                if (i == x + mWord.length() - o || j == -1) {
+                    return true;
+                }
             }
         }
         return false;
@@ -98,14 +123,15 @@ public class WordComparer {
         return wordStems;
     }
 
-    public void notSuitableBotClue(List<String> words, String mysteryWord){
+    public void notSuitableBotClue(List<String> words, String mWord){
         ApiRequester apiRequester = new ApiRequester();
+        EditDistanceCalculator editCal = new EditDistanceCalculator();
 
         String mysteryStem;
         try {
-            mysteryStem = apiRequester.getWordStem(mysteryWord.toLowerCase());
+            mysteryStem = apiRequester.getWordStem(mWord.toLowerCase());
         } catch(IOException ex) {
-            mysteryStem = mysteryWord.toLowerCase();
+            mysteryStem = mWord.toLowerCase();
         }
 
         Iterator<String> i = words.iterator();
@@ -117,16 +143,23 @@ public class WordComparer {
             } catch(IOException ex) {
                 stem = word.toLowerCase();
             }//get the word stem from API
-            if ((word.toLowerCase().contains(mysteryStem) || mysteryWord.toLowerCase().contains(stem) || stem.equals(mysteryStem) ||word.contains(" "))) {
+            if ((word.contains(" ") || word.toLowerCase().contains(mysteryStem) || mWord.toLowerCase().contains(stem) || stem.equals(mysteryStem) || editCal.calculate1337EditDistance(word, mWord) < 2)) {
                 i.remove();
-
+            } else if (mWord.contains(" ")){
+                int ind = mWord.indexOf(" ");
+                String s2 = mWord.toLowerCase().substring(ind+1);
+                String s1 = mWord.toLowerCase().substring(0, ind);
+                if (word.contains(s2) || word.contains(s1)) {
+                    i.remove();
+                }
             }
         }
     }
 
-    public boolean compareMysteryWords(String guess, String mysteryWord){
+    public boolean compareMysteryWords(String guess, String mWord){
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
 
-        return closeWords(guess, mysteryWord);
+        return editDistanceCalculator.calculate1337EditDistance(guess, mWord) < 2;
     }
 
     /*
