@@ -33,9 +33,6 @@ public class Angel implements Bot {
         this.stripWords(clues);
         wordComparer.notSuitableBotClue(clues, mysteryWord);
 
-        for (String word : clues) {
-            System.out.println(word);
-        }
         if (n < clues.size()) {
             return clues.get(n);
         }
