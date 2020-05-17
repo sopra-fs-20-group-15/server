@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.service.State;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,9 @@ public class GameEntity {
     @Embedded
     private Scoreboard scoreboard;
 
+    @Embedded
+    private HandlerForLeavingPlayers handlerForLeavingPlayers=new HandlerForLeavingPlayers();
+
     @Column
     private String Guess;
 
@@ -76,10 +80,13 @@ public class GameEntity {
 
     private Long timeStart;
 
-    @Column(nullable = true)
+    @Column
     private Boolean hasEnded;
 
 
+    public HandlerForLeavingPlayers getHandlerForLeavingPlayers(){
+        return handlerForLeavingPlayers;
+    }
     public void setTimeStart(Long timeStart) {
         this.timeStart = timeStart;
     }
@@ -215,6 +222,33 @@ public class GameEntity {
 
     public void setHasEnded(Boolean hasEnded) {
         this.hasEnded = hasEnded;
+    }
+
+    public void removePlayersFromGameByToken(List<String> tokens){
+        List<PlayerEntity> players=new ArrayList<>();
+        List<Long> idsOfPlayersToRemove= new LinkedList<>();
+        List<Long> passiveIds= new ArrayList<>();
+        List<String> userNames=new ArrayList<>();
+
+        // remove playerEntity
+        for (PlayerEntity player: this.players) {
+            if (!tokens.contains(player.getToken())) players.add(player);
+            else {
+                idsOfPlayersToRemove.add(player.getId());
+                userNames.add(player.getUsername());
+            }
+        }
+        // remove from passiveIds
+        for(Long id: passivePlayerIds){
+            if (!idsOfPlayersToRemove.contains(id)) passiveIds.add(id);
+        }
+
+        //remove players from the ScoreBoard
+        scoreboard.removePlayersFromScoreBoard(userNames);
+
+        setPlayers(players);
+        setPassivePlayerIds(passiveIds);
+        if (idsOfPlayersToRemove.contains(activePlayerId)) setActivePlayerId(null);
     }
 
     public List<Bot> getBots(){

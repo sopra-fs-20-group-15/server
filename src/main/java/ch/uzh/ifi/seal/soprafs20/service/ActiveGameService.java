@@ -98,14 +98,14 @@ public class ActiveGameService {
     /**Adds the human players to a game*/
     protected GameEntity addHumanPlayers(GameEntity game, List<String> playerTokens, String hostToken){
         //Add playerEntities
-        List<PlayerEntity> players = new ArrayList<>();
+        List<PlayerEntity> players = new LinkedList<>();
         for (String playerToken : playerTokens) {
             players.add(playerService.getPlayerByToken(playerToken));
             game.setPlayers(players);
         }
         //Add Ids
         game.setActivePlayerId(playerService.getPlayerByToken(hostToken).getId());
-        List<Long> passivePlayerIds=new ArrayList<>();
+        List<Long> passivePlayerIds=new LinkedList<>();
         for (PlayerEntity player : game.getPlayers()){
             if (!player.getId().equals(game.getActivePlayerId())) passivePlayerIds.add(player.getId());
         }
@@ -173,6 +173,7 @@ public class ActiveGameService {
             botCreator.addBots(game, gameSetUpEntity.getNumberOfDevils().intValue(), gameSetUpEntity.getNumberOfAngles().intValue());
             addCards(game);
             furtherInitialize(game);
+            game.getHandlerForLeavingPlayers().loadPlayersIntoHandler(game.getPlayers());
             //Save and flush
             GameEntity activeGame= gameRepository.saveAndFlush(game);
             gameSetUpService.getGameSetupById(gameSetupId).setActiveGameId(activeGame.getId());

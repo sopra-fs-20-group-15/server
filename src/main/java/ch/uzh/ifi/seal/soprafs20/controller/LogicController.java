@@ -5,7 +5,6 @@ import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.BadRequestException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.*;
@@ -275,10 +274,12 @@ public class LogicController {
     @PutMapping("/games/{gameId}/phases")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void setStillAlive(@PathVariable String gameId, @RequestBody StillAliveDTO stillAliveDTO) {
+    public void setStillAlive(@PathVariable String gameId, @RequestBody TokenDTO tokenDTO) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
+        validationService.checkPlayerIsPartOfGame(tokenDTO.getPlayerToken(),gameIdLong);
         logicService.checkThatPhaseHasNotEndedYet(gameIdLong);
+        logicService.updateDeadMansSwitch(gameIdLong, tokenDTO.getPlayerToken());
     }
 
 

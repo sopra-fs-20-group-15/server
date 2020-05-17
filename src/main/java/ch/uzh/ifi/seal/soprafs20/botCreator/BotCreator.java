@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
 
+import javax.persistence.Embeddable;
 import java.util.*;
 
 public class BotCreator {
@@ -13,13 +14,27 @@ public class BotCreator {
     private List<String> nameList= new LinkedList<>(Arrays.asList(names));
     private Random rand=new Random();
 
-    public GameEntity addBots(GameEntity game, int numOfDevils, int numOfAngels){
-        List<Angel> angels=new ArrayList<>();
-        List<Devil> devils=new ArrayList<>();
-        List<String> humanNames=new ArrayList<>();
+    public void addBots(GameEntity game, int numOfDevils, int numOfAngels){
+        List<Angel> angels;
+        List<Devil> devils;
+
+        if (game.getAngels()!=null) angels=game.getAngels();
+        else angels=new ArrayList<>();
+        if (game.getDevils()!=null) devils=game.getDevils();
+        else devils=new ArrayList<>();
+
+        // remove names from the list of possible names, if bots or humans already use that username
         for (PlayerEntity player : game.getPlayers()) {
             nameList.remove(player.getUsername());
         }
+        for (Angel angel : angels) {
+            nameList.remove(angel.getName());
+        }
+        for (Devil devil : devils) {
+            nameList.remove(devil.getName());
+        }
+
+
         //Add angles
         for (int i = 1; i <= numOfAngels; i++) {
             Angel bot = new Angel();
@@ -40,6 +55,5 @@ public class BotCreator {
         }
         game.setAngels(angels);
         game.setDevils(devils);
-        return game;
     }
 }

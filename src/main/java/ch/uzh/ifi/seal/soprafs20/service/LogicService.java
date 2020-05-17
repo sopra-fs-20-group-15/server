@@ -4,7 +4,6 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 
-import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
@@ -290,6 +289,11 @@ public class LogicService {
         if(getSystemCurrentMillis() > (game.getTimeStart()+game.getStateForLogicService().getPhaseDuration()+threshold)){
             state.endRoundAutomatically(game);
         }
+    }
+
+    public void updateDeadMansSwitch(Long gameId, String token){
+       GameEntity game= getGame(gameId);
+       game.getHandlerForLeavingPlayers().updateDeadMansSwitch(token);
     }
 
 }

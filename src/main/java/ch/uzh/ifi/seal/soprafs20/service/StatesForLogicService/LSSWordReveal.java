@@ -2,7 +2,6 @@ package ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.exceptions.ConflictException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ClueGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
@@ -19,7 +18,8 @@ public class LSSWordReveal implements LogicServiceState{
     /**Puts the active player at the end of the passive Players List, takes the passive Player at 0 and make him the active player*/
     protected GameEntity goOnePlayerFurther(GameEntity game){
         List<Long> passivePlayerIds = game.getPassivePlayerIds();
-        passivePlayerIds.add(game.getActivePlayerId());
+        // check that active player was not removed; if not: make him a passive player
+        if (game.getActivePlayerId()!=null) passivePlayerIds.add(game.getActivePlayerId());
         Long playerId = passivePlayerIds.remove(0);
         game.setActivePlayerId(playerId);
         game.setPassivePlayerIds(passivePlayerIds);
@@ -27,9 +27,11 @@ public class LSSWordReveal implements LogicServiceState{
     }
 
     public GameEntity initializeTurn(GameEntity game) {
+        //First remove all players that did unceremoniously leave the game
+        game.getHandlerForLeavingPlayers().removeInactivePlayers(game);
         game.setActiveMysteryWord("");
         //Update the players
-        goOnePlayerFurther(game);
+        if (game.getPassivePlayerIds().size()>0) goOnePlayerFurther(game);
         //Update Cards
         game.drawCardFromStack();
         for (PlayerEntity player : game.getPlayers()) {

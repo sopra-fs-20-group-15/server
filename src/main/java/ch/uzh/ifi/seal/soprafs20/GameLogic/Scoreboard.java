@@ -46,6 +46,13 @@ public class Scoreboard {
         scoreboard.put(playerEntity.getUsername(), scoreboard.get(playerEntity.getUsername()) + score);
     }
 
+    public void removePlayersFromScoreBoard(List<String> userNames){
+        for (String name: userNames) {
+            scoreboard.remove(name);
+            correctlyGuessedMysteryWordsPerPlayer.remove(name);
+        }
+    }
+
     /**Transforms the internal statistics of the scoreboard into a format which is suitable for sending to the client*/
     public List<StatisticsGetDTO> transformIntoList(){
         List<StatisticsGetDTO> rankScorePlayerNameList = new ArrayList<StatisticsGetDTO>();

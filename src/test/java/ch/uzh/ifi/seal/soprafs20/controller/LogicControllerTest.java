@@ -595,9 +595,11 @@ public class LogicControllerTest {
     @Test
     public void PUTStillAliveWorks() throws Exception {
         //Returns
-        StillAliveDTO stillAliveDTO = new StillAliveDTO();
+        TokenDTO tokenDTO = new TokenDTO();
 
-        MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/phases", "1");
+        MockHttpServletRequestBuilder putRequest = put("/games/{gameId}/phases", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(tokenDTO));
         // then
         mockMvc.perform(putRequest)
                 .andExpect(status().isOk());
