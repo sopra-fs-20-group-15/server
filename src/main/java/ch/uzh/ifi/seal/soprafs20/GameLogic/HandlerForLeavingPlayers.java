@@ -11,7 +11,7 @@ import java.util.*;
 @Embeddable
 public class HandlerForLeavingPlayers {
     @ElementCollection
-    Map<String,Long> deadMansSwitchMap= new HashMap<>();
+    private Map<String,Long> deadMansSwitchMap= new HashMap<>();
 
     public void loadPlayersIntoHandler(List<PlayerEntity> players){
         for (PlayerEntity player: players) {
@@ -68,9 +68,4 @@ public class HandlerForLeavingPlayers {
         }
     }
 
-    public void removePlayersFromGameByToken(List<String> tokens){
-
-
-
-    }
 }
