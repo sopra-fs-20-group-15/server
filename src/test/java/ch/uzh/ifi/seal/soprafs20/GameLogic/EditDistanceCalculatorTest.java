@@ -4,60 +4,93 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 class EditDistanceCalculatorTest {
 
     @Test
+    void leetTranslatorWorks() {
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
+        assertEquals(editDistanceCalculator.convertCharFromLeet('0'), 'o');
+        assertEquals(editDistanceCalculator.convertCharFromLeet('4'), 'a');
+        assertEquals(editDistanceCalculator.convertCharFromLeet('1'), 'l');
+        assertEquals(editDistanceCalculator.convertCharFromLeet('7'), 't');
+        assertEquals(editDistanceCalculator.convertCharFromLeet('8'), 'b');
+        assertEquals(editDistanceCalculator.convertCharFromLeet('3'), 'e');
+        assertEquals(editDistanceCalculator.convertCharFromLeet('5'), 's');
+        assertEquals(editDistanceCalculator.convertCharFromLeet('2'), 'z');
+    }
+
+    @Test
     void worksForEmptyStrings() {
-        assertEquals(EditDistanceCalculator.calculateEditDistance("", ""), 0);
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
+        assertEquals(editDistanceCalculator.calculate1337EditDistance("", ""), 0);
     }
 
     @Test
     void sameWordsHasEditDistanceZero() {
-        assertEquals(EditDistanceCalculator.calculateEditDistance("test", "test"), 0);
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
+        assertEquals(editDistanceCalculator.calculate1337EditDistance("test", "test"), 0);
     }
 
     @Test
     void capitalizationDoesNotMatter() {
-        assertEquals(EditDistanceCalculator.calculateEditDistance("tEst", "tesT"), 0);
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
+        assertEquals(editDistanceCalculator.calculate1337EditDistance("tEst", "tesT"), 0);
     }
 
     @Test
     void oneDeletionHasEditDistanceOne() {
-        assertEquals(EditDistanceCalculator.calculateEditDistance("testt", "test"), 1);
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
+        assertEquals(editDistanceCalculator.calculate1337EditDistance("testt", "test"), 1);
     }
 
     @Test
     void oneAdditionHasEditDistanceOne() {
-        assertEquals(EditDistanceCalculator.calculateEditDistance("test", "testt"), 1);
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
+        assertEquals(editDistanceCalculator.calculate1337EditDistance("test", "testt"), 1);
     }
 
     @Test
     void oneChangeHasEditDistanceOne() {
-        assertEquals(EditDistanceCalculator.calculateEditDistance("tesk", "test"), 1);
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
+        assertEquals(editDistanceCalculator.calculate1337EditDistance("tesk", "test"), 1);
     }
 
     @Test
     void multipleChangesWorks() {
-        assertEquals(EditDistanceCalculator.calculateEditDistance("tedk", "test"), 2);
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
+
+        assertEquals(editDistanceCalculator.calculate1337EditDistance("tedk", "test"), 2);
     }
 
     @Test
-    void multipleDeletesWorks() {
-        assertEquals(EditDistanceCalculator.calculateEditDistance("test", "tester"), 2);
+    void multipleDeletesWorks()
+    {
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
+        assertEquals(editDistanceCalculator.calculate1337EditDistance("test", "tester"), 2);
     }
 
     @Test
     void deleteAndChangeWorks() {
-        assertEquals(EditDistanceCalculator.calculateEditDistance("test", "tisto"), 2);
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
+        assertEquals(editDistanceCalculator.calculate1337EditDistance("test", "tisto"), 2);
     }
 
     @Test
     void multipleDeletionsAndChangesWorks() {
-        assertEquals(EditDistanceCalculator.calculateEditDistance("Spaagethy", "Spaghetti"), 4);
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
+        assertEquals(editDistanceCalculator.calculate1337EditDistance("Spaagethy", "Spaghetti"), 4);
+    }
+
+    @Test
+    void editDistanceWorksFor1337() {
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
+        assertEquals(editDistanceCalculator.calculate1337EditDistance("Sp4gh377i", "Spaghetti"), 0);
+    }
+
+    @Test
+    void multipleDeletionsAndChangesWorksFor1337() {
+        EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();
+        assertEquals(editDistanceCalculator.calculate1337EditDistance("Sp44g37hy", "Spaghetti"), 4);
     }
 
 }
