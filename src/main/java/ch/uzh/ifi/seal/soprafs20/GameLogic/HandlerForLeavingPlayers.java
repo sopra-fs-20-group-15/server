@@ -6,10 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.botCreator.BotCreator;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Embeddable
 public class HandlerForLeavingPlayers {
@@ -35,14 +32,45 @@ public class HandlerForLeavingPlayers {
                 tokens.add(entry.getKey());
             }
         }
-        //remove players from game
-        game.removePlayersFromGameByToken(tokens);
-        //add bots to replace removed players
-        BotCreator botCreator= new BotCreator();
-        botCreator.addBots(game,0,tokens.size());
-        //lastly remove players from Map
-        for (String token:tokens) {
-            deadMansSwitchMap.remove(token);
+        if (!tokens.isEmpty()) {
+            List<PlayerEntity> players = new ArrayList<>();
+            List<Long> idsOfPlayersToRemove = new LinkedList<>();
+            List<Long> passiveIds = new ArrayList<>();
+            List<String> userNames = new ArrayList<>();
+
+            // remove playerEntity from game
+            for (PlayerEntity player: game.getPlayers()) {
+                if (!tokens.contains(player.getToken())) players.add(player);
+                else {
+                    idsOfPlayersToRemove.add(player.getId());
+                    userNames.add(player.getUsername());
+                }
+            }
+            // remove from passiveIds
+            for(Long id: game.getPassivePlayerIds()){
+                if (!idsOfPlayersToRemove.contains(id)) passiveIds.add(id);
+            }
+
+            //remove players from the ScoreBoard
+            game.getScoreboard().removePlayersFromScoreBoard(userNames);
+
+            //set new values for the game without the removed players
+            game.setPlayers(players);
+            game.setPassivePlayerIds(passiveIds);
+            if (idsOfPlayersToRemove.contains(game.getActivePlayerId())) game.setActivePlayerId(null);
+            //add bots to replace removed players
+            BotCreator botCreator = new BotCreator();
+            botCreator.addBots(game, 0, tokens.size());
+            //lastly remove players from Map
+            for (String token : tokens) {
+                deadMansSwitchMap.remove(token);
+            }
         }
+    }
+
+    public void removePlayersFromGameByToken(List<String> tokens){
+
+
+
     }
 }

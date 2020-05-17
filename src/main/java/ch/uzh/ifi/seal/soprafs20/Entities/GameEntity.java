@@ -224,33 +224,6 @@ public class GameEntity {
         this.hasEnded = hasEnded;
     }
 
-    public void removePlayersFromGameByToken(List<String> tokens){
-        List<PlayerEntity> players=new ArrayList<>();
-        List<Long> idsOfPlayersToRemove= new LinkedList<>();
-        List<Long> passiveIds= new ArrayList<>();
-        List<String> userNames=new ArrayList<>();
-
-        // remove playerEntity
-        for (PlayerEntity player: this.players) {
-            if (!tokens.contains(player.getToken())) players.add(player);
-            else {
-                idsOfPlayersToRemove.add(player.getId());
-                userNames.add(player.getUsername());
-            }
-        }
-        // remove from passiveIds
-        for(Long id: passivePlayerIds){
-            if (!idsOfPlayersToRemove.contains(id)) passiveIds.add(id);
-        }
-
-        //remove players from the ScoreBoard
-        scoreboard.removePlayersFromScoreBoard(userNames);
-
-        setPlayers(players);
-        setPassivePlayerIds(passiveIds);
-        if (idsOfPlayersToRemove.contains(activePlayerId)) setActivePlayerId(null);
-    }
-
     public List<Bot> getBots(){
         List<Bot> bots = new ArrayList<>();
         bots.addAll(angels);

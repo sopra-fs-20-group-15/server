@@ -75,7 +75,6 @@ public class ScoreboardTest {
             mysteryActualList.add(element.getNumberOfCorrectlyGuessedMysteryWords());
         }
 
-
         assertTrue(scoresActualList.contains(intended.get(0).getScore()));
         assertTrue(scoresActualList.contains(intended.get(1).getScore()));
         assertTrue(scoresActualList.contains(intended.get(2).getScore()));
@@ -88,6 +87,52 @@ public class ScoreboardTest {
         assertTrue(mysteryActualList.contains(intended.get(1).getNumberOfCorrectlyGuessedMysteryWords()));
         assertTrue(mysteryActualList.contains(intended.get(2).getNumberOfCorrectlyGuessedMysteryWords()));
         assertTrue(mysteryActualList.contains(intended.get(3).getNumberOfCorrectlyGuessedMysteryWords()));
+    }
+    @Test
+    void removePlayersFromScoreBoardWhenRemovingSinglePlayer(){
+        //make sure map is not empty at beginning of game
+        assertEquals(4, scoreboard.getScore().size());
+        //add player to the list of players that should be removed
+        List<String> usersToBeRemoved=new ArrayList<>();
+        usersToBeRemoved.add("A");
+        //remove players in list
+        scoreboard.removePlayersFromScoreBoard(usersToBeRemoved);
+        //check that players were removed
+        assertEquals(3, scoreboard.getScore().size());
+        assertEquals(3,scoreboard.getCorrectlyGuessedMysteryWordsPerPlayer().size());
+        assertFalse(scoreboard.getScore().containsKey("A"));
+        assertFalse(scoreboard.getCorrectlyGuessedMysteryWordsPerPlayer().containsKey("A"));
 
     }
+
+    @Test
+    void removePlayersFromScoreBoardWorksWhenAllPlayersAreRemovedAtOnce(){
+        //make sure map is not empty at beginning of game
+        assertEquals(4, scoreboard.getScore().size());
+        //add all players to the list of players that should be removed
+        List<String> usersToBeRemoved=new ArrayList<>();
+        usersToBeRemoved.add("A");
+        usersToBeRemoved.add("B");
+        usersToBeRemoved.add("C");
+        usersToBeRemoved.add("D");
+        //remove players
+        scoreboard.removePlayersFromScoreBoard(usersToBeRemoved);
+        //check that players were removed
+        assertTrue(scoreboard.getScore().isEmpty());
+        assertTrue(scoreboard.getCorrectlyGuessedMysteryWordsPerPlayer().isEmpty());
+    }
+
+    @Test
+    void removePlayersFromScoreBoardDoesNothingIfNoPlayerMarkedForRemoval(){
+        //make sure map is not empty at beginning of game
+        assertEquals(4, scoreboard.getScore().size());
+        //do not add players to the list of players that should be removed
+        List<String> usersToBeRemoved=new ArrayList<>();
+        //remove players in list
+        scoreboard.removePlayersFromScoreBoard(usersToBeRemoved);
+        //check that players were removed
+        assertEquals(4, scoreboard.getScore().size());
+        assertEquals(4,scoreboard.getCorrectlyGuessedMysteryWordsPerPlayer().size());
+    }
+
 }

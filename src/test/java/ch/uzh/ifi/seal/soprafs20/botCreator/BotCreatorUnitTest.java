@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.botCreator;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -51,7 +52,7 @@ public class BotCreatorUnitTest {
     }
 
     @Test
-    public void addBotsDoNotUseNamesFromListIfHumanAlreadyUsesSaidName(){
+    public void addBotsDoNotUseNamesFromListIfHumansOrOtherBotsAlreadyUsesSaidName(){
         List<PlayerEntity> players=game.getPlayers();
         PlayerEntity p2=new PlayerEntity();
         PlayerEntity p3=new PlayerEntity();
@@ -60,14 +61,31 @@ public class BotCreatorUnitTest {
         players.add(p2);
         players.add(p3);
         game.setPlayers(players);
+        Angel a1=new Angel();
+        Devil d1=new Devil();
+        a1.setName("Chris");
+        d1.setName("Leon");
+        List<Angel> angels=new ArrayList<>();
+        angels.add(a1);
+        List<Devil> devils=new ArrayList<>();
+        devils.add(d1);
+        game.setAngels(angels);
+        game.setDevils(devils);
+
         // adds bots until there are no bot names left anymore
         while (true){
             try {botCreator.addBots(game,0,1);}
             catch (IllegalArgumentException e){break;}
         }
-        //Check that even though all possible names where added, Claire and Jill did not get added because they are used by human players
+        //Check that even though all possible names where added, Claire, Jill and Leon did not get added because they are used by human players or devil bot
         for (Angel bot : game.getAngels()) {
-            assertFalse(bot.getName().equals(p2.getUsername())||bot.getName().equals(p3.getUsername()));
+            assertFalse(bot.getName().equals(p2.getUsername())||bot.getName().equals(p3.getUsername())||bot.getName().equals(d1.getName()));
         }
+        //Check that there is a single angel bot with the name Chris
+        int cnt=0;
+        for (Angel angel:game.getAngels()) {
+            if (angel.getName().equals("Chris")) cnt++;
+        }
+        assertEquals(1,cnt);
     }
 }
