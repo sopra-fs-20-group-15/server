@@ -1,23 +1,16 @@
 package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 
-
-import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.CluePostDTO;
 import ch.uzh.ifi.seal.soprafs20.service.*;
 import ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService.*;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.spy;
 
 @Transactional
 @WebAppConfiguration
@@ -67,6 +58,25 @@ public class LogicServiceIntegrationTestFinishingPhasesAutomatically extends Tes
         assertNotEquals(0L, createdActiveGame.getTimeStart());
     }
 
+    /**ChooseMysteryWord does not finish automatically when timer has not finished yet*/
+    @Test
+    public void ChooseMysteryWordFinishesAutomaticallyFailsBecauseTimeNotEndedYet() {
+        //Preparations
+        createdActiveGame.setStateForLogicService(State.WordReveal);
+        logicService.initializeTurn(createdActiveGame.getId());
+        createdActiveGame.setTimeStart(0L);
+
+        //Mock the current time of the System -> Uses logicService2 to spy
+        Mockito.doReturn(30000L).when(logicService2).getSystemCurrentMillis();
+
+        //Perform the phase switch
+        logicService2.checkThatPhaseHasNotEndedYet(createdActiveGame.getId());
+
+        //Check that a MysteryWord has NOT been chosen automatically
+        assertEquals(State.ChooseMysteryWord, createdActiveGame.getStateForLogicService());
+        assertTrue(createdActiveGame.getActiveMysteryWord().isBlank());
+    }
+
     /**Give Clue can finish automatically*/
     @Test
     public void GiveClueFinishesAutomatically() {
@@ -92,6 +102,26 @@ public class LogicServiceIntegrationTestFinishingPhasesAutomatically extends Tes
         assertEquals(State.GiveGuess, createdActiveGame.getStateForLogicService());
         //Check that the timer has been reinitialized
         assertNotEquals(0L, createdActiveGame.getTimeStart());
+    }
+
+    /**GiveClue does not finish automatically when timer has not finished yet*/
+    @Test
+    public void GiveClueFinishesNOTAutomaticallyBecauseTimeNotEndedYet() {
+        //Preparations
+        createdActiveGame.setStateForLogicService(State.WordReveal);
+        logicService.initializeTurn(createdActiveGame.getId());
+        createdActiveGame.setTimeStart(0L);
+        createdActiveGame.setStateForLogicService(State.GiveClues);
+
+        //Mock the current time of the System -> Uses logicService2 to spy
+        Mockito.doReturn(50000L).when(logicService2).getSystemCurrentMillis();
+
+        //Perform the phase switch
+        logicService2.checkThatPhaseHasNotEndedYet(createdActiveGame.getId());
+
+        //Check that a MysteryWord has NOT been chosen automatically
+        assertEquals(State.GiveClues, createdActiveGame.getStateForLogicService());
+        assertEquals(0, createdActiveGame.getClueMap().size());
     }
 
     /**Give Guess can finish automatically*/
@@ -125,6 +155,26 @@ public class LogicServiceIntegrationTestFinishingPhasesAutomatically extends Tes
         assertNotEquals(0L, createdActiveGame.getTimeStart());
     }
 
+    /**GiveGuess does not finish automatically when timer has not finished yet*/
+    @Test
+    public void GiveGuessFinishesNOTAutomaticallyBecauseTimeNotEndedYet() {
+        //Preparations
+        createdActiveGame.setStateForLogicService(State.WordReveal);
+        logicService.initializeTurn(createdActiveGame.getId());
+        createdActiveGame.setTimeStart(0L);
+        createdActiveGame.setStateForLogicService(State.GiveGuess);
+
+        //Mock the current time of the System -> Uses logicService2 to spy
+        Mockito.doReturn(60000L).when(logicService2).getSystemCurrentMillis();
+
+        //Perform the phase switch
+        logicService2.checkThatPhaseHasNotEndedYet(createdActiveGame.getId());
+
+        //Check that a MysteryWord has NOT been chosen automatically
+        assertEquals(State.GiveGuess, createdActiveGame.getStateForLogicService());
+        assertTrue(createdActiveGame.getGuess().isBlank());
+    }
+
     /**WordReveal can finish automatically*/
     @Test
     public void WordRevealFinishesAutomatically() {
@@ -144,6 +194,25 @@ public class LogicServiceIntegrationTestFinishingPhasesAutomatically extends Tes
         assertEquals(State.ChooseMysteryWord, createdActiveGame.getStateForLogicService());
         //Check that the timer has been reinitialized
         assertNotEquals(0L, createdActiveGame.getTimeStart());
+    }
+
+    /**WordReveal does not finish automatically when timer has not finished yet*/
+    @Test
+    public void WordRevealFinishesNOTAutomaticallyBecauseTimeNotEndedYet() {
+        //Preparations
+        createdActiveGame.setStateForLogicService(State.WordReveal);
+        logicService.initializeTurn(createdActiveGame.getId());
+        createdActiveGame.setTimeStart(0L);
+        createdActiveGame.setStateForLogicService(State.WordReveal);
+
+        //Mock the current time of the System -> Uses logicService2 to spy
+        Mockito.doReturn(10000L).when(logicService2).getSystemCurrentMillis();
+
+        //Perform the phase switch
+        logicService2.checkThatPhaseHasNotEndedYet(createdActiveGame.getId());
+
+        //Check that a MysteryWord has NOT been chosen automatically
+        assertEquals(State.WordReveal, createdActiveGame.getStateForLogicService());
     }
 
 }
