@@ -34,10 +34,11 @@ public class LogicServiceUnitTestGetGamePhase {
     /**Idea behind these tests: check that number matches intended gamePhaseName*/
 
     @Test
-    public void giveBackCorrectGamePhaseChooseMysteryWord(){
+    public void giveBackCorrectGamePhaseChooseMysteryWordAndCorrectTime(){
         //GameEntity that shall be returned
         GameEntity game = new GameEntity();
         game.setStateForLogicService(State.ChooseMysteryWord);
+        game.setTimeStart(0L);
 
         given(activeGameService.getGameById(anyLong())).willReturn(game);
 
@@ -45,6 +46,7 @@ public class LogicServiceUnitTestGetGamePhase {
 
         assertEquals("ChooseMysteryWord", gamePhaseDTOActual.getPhase() );
         assertEquals(1,gamePhaseDTOActual.getPhaseNumber());
+        assertEquals(0L, gamePhaseDTOActual.getTimeStart());
     }
     @Test
     public void giveBackCorrectGamePhaseGiveClues(){

@@ -16,11 +16,12 @@ public class ActiveGamesController {
 
     private final LogicService logicService;
     private final ActiveGameService activeGameService;
+    private final ValidationService validationService;
 
-
-    ActiveGamesController( LogicService logicService, ActiveGameService activeGameService) {
+    ActiveGamesController( LogicService logicService, ActiveGameService activeGameService, ValidationService validationService) {
         this.logicService = logicService;
         this.activeGameService = activeGameService;
+        this.validationService = validationService;
     }
 
     protected boolean stringIsALong(String str) {
@@ -58,12 +59,29 @@ public class ActiveGamesController {
     }
 
 
-    /**Allows player to get an overview of an existing active game
-     * @Param: String gameId
-     * @Returns: GameGetDTO: Long id, String activePlayerName, List<String> playerNames, List<String> passivePlayerNames,
-     * @Throws: 409:The PathVariable is not a Long
-     * @Throws: 404: Game with specified Id cannot be found
+    /**Allows a player to leave the request that he or she does not wish to continue a round of Just One
+     * Takes the player out of the game at the end of that round. Deletes the game if he or she is the only human
+     * player in that game
+     * @Param: TokenDTO: String playerToken
+     * @Returns: void
+     * @Throws: 404: player not found
+     * @Throws: 404: game not found
      * */
+    @PutMapping("/activeGames/{gameId}/players")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void removePlayerFromGame(@PathVariable String gameId, @RequestBody TokenDTO tokenDTO) {
+        //Check that SetupEntity actually exists
+        if (stringIsALong(gameId)) {
+            //Try to create active game
+            Long Id = parseLong(gameId);
+            validationService.checkPlayerIsPartOfGame(tokenDTO.getPlayerToken(), Id);
+            activeGameService.removePlayerFromGame(Id, tokenDTO.getPlayerToken());
+
+        }
+    }
+
+
     @GetMapping("/activeGames/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

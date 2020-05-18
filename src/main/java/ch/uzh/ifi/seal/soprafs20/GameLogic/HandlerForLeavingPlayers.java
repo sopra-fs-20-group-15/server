@@ -10,8 +10,18 @@ import java.util.*;
 
 @Embeddable
 public class HandlerForLeavingPlayers {
+
+    /**Token, millliseconds not having done a call*/
     @ElementCollection
     private Map<String,Long> deadMansSwitchMap= new HashMap<>();
+
+    public Map<String, Long> getDeadMansSwitchMap() {
+        return deadMansSwitchMap;
+    }
+
+    public void setDeadMansSwitchMap(Map<String, Long> deadMansSwitchMap) {
+        this.deadMansSwitchMap = deadMansSwitchMap;
+    }
 
     public void loadPlayersIntoHandler(List<PlayerEntity> players){
         for (PlayerEntity player: players) {

@@ -274,6 +274,7 @@ public class LogicService {
         GamePhaseDTO gamePhaseDTO = new GamePhaseDTO();
         gamePhaseDTO.setPhase(state.toString());
         gamePhaseDTO.setPhaseNumber(state.getNumVal());
+        gamePhaseDTO.setTimeStart(gamePhaseDTO.getTimeStart());
         return gamePhaseDTO;
     }
 

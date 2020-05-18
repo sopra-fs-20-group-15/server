@@ -3,10 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.GameSetUpEntity;
 import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Angel;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Bot;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Devil;
-import ch.uzh.ifi.seal.soprafs20.GameLogic.Scoreboard;
+import ch.uzh.ifi.seal.soprafs20.GameLogic.*;
 import ch.uzh.ifi.seal.soprafs20.botCreator.BotCreator;
 import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 
@@ -195,6 +192,32 @@ public class ActiveGameService {
         }
     }
 
+    /**
+     *
+     *
+     *
+     * */
+
+    public void removePlayerFromGame(Long gameId, String playerToken){
+        GameEntity game = getGameById(gameId);
+        PlayerEntity player = playerService.getPlayerByToken(playerToken);
+        if (game.getStateForLogicService() == State.WordReveal) {
+            // Set the time for the player that wants to leave to a big number
+            HandlerForLeavingPlayers handlerForLeavingPlayers = game.getHandlerForLeavingPlayers();
+            Map<String, Long> deadMansSwitchMap = handlerForLeavingPlayers.getDeadMansSwitchMap();
+            deadMansSwitchMap.put(playerToken, 10000L);
+            handlerForLeavingPlayers.setDeadMansSwitchMap(deadMansSwitchMap);
+            game.setHandlerForLeavingPlayers(handlerForLeavingPlayers);
+            //remove the players
+            handlerForLeavingPlayers.removeInactivePlayers(game);
+            //delete the game if no human players are left
+            if (handlerForLeavingPlayers.getDeadMansSwitchMap().size() == 0) {
+                game.setStateForLogicService(State.hasEnded);
+                deleteActiveGame(gameId);
+            }
+        }
+        else {throw new ConflictException("A player can only leave a round during Word Reveal!");}
+    }
 
     /**Deletes an active game once it has ended
      * @Param: String gameId

@@ -127,6 +127,17 @@ public class GameEntity {
         this.players = players;
     }
 
+    public void setHandlerForLeavingPlayers(HandlerForLeavingPlayers handlerForLeavingPlayers) {
+        this.handlerForLeavingPlayers = handlerForLeavingPlayers;
+    }
+
+    public boolean isValidGuess() {
+        return isValidGuess;
+    }
+
+    public void setValidGuess(boolean validGuess) {
+        isValidGuess = validGuess;
+    }
 
     public Long getActiveCardId() {
         return activeCardId;

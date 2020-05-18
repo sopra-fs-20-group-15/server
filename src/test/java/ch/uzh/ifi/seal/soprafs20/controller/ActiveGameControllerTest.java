@@ -22,9 +22,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,6 +42,9 @@ public class ActiveGameControllerTest {
 
     @MockBean
     private GameSetUpService gameSetUpService;
+
+    @MockBean
+    private ValidationService validationService;
 
     @MockBean
     private LogicService logicService;
@@ -124,8 +125,23 @@ public class ActiveGameControllerTest {
                 .andExpect(jsonPath("$.id", is(1)));
     }
 
-    /**Tests Delete-Request to /activeGames/{gameId}*/
 
+    /**Tests a Put-Request to /activeGames/{gameId}/players*/
+
+    @Test
+    public void PUTRemovePlayerFromActiveGame() throws Exception {
+        TokenDTO tokenDTO = new TokenDTO();
+
+        MockHttpServletRequestBuilder putRequest = put("/activeGames/{gameId}/players", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(tokenDTO));
+        // then
+        mockMvc.perform(putRequest)
+                .andExpect(status().isOk());
+    }
+
+
+    /**Tests Delete-Request to /activeGames/{gameId}*/
     @Test
     public void DELETEActiveGame() throws Exception {
         MockHttpServletRequestBuilder deleteRequest = delete("/activeGames/{gameId}", 1);
