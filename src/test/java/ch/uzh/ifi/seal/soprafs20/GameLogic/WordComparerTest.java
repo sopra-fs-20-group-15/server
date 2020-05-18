@@ -17,8 +17,8 @@ class WordComparerTest {
         String clue1 = "Love";
         String clue2 = "Lemflowervaarre";
         String mWord = "love";
-        assertTrue(wordComparer.containsMysteryWord(mWord, clue1));
-        assertTrue(wordComparer.containsMysteryWord(mWord, clue2));
+        assertTrue(wordComparer.containsMysteryWordMinusO(mWord, clue1, 0));
+        assertTrue(wordComparer.containsMysteryWordMinusO(mWord, clue2, 0));
     }
 
     @Test
@@ -27,8 +27,18 @@ class WordComparerTest {
         String clue1 = "evoL";
         String clue2 = "eeVvooLL";
         String mWord = "love";
-        assertTrue(wordComparer.containsMysteryWord(mWord, clue1));
-        assertTrue(wordComparer.containsMysteryWord(mWord, clue2));
+        assertTrue(wordComparer.containsMysteryWordMinusO(mWord, clue1, 0));
+        assertTrue(wordComparer.containsMysteryWordMinusO(mWord, clue2, 0));
+    }
+
+    @Test
+    void clueContainsNearlyMysteryWord() {
+        WordComparer wordComparer = new WordComparer();
+        String clue1 = "fi11ing";
+        String clue2 = "philling";
+        String mWord = "Filling";
+        assertTrue(wordComparer.containsMysteryWordMinusO(mWord, clue1, 2));
+        assertTrue(wordComparer.containsMysteryWordMinusO(mWord, clue2, 2));
     }
 
     @Test
