@@ -104,9 +104,13 @@ public class LogicService {
      *@Throws: 404: No game with specified id found
      *@Throws: 404: Mystery Word not found, because it has not been set yet
      *     */
-    public String getMysteryWord(Long gameId){
+    public WordPostDTO getMysteryWord(Long gameId){
         GameEntity game = getGame(gameId);
-        return state.getMysteryWord(game);
+        WordPostDTO wordPostDTO = new WordPostDTO();
+        wordPostDTO.setWord(state.getMysteryWord(game));
+        wordPostDTO.setWordId(game.getWordId());
+        return wordPostDTO;
+
     }
     /**Let's players give clues and save them into a list
      *@Param: Long gameId; CluePostDTO: String playerToken, String clue

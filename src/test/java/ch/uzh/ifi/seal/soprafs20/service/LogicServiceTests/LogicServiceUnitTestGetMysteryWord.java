@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 
 import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NoContentException;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.WordPostDTO;
 import ch.uzh.ifi.seal.soprafs20.service.ActiveGameService;
 import ch.uzh.ifi.seal.soprafs20.service.LogicService;
 import ch.uzh.ifi.seal.soprafs20.service.State;
@@ -34,13 +35,15 @@ public class LogicServiceUnitTestGetMysteryWord {
         //GameEntity that shall be returned
         GameEntity game = new GameEntity();
         game.setActiveMysteryWord("Test");
+        game.setWordId(1L);
         game.setStateForLogicService(State.GiveClues);
 
         given(activeGameService.getGameById(anyLong())).willReturn(game);
 
-        String mysteryWordActual = logicService.getMysteryWord(2L);
+        WordPostDTO mysteryWordActual = logicService.getMysteryWord(2L);
 
-        assertEquals("Test", mysteryWordActual );
+        assertEquals("Test", mysteryWordActual.getWord()) ;
+        assertEquals(1L, mysteryWordActual.getWordId());
     }
 
     @Test
@@ -49,12 +52,14 @@ public class LogicServiceUnitTestGetMysteryWord {
         GameEntity game = new GameEntity();
         game.setActiveMysteryWord("Test");
         game.setStateForLogicService(State.GiveGuess);
+        game.setWordId(1L);
 
         given(activeGameService.getGameById(anyLong())).willReturn(game);
 
-        String mysteryWordActual = logicService.getMysteryWord(2L);
+        WordPostDTO mysteryWordActual = logicService.getMysteryWord(2L);
 
-        assertEquals("Test", mysteryWordActual );
+        assertEquals("Test", mysteryWordActual.getWord()) ;
+        assertEquals(1L, mysteryWordActual.getWordId());
     }
 
     @Test
@@ -63,12 +68,14 @@ public class LogicServiceUnitTestGetMysteryWord {
         GameEntity game = new GameEntity();
         game.setActiveMysteryWord("Test");
         game.setStateForLogicService(State.WordReveal);
+        game.setWordId(1L);
 
         given(activeGameService.getGameById(anyLong())).willReturn(game);
 
-        String mysteryWordActual = logicService.getMysteryWord(2L);
+        WordPostDTO mysteryWordActual = logicService.getMysteryWord(2L);
 
-        assertEquals("Test", mysteryWordActual );
+        assertEquals("Test", mysteryWordActual.getWord()) ;
+        assertEquals(1L, mysteryWordActual.getWordId());
     }
 
     @Test
@@ -77,6 +84,7 @@ public class LogicServiceUnitTestGetMysteryWord {
         GameEntity game = new GameEntity();
         game.setActiveMysteryWord("Test");
         game.setStateForLogicService(State.ChooseMysteryWord);
+        game.setWordId(1L);
 
         given(activeGameService.getGameById(anyLong())).willReturn(game);
             assertThrows(NoContentException.class, () -> {logicService.getMysteryWord(2L);});
@@ -89,6 +97,7 @@ public class LogicServiceUnitTestGetMysteryWord {
         GameEntity game = new GameEntity();
         game.setActiveMysteryWord("Test");
         game.setStateForLogicService(State.hasEnded);
+        game.setWordId(1L);
 
         given(activeGameService.getGameById(anyLong())).willReturn(game);
         assertThrows(NoContentException.class, () -> {logicService.getMysteryWord(2L);});

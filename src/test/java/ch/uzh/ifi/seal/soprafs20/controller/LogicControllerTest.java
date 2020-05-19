@@ -200,13 +200,14 @@ public class LogicControllerTest {
         //returns
         WordPostDTO wordPostDTO = new WordPostDTO();
         wordPostDTO.setWord("Eis");
+        wordPostDTO.setWordId(1L);
 
         /**
          doReturn(true).when(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.any(),Mockito.any()));
          doReturn(game).when(gameService.getGameById(Mockito.any()));*/
         given(validationService.checkPlayerIsPassivePlayerOfGame(Mockito.any(), Mockito.any())).willReturn(true);
         given(gameService.getGameById(Mockito.any())).willReturn(game);
-        given(logicService.getMysteryWord(Mockito.any())).willReturn("Eis");
+        given(logicService.getMysteryWord(Mockito.any())).willReturn(wordPostDTO);
 
         // when/then -> do the request + validate the result
 
@@ -217,7 +218,8 @@ public class LogicControllerTest {
 
         mockMvc.perform(postRequest)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.word", is(wordPostDTO.getWord())));
+                .andExpect(jsonPath("$.word", is(wordPostDTO.getWord())))
+                .andExpect(jsonPath("$.wordId", is(1)));
 
     }
     /**

@@ -26,6 +26,9 @@ public class GameEntity {
     private String activeMysteryWord;
 
     @Column(nullable = true)
+    private Long wordId;
+
+    @Column(nullable = true)
     private Long activePlayerId;
 
     @ElementCollection
@@ -83,6 +86,13 @@ public class GameEntity {
     @Column
     private Boolean hasEnded;
 
+    public Long getWordId() {
+        return wordId;
+    }
+
+    public void setWordId(Long wordId) {
+        this.wordId = wordId;
+    }
 
     public HandlerForLeavingPlayers getHandlerForLeavingPlayers(){
         return handlerForLeavingPlayers;

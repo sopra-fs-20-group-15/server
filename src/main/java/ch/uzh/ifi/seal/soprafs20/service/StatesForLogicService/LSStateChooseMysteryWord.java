@@ -50,6 +50,7 @@ public class LSStateChooseMysteryWord implements LogicServiceState {
         CardEntity card = cardService.getCardById(game.getActiveCardId());
         String word = cardService.chooseWordOnCard(wordId, card);
         game.setActiveMysteryWord(word);
+        game.setWordId(wordId);
         //Switch over to the next state
         game.setStateForLogicService(State.GiveClues);
         game.setTimeStart(System.currentTimeMillis());

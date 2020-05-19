@@ -229,6 +229,7 @@ public class ActiveGameService {
         if (game.getStateForLogicService() != State.hasEnded){throw new ConflictException("The game cannot be deleted before it has ended");}
         updateLeaderBoard(game);
         gameRepository.deleteById(game.getId());
+
     }
 
 }

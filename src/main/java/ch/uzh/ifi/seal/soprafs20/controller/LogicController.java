@@ -123,11 +123,8 @@ public class LogicController {
     public WordPostDTO getMysteryWord(@PathVariable String gameId, @PathVariable String playerToken) {
         stringIsALong(gameId);
         Long gameIdLong = parseLong(gameId);
-        validationService.checkPlayerIsPassivePlayerOfGame(playerToken, gameIdLong);
-        String word = logicService.getMysteryWord(gameIdLong);
-        WordPostDTO wordPostDTO = new WordPostDTO();
-        wordPostDTO.setWord(word);
-        return wordPostDTO;
+        validationService.checkPlayerIsPartOfGame(playerToken, gameIdLong);
+        return logicService.getMysteryWord(gameIdLong);
     }
 
     /**Sets the clue for each player into a list. Once all players have given their clues, they will be evaluated
