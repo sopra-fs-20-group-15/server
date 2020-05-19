@@ -52,6 +52,7 @@ public class LogicServiceUnitTestGetGamePhase {
     public void giveBackCorrectGamePhaseGiveClues(){
         //GameEntity that shall be returned
         GameEntity game = new GameEntity();
+        game.setTimeStart(0L);
         game.setStateForLogicService(State.GiveClues);
 
         given(activeGameService.getGameById(anyLong())).willReturn(game);
@@ -66,6 +67,7 @@ public class LogicServiceUnitTestGetGamePhase {
         //GameEntity that shall be returned
         GameEntity game = new GameEntity();
         game.setStateForLogicService(State.GiveGuess);
+        game.setTimeStart(0L);
 
         given(activeGameService.getGameById(anyLong())).willReturn(game);
 
@@ -79,6 +81,7 @@ public class LogicServiceUnitTestGetGamePhase {
         //GameEntity that shall be returned
         GameEntity game = new GameEntity();
         game.setStateForLogicService(State.WordReveal);
+        game.setTimeStart(0L);
 
         given(activeGameService.getGameById(anyLong())).willReturn(game);
 
@@ -93,6 +96,7 @@ public class LogicServiceUnitTestGetGamePhase {
         //GameEntity that shall be returned
         GameEntity game = new GameEntity();
         game.setStateForLogicService(State.hasEnded);
+        game.setTimeStart(0L);
 
         given(activeGameService.getGameById(anyLong())).willReturn(game);
 
