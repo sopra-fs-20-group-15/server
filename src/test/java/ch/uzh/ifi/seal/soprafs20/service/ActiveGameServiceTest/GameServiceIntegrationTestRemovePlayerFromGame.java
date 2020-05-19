@@ -19,8 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @Transactional
@@ -45,6 +44,7 @@ public class GameServiceIntegrationTestRemovePlayerFromGame extends TestSETUPCre
 
         assertEquals(2, createdActiveGame.getPlayers().size());
         assertEquals(1, createdActiveGame.getPassivePlayerIds().size());
+        assertNotNull(gameService.getGameById(createdActiveGame.getId()));
     }
 
     @Test
@@ -58,6 +58,8 @@ public class GameServiceIntegrationTestRemovePlayerFromGame extends TestSETUPCre
 
         assertEquals(1, createdActiveGame.getPlayers().size());
         assertEquals(0, createdActiveGame.getPassivePlayerIds().size());
+        //Game gets not accidentally deleted
+        assertNotNull(gameService.getGameById(createdActiveGame.getId()));
 
     }
 

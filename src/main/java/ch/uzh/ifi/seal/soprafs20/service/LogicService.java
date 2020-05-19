@@ -270,11 +270,12 @@ public class LogicService {
      * @Throws: 404 if game is not found
     */
     public GamePhaseDTO getGamePhase(long gameId){
-        State state = getGame(gameId).getStateForLogicService();
+        GameEntity game = getGame(gameId);
+        State state = game.getStateForLogicService();
         GamePhaseDTO gamePhaseDTO = new GamePhaseDTO();
         gamePhaseDTO.setPhase(state.toString());
         gamePhaseDTO.setPhaseNumber(state.getNumVal());
-        gamePhaseDTO.setTimeStart(gamePhaseDTO.getTimeStart());
+        gamePhaseDTO.setTimeStart(game.getTimeStart());
         return gamePhaseDTO;
     }
 

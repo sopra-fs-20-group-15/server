@@ -6,7 +6,7 @@ public class GamePhaseDTO {
 
     int phaseNumber;
 
-    int timeStart;
+    long timeStart;
 
     public String getPhase() {
         return phase;
@@ -24,11 +24,11 @@ public class GamePhaseDTO {
         this.phaseNumber = phaseNumber;
     }
 
-    public int getTimeStart() {
+    public long getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(int timeStart) {
+    public void setTimeStart(long timeStart) {
         this.timeStart = timeStart;
     }
 }
