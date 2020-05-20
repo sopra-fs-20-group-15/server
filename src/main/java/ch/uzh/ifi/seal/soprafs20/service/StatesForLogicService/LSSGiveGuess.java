@@ -112,7 +112,9 @@ public class LSSGiveGuess implements LogicServiceState{
         }
         //draw an extra card if the guess was wrong
         if (!isValidGuess && !(game.getCardIds().size() == 0)){
-            game.drawCardFromStack();
+            List<Long> cards = game.getCardIds();
+            cards.remove(cards.size()-1);
+            game.setCardIds(cards);
         }
         //Time to dish out some points fam!
         updateScoreboard(game);
