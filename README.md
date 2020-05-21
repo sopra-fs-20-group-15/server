@@ -1,12 +1,13 @@
 # Just One
 
-This project aims to recreate the popular game "Just One" as a web application. This repository implements the server side of the said web application. To view the client side, please visit the following git repository: https://github.com/sopra-fs-20-group-15/client.git
+This project aims to recreate the popular table top game "Just One" as a web application, while staying as true as possible to the original. The goal of this web application is to allow for players around the world to play "Just One" together. 
+This repository implements the server side of the said web application. To view the client side, please visit the following git repository: https://github.com/sopra-fs-20-group-15/client.git
 
 ## Technologies used
 
 This project uses Gradle for its build automation and deployment.
 
-The Client and Server communicate to each other through REST API Calls. This is also the reason why this project is implemented throug Spring Boot, which allows for easy management of REST endpoints.
+The Client and Server communicate to each other through REST API Calls. This is also the reason why this project is implemented with Spring Boot, which allows for easy management of REST endpoints.
 
 ## High-level components
 
