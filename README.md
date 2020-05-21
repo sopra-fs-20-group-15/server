@@ -1,13 +1,21 @@
 # Just One
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sopra-fs-20-group-15_server&metric=alert_status)](https://sonarcloud.io/dashboard?id=sopra-fs-20-group-15_server)
 
-This project aims to recreate the popular table top game "Just One" as a web application, while staying as true as possible to the original. The goal of this web application is to allow for players around the world to play "Just One" together. 
+This project aims to recreate the popular table top game "Just One" as a web application, while staying as true to the original as possible. 
+
+The goal of this web application is to allow for players around the world to play "Just One" together. This application  allows for players to add bots to their games, if they do not have enough players to play a game or simply want more players in the game. It's also possible to play a game without having other human co-players as long as you add at least two bots to meet the minimum required player size of three.
+
+The web application is implemented in a way that it recognizes if a player has left the game during a game session and replaces the missing player with a bot at the end of the turn.
+
 This repository implements the server side of the said web application. To view the client side, please visit the following git repository: https://github.com/sopra-fs-20-group-15/client.git
 
 ## Technologies used
 
-This project uses Gradle for its build automation and deployment.
+This project is written in Java (JDK 13) and uses Spring Boot for additional tools. Repositories used in this project are managed and stored through hibernate. The Client and Server communicate to each other through REST API Calls. This is also the reason why this project is implemented with Spring Boot, which allows for easy management of REST endpoints.
 
-The Client and Server communicate to each other through REST API Calls. This is also the reason why this project is implemented with Spring Boot, which allows for easy management of REST endpoints.
+This project uses Gradle for its build automation and deployment ([Building With Gradle](##building-with-gradle)).
+
+This project is set to deploy to Heroku (running build on the web) and SonarCloud (quality control). If you wish to deploy to your own Heroku and SonarCloud create secrets for the secrets in [deploy.yml](.github/workflows/deploy.yml).
 
 ## High-level components
 
@@ -15,61 +23,7 @@ The Client and Server communicate to each other through REST API Calls. This is 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# SoPra RESTful Service Template FS20
-
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sopra-fs-20-group-15_server&metric=alert_status)](https://sonarcloud.io/dashboard?id=sopra-fs-20-group-15_server)
-
-## Getting started with Spring Boot
-
--   Documentation: https://docs.spring.io/spring-boot/docs/current/reference/html/index.html
--   Guides: http://spring.io/guides
-    -   Building a RESTful Web Service: http://spring.io/guides/gs/rest-service/
-    -   Building REST services with Spring: http://spring.io/guides/tutorials/bookmarks/
-
-## Setup this Template with your IDE of choice
-
-Download your IDE of choice: (e.g., [Eclipse](http://www.eclipse.org/downloads/), [IntelliJ](https://www.jetbrains.com/idea/download/)) and make sure Java 13 is installed on your system.
-
-1. File -> Open... -> SoPra Server Template
-2. Accept to import the project as a `gradle project`
-
-To build right click the `build.gradle` file and choose `Run Build`
-
-## Building with Gradle
+## Building with Gradle 
 
 You can use the local Gradle Wrapper to build the application.
 
@@ -116,29 +70,4 @@ If you want to avoid running all tests with every change, use the following comm
 
 `./gradlew build --continuous -xtest`
 
-## API Endpoint Testing
 
-### Postman
-
--   We highly recommend to use [Postman](https://www.getpostman.com) in order to test your API Endpoints.
-
-## Debugging
-
-If something is not working and/or you don't know what is going on. We highly recommend that you use a debugger and step
-through the process step-by-step.
-
-To configure a debugger for SpringBoot's Tomcat servlet (i.e. the process you start with `./gradlew bootRun` command),
-do the following:
-
-1. Open Tab: **Run**/Edit Configurations
-2. Add a new Remote Configuration and name it properly
-3. Start the Server in Debug mode: `./gradlew bootRun --debug-jvm`
-4. Press `Shift + F9` or the use **Run**/Debug"Name of your task"
-5. Set breakpoints in the application where you need it
-6. Step through the process one step at a time
-
-## Testing
-
-Have a look here: https://www.baeldung.com/spring-boot-testing
-
-test_kai
