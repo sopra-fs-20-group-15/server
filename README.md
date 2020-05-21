@@ -13,7 +13,7 @@ This repository implements the server side of the said web application. To view 
 
 This project is written in Java (JDK 13) and uses Spring Boot for additional tools. Repositories used in this project are managed and stored through hibernate. The Client and Server communicate to each other through REST API Calls. This is also the reason why this project is implemented with Spring Boot, which allows for easy management of REST endpoints.
 
-This project uses Gradle for its build automation and deployment ([Building With Gradle](##building-with-gradle)).
+This project uses Gradle for its build automation and deployment ([Building With Gradle](#building-with-gradle)).
 
 This project is set to deploy to Heroku (running build on the web) and SonarCloud (quality control). If you wish to deploy to your own Heroku and SonarCloud create secrets for the secrets in [deploy.yml](.github/workflows/deploy.yml).
 
