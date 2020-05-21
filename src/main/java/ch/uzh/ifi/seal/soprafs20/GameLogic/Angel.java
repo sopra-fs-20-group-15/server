@@ -13,7 +13,6 @@ public class Angel implements Bot {
 
     @Override
     public String giveClue(String mysteryWord, int n) {
-        mysteryWord = mysteryWord.toLowerCase();
         int length = mysteryWord.length();
         String line = "Error";
         if (n > 4) {
@@ -22,7 +21,7 @@ public class Angel implements Bot {
 
         try (BufferedReader bufReader = new BufferedReader(new FileReader("cardsEnAngel"))) {
             line = bufReader.readLine();
-            while (line != null && !line.substring(0, length).toLowerCase().contains(mysteryWord)) {
+            while (line != null && !line.substring(0, length).equalsIgnoreCase(mysteryWord)) {
                 line = bufReader.readLine();
             }
         } catch (IOException e) {

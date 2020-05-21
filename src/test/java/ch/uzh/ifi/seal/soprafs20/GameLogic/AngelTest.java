@@ -79,11 +79,13 @@ class AngelTest {
         String actual2 = angel.giveClue("smoke", 0);
         String actual3 = angel.giveClue("sMoKE", 0);
 
+
         assertNotNull(actual1);
         assertNotNull(actual2);
         assertNotNull(actual3);
         assertEquals(actual1, actual2);
         assertEquals(actual2, actual3);
+        assertEquals(actual1, "inhalation");
     }
 
     @Test
@@ -97,7 +99,6 @@ class AngelTest {
         assertEquals(angel.correctClueFromLine(line, 2), "perth");
         assertEquals(angel.correctClueFromLine(line, 3), "adelaide");
         assertEquals(angel.correctClueFromLine(line, 4), "papua");
-
     }
 
 }
