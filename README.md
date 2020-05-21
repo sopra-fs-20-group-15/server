@@ -1,3 +1,53 @@
+# Just One
+
+This project aims to recreate the popular game "Just One" as a web application. This repository implements the server side of the said web application. To view the client side, please visit the following git repository: https://github.com/sopra-fs-20-group-15/client.git
+
+## Technologies used
+
+This project uses Gradle for its build automation and deployment.
+
+The Client and Server communicate to each other through REST API Calls. This is also the reason why this project is implemented throug Spring Boot, which allows for easy management of REST endpoints.
+
+## High-level components
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # SoPra RESTful Service Template FS20
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sopra-fs-20-group-15_server&metric=alert_status)](https://sonarcloud.io/dashboard?id=sopra-fs-20-group-15_server)
