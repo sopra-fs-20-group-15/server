@@ -103,4 +103,16 @@ public class PlayerController {
         return playerGetDTO;
     }
 
+    /** Finds out if there exists a player with given token
+     * @Param: String playerToken; pathVariable
+     * @Returns: void
+     * @Throws: 404: no player with this token exists
+     * */
+    @GetMapping("/players/tokens/{playerToken}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void checkIfPlayerExistsByToken(@PathVariable String playerToken) {
+        playerService.checkIfPlayerExistsByToken(playerToken);
+    }
+
 }

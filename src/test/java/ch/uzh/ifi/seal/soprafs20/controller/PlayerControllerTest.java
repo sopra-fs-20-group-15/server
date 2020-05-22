@@ -288,6 +288,31 @@ public class PlayerControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    /**Tests a Get-Request to /players/tokens/{playerToken} */
+    @Test
+    public void aPlayerWithGivenTokenExists() throws Exception {
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder getRequest = get("/players/tokens/{playerToken}", "token");
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk());
+    }
+
+    /**Tests a Get-Request to /players/tokens/{playerToken} */
+    @Test
+    public void noPlayerWithGivenTokenExists() throws Exception {
+        // given
+        Mockito.doThrow(PlayerNotAvailable.class).when(playerService).checkIfPlayerExistsByToken(Mockito.anyString());
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder getRequest = get("/players/tokens/{playerToken}", "token");
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());
+    }
+
 
 
     /**
