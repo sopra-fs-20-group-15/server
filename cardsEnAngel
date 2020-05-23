@@ -63,7 +63,7 @@ Frankenstein: 0.blizzard 1.dracula 2.prometheus 3.monster 4.werewolf
 Beam: 0.light 1.supercharged 2.epitaxy 3.burthen 4.lithography 
 Accent: 0.pronunciation 1.syllable 2.dialect 3.vowel 4.intonation 
 Shower: 0.water 1.lavatory 2.soap 3.bathtub 4.meteor 
-Ladybird: 0.bug 1.elytra 3.dotted 4.loach 5.beetle
+Ladybird: 0.bug 1.elytra 2.dotted 3.loach 4.beetle
 Mustard: 0.mayonnaise 1.ketchup 2.fenugreek 3.tabun 4.cress 
 Sherlock: 0.holmes 1.theatre 2.pastiche 3.doyle 4.hound  
 Bottle: 0.perfume 1.champagne 2.vodka 3.whisky 4.glass
@@ -91,7 +91,7 @@ Friday: 0.saturday 1.party 2.prayers 3.sunday 4.monday
 Pirate: 0.blackbeard 1.treasure 2.ship 3.privateer 4.parrot 
 Holidays: 0.christmas 1.vacations 2.yom 3.ramadan 4.easter 
 Fairy: 0.tale 1.cinderella 2.grimm 3.prion 4.pinocchio 
-Magnet: 0.poles 1.field 1.synchronous 2.dipole 3.baccalaureate 4.wire 
+Magnet: 0.poles 1.field 2.dipole 3.baccalaureate 4.wire
 Fork: 0.spoon 1.eating 2.flathead 3.eel 4.tributary 
 Syrup: 0.sweet 1.maltose 2.treacle 3.fructose 4.citric 
 Forest: 0.trees 1.dark 2.animals 3.scrub 4.logging  
@@ -168,7 +168,7 @@ Bowling: 0.tenpin 1.alleys 2.beer 3spinner 4.ball
 Churchill: 0.winston 1.stalin 2.roosevelt 3.labrador 4.corvette 
 Aries: 0.libra 1.pisces 2.star 3.necro 4.taurus 
 Spy: 0.thriller 1.USA 2.agent 3.bond 4.secrets 
-Olympics: 0.japan 1.sport 2.tokyo 
+Olympics: 0.japan 1.athlete 2.tokyo 3.sport 4.sprint
 Climbing: 0.everest 1.mountaineering 2.caving 3.ropes 4.ladders
 Lawyer: 0.jurist 1.politician 2.legislator 3.diplomat 4.judge
 Tolkien: 0.elvish 1.hobbit 2.bilbo 3.beowulf 4.rings 
@@ -194,7 +194,7 @@ Mozart: 0.beethoven 1.amadeus 2.haydn 3.rossini 4.concerti
 Ring: 0.wrestler 1.undertaker 2.finger 3.bells 4.integer
 Pizza: 0.italy 1.pepperoni 2.mozzarella 3.takeaway 4.hut 
 Picture: 0.picasso 1.drawing 2.photo 3.editing 4.motion 
-Fire department: 0.911 1.service 2.marshal 3.chief 4.lieutenant 
+Fire department: 0.service 1.911 2.marshal 3.chief 4.lieutenant
 Glass: 0.bottle 1.beads 2.window 3.stained 4.corning 
 Meatball: 0.spaghetti 1.soup 2.noodles 3.sandwiches 4.stew 
 Greece: 0.crete 1.hellenic 2.ionian 3.cypruss 4.macedonia 
