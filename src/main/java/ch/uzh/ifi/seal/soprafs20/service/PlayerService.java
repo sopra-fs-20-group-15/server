@@ -64,7 +64,7 @@ public class PlayerService {
      * @throws UsernameAlreadyExists
      * @see PlayerEntity
      */
-    private void checkIfUserExists(PlayerEntity playerEntityToBeCreated) {
+    private void checkIfUserNameAlreadyInUse(PlayerEntity playerEntityToBeCreated) {
         PlayerEntity playerEntityByUsername = playerRepository.findByUsername(playerEntityToBeCreated.getUsername());
 
         String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
@@ -85,7 +85,7 @@ public class PlayerService {
         newPlayerEntity.setStatus(PlayerStatus.OFFLINE);
         newPlayerEntity.setLeaderBoardScore(0);
 
-        checkIfUserExists(newPlayerEntity);
+        checkIfUserNameAlreadyInUse(newPlayerEntity);
 
         if (newPlayerEntity.getPassword().equals("")|| newPlayerEntity.getUsername().equals("")) throw new IllegalRegistrationInput("Username and/or password can't consist of an empty string!");
 
@@ -105,14 +105,14 @@ public class PlayerService {
      * */
     public PlayerEntity loginUser(PlayerEntity potPlayerEntity){
         PlayerEntity playerEntity = playerRepository.findByUsername(potPlayerEntity.getUsername());
-        if (playerEntity ==null) throw new PlayerNotAvailable(String.format("No playerEntity with this username exists."));
+        if (playerEntity ==null) throw new PlayerNotAvailable("No playerEntity with this username exists.");
         else if (playerEntity.getPassword().equals(potPlayerEntity.getPassword())) {
             if (playerEntity.getStatus().equals(PlayerStatus.OFFLINE)) {
                 playerEntity.setStatus(PlayerStatus.ONLINE);
             }
             return playerEntity;
         }
-        else throw new UnauthorizedException(String.format("Incorrect password."));
+        else throw new UnauthorizedException("Incorrect password.");
     }
 
     /** Lets a player logout
@@ -136,5 +136,13 @@ public class PlayerService {
         return this.playerRepository.findAll();
     }
 
+    /** Check if player with given token exists
+     * @Param: String playerToken
+     * @Returns: void
+     * @Throws: 404: If user does not exist a PlayerNotAvailable exception is thrown
+     * */
+    public void checkIfPlayerExistsByToken(String playerToken){
+        getPlayerByToken(playerToken);
+    }
 
 }

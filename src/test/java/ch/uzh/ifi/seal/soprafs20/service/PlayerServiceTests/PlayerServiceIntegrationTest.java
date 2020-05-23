@@ -237,4 +237,20 @@ public class PlayerServiceIntegrationTest {
         NotFoundException exception= assertThrows(NotFoundException.class, () -> playerService.getPlayerById(newUser.getId()));
         assertEquals(exception.getMessage(),exceptionMsg);
     }
+
+    @Test
+    public void playerWithGivenTokenExists(){
+        PlayerEntity testUser = new PlayerEntity();
+        testUser.setUsername("testUsername");
+        testUser.setPassword("testPassword");
+        PlayerEntity createdUser = playerService.createUser(testUser);
+
+        //if no error thrown, test has passed; does not need assertions
+        playerService.checkIfPlayerExistsByToken(createdUser.getToken());
+    }
+
+    @Test
+    public void noPlayerWithGivenTokenExists(){
+        assertThrows(PlayerNotAvailable.class, ()->playerService.checkIfPlayerExistsByToken("pseudoToken"));
+    }
 }

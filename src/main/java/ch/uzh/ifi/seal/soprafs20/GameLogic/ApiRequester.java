@@ -16,11 +16,11 @@ public class ApiRequester {
 
 
 
-
-    //"ml" = means like, "rel_trg" = triggerword,
+    //makes an Api request to Datamuse for a String and a request type
+    //Request types: "ml" = means like, "rel_trg" = triggerword,
     public List<String> getFiveWordsFromDatamuseApi(String mysteryWord, String requestType) throws IOException {
         String transformedWord = this.transformWordForApi(mysteryWord);
-        String url = "https://api.datamuse.com/words?" + requestType + "=" + transformedWord + "&max=5";
+        String url = "https://api.datamuse.com/words?" + requestType + "=" + transformedWord + "&max=10";
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
@@ -37,6 +37,7 @@ public class ApiRequester {
         return clues;
     }
 
+    //makes API request to a WordStem Api, returns the stem
     public String getWordStem(String r) throws IOException {
         String s = r.toLowerCase();
         String apiAnswer;
@@ -69,16 +70,14 @@ public class ApiRequester {
         return convertStemApiAnswer(apiAnswer);
     }
 
-    /**
-     * @param s the string StemApiForm
-     * @return  word Stem
-     */
+    //converts the WordStem Api response into a usable string
     private String convertStemApiAnswer(String s){
         int middle = s.indexOf(":");
         return s.substring(middle+3, s.length()-2);
 
     }
 
+    //transforms the Datamuse response into a usable List of Strings
     private List<String> transformApiAnswer(StringBuffer response){
         List<String> clues = new ArrayList<>();
         while (response.indexOf("word") >= 0){
@@ -90,7 +89,7 @@ public class ApiRequester {
         return clues;
     }
 
-
+    //transforms a String with spaces into a String without spaces usable by the Datamuse Api
     private String transformWordForApi(String word){
         return word.replace(" ", "+");
     }
