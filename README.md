@@ -1,6 +1,7 @@
 # Just One
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sopra-fs-20-group-15_server&metric=alert_status)](https://sonarcloud.io/dashboard?id=sopra-fs-20-group-15_server)
 
+This project aims to recreate the popular table top game "Just One" as a web application, while adding features such as for example a score system and bots. 
 
 The goal of this web application is to let players all around the world  enjoy "Just One" together. This application  allows players to add bots to their games (which as of now can only give clues), if they do not have enough players to play a game or simply want more players in the game. It's also possible to play a game without having other human co-players as long as you add at least two bots to meet the minimum required player size of three.
 
