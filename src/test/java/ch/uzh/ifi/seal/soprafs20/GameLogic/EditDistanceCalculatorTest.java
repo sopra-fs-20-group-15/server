@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class EditDistanceCalculatorTest {
 
+    /**Leet-Speak: Replacing certain letters with numbers*/
     @Test
     void leetTranslatorWorks() {
         EditDistanceCalculator editDistanceCalculator = new EditDistanceCalculator();

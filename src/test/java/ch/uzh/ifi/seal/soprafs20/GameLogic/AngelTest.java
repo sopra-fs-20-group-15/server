@@ -33,6 +33,7 @@ class AngelTest {
         assertNotNull(actual);
     }
 
+    /**Bots are not allowed to give two times the same clue, since otherwise there would be too many invalid clues in a round played with a lot of bots*/
     @Test
     void testGiveClueGivesTwoNonEqualClues(){
         Angel angel = new Angel();

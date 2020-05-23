@@ -10,11 +10,8 @@ import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.service.*;
 import ch.uzh.ifi.seal.soprafs20.service.StatesForLogicService.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.transaction.BeforeTransaction;
 
 import java.util.ArrayList;
@@ -22,7 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import static ch.uzh.ifi.seal.soprafs20.constant.GameType.PRIVATE;
-
+/**This setup is used by a lot of integration tests (LogicService etc.)
+ * It creates three players, a gameSetUp and an active Game and saves all of them into repositories.
+ * -> If something about the game setup etc. changes, just this helper has to be changed*/
 public class TestSETUPCreatesActiveGame {
     protected GameSetUpEntity game = new GameSetUpEntity();
 
@@ -74,12 +73,14 @@ public class TestSETUPCreatesActiveGame {
 
     @BeforeEach
     public void setup() {
+        //Create a game setup
         game.setNumberOfPlayers(3L);
         game.setNumberOfAngles(0L);
         game.setNumberOfDevils(0L);
         game.setGameType(PRIVATE);
         game.setPassword("Cara");
 
+        //Create three players and save them into a repository
         PlayerEntity playerOne= new PlayerEntity();
         PlayerEntity playerTwo= new PlayerEntity();
         PlayerEntity playerThree= new PlayerEntity();
@@ -113,6 +114,7 @@ public class TestSETUPCreatesActiveGame {
         game.setHostName(p1.getUsername());
         game.setGameName("GameName");
 
+        //Create the active game based on the setup
         createdGame =gameSetUpService.createGame(game);
 
         createdActiveGame =gameService.getGameById(gameService.createActiveGame(createdGame.getId(), "One").getId());

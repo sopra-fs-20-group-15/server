@@ -10,7 +10,7 @@ import java.util.Map;
 
 class WordComparerTest {
 
-
+    /**Not allowed*/
     @Test
     void clueContainsMysteryWord() {
         WordComparer wordComparer = new WordComparer();
@@ -21,6 +21,7 @@ class WordComparerTest {
         assertTrue(wordComparer.containsMysteryWordMinusO(mWord, clue2, 0));
     }
 
+    /**Not allowed*/
     @Test
     void clueContainsReversedMysteryWord() {
         WordComparer wordComparer = new WordComparer();
@@ -31,6 +32,7 @@ class WordComparerTest {
         assertTrue(wordComparer.containsMysteryWordMinusO(mWord, clue2, 0));
     }
 
+    /**Not allowed*/
     @Test
     void clueContainsNearlyMysteryWord() {
         WordComparer wordComparer = new WordComparer();
@@ -41,6 +43,8 @@ class WordComparerTest {
         assertTrue(wordComparer.containsMysteryWordMinusO(mWord, clue2, 2));
     }
 
+    /**The wordComparer can produce a map with every given clue and how many duplicates of that clue exist
+     * Words with the same word stem etc. also count as duplicates*/
     @Test
     void noDuplicateInClues() {
         WordComparer wordComparer = new WordComparer();
@@ -120,7 +124,7 @@ class WordComparerTest {
     }
 
     @Test
-    void ClueToCloseToMysteryWord() {
+    void ClueTooCloseToMysteryWord() {
         WordComparer wordComparer = new WordComparer();
         ArrayList<String> words = new ArrayList<>();
         words.add("living");
@@ -129,6 +133,10 @@ class WordComparerTest {
         assertEquals(1, actual.get("living"));
     }
 
+    /**Sometimes Datamuse API which is responsible for creating the clues that the bots will give, returns clues that are too close to the mystery word,
+     * have withespaces in them etc. -> NotSuitableBotClues should detect this kind of words*/
+
+    /**House and Tree are valid clues for the MysteryWord "live"*/
     @Test
     void notASuitableBotClueOkClue() {
         WordComparer wordComparer = new WordComparer();
@@ -144,6 +152,7 @@ class WordComparerTest {
         assertEquals(actual.get(1), words.get(1));
     }
 
+    /**The word "live" is too close to the mysteryWord "live" and thus should be filtered out by "notSuitableBotClue"*/
     @Test
     void notASuitableBotClueOneWordIsMW() {
         WordComparer wordComparer = new WordComparer();

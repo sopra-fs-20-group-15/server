@@ -71,6 +71,7 @@ public class GameServiceIntegrationCreateActiveGameTest {
         playerRepository.deleteAll();
     }
 
+    //Creates a game setup with three human players in it and puts them into the repositories
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -165,6 +166,7 @@ public class GameServiceIntegrationCreateActiveGameTest {
         }
     }
 
+    /** If a player is not in the lobby yet*/
     @Test
     public void NotAllPlayersAreReady() {
         List<String> playerTokens=new ArrayList<>();
@@ -184,7 +186,7 @@ public class GameServiceIntegrationCreateActiveGameTest {
     }
 
     @Test
-    public void createActiveGameFailsBecauseNoGameSetupWithSpecifiedId() {
+    public void createActiveGameFailsBecauseNoGameSetupWithSpecifiedIdExists() {
         assertThrows(NotFoundException.class, ()-> gameService.createActiveGame(22000L, "Two"));
     }
 

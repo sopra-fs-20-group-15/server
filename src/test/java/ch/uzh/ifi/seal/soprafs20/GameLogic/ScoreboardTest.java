@@ -18,6 +18,7 @@ public class ScoreboardTest {
 
     @BeforeEach
     public void setup() {
+        //Put some fake scores for giving clues and guessing mystery words correctly
         Map<String, Integer> scores = new HashMap<String, Integer>();
         Map<String, Integer> mysteryWords = new HashMap<String, Integer>();
         //players
@@ -88,6 +89,8 @@ public class ScoreboardTest {
         assertTrue(mysteryActualList.contains(intended.get(2).getNumberOfCorrectlyGuessedMysteryWords()));
         assertTrue(mysteryActualList.contains(intended.get(3).getNumberOfCorrectlyGuessedMysteryWords()));
     }
+
+    /**When a player is removed due to inactivity before a game has ended, he or she should also be taken out of the scoreboard*/
     @Test
     void removePlayersFromScoreBoardWhenRemovingSinglePlayer(){
         //make sure map is not empty at beginning of game
@@ -121,6 +124,7 @@ public class ScoreboardTest {
         assertTrue(scoreboard.getScore().isEmpty());
         assertTrue(scoreboard.getCorrectlyGuessedMysteryWordsPerPlayer().isEmpty());
     }
+
 
     @Test
     void removePlayersFromScoreBoardDoesNothingIfNoPlayerMarkedForRemoval(){

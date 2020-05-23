@@ -47,6 +47,7 @@ public class CardServiceTest {
         Mockito.when(cardRepository.save(Mockito.any())).thenReturn(testCard);
     }
 
+    /**The card does not have a 0th word*/
     @Test
     public void ZeroShouldThrowError() {
         CardService cardService = new CardService(cardRepository);
@@ -60,6 +61,7 @@ public class CardServiceTest {
         assertTrue(thrown.getMessage().contains("The input should be between 1 and 5!"));
     }
 
+    /**The card does not have a 6th word*/
     @Test
     public void SixShouldThrowError() {
         CardService cardService = new CardService(cardRepository);

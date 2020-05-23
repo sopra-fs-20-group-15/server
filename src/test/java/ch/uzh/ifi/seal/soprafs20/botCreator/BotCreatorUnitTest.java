@@ -10,10 +10,11 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
-
+/**Tests if all kinds of bots can be created*/
 public class BotCreatorUnitTest {
     GameEntity game;
     BotCreator botCreator;
+    /**Setup. Needs a human player to check that their names are not equal*/
     @BeforeEach
     public void setup(){
         botCreator=new BotCreator();
@@ -51,8 +52,10 @@ public class BotCreatorUnitTest {
         assertEquals(0, game.getDevils().size());
     }
 
+    /**Humans and bots are not allowed to have the same name in a round of Just One*/
     @Test
     public void addBotsDoNotUseNamesFromListIfHumansOrOtherBotsAlreadyUsesSaidName(){
+        //Creates human players and bots
         List<PlayerEntity> players=game.getPlayers();
         PlayerEntity p2=new PlayerEntity();
         PlayerEntity p3=new PlayerEntity();

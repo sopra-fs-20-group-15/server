@@ -36,6 +36,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * UserControllerTest
  * This is a WebMvcTest which allows to test the UserController i.e. GET/POST request without actually sending them over the network.
  * This tests if the UserController works.
+ * Structure of all tests:
+ *  1. Preparations for the test, e. g. creation of a player etc.
+ *  2. mocking of all the functions that will be called in that endpoint
+ *  3. Request
+ *  4. assertions that should hold
  */
 @WebMvcTest(LogicController.class)
 public class LogicControllerTest {
