@@ -11,11 +11,9 @@ This repository implements the server side of the said web application. To view 
 
 ## Technologies used
 
-This project is written in Java (JDK 13) and uses Spring Boot for additional tools. Repositories used in this project are managed and stored through hibernate. The Client and Server communicate to each other through REST API calls. This is also the reason why this project is implemented with Spring Boot, which allows for easy management of REST endpoints.
+This project is written in Java (JDK 13) and uses Spring Boot for additional tools. Repositories used in this project are managed and stored through JPA / Hibernate. The Client and Server communicate to each other through REST API calls. This is also the reason why this project is implemented with Spring Boot, which allows for easy management of REST endpoints.
 
 This project uses Gradle for its build automation and deployment ([Building With Gradle](#building-with-gradle)).
-
-This project is set to deploy to Heroku (running build on the web) and SonarCloud (quality control). If you wish to deploy to your own Heroku and SonarCloud create secrets for the secrets in [deploy.yml](.github/workflows/deploy.yml).
 
 ## High-level components
 ### Game Setup
@@ -40,6 +38,7 @@ The Word Comparer is a component used for clue and guess evaluation and analysis
 The main and only class of this component is the [WordComparer](src/main/java/ch/uzh/ifi/seal/soprafs20/GameLogic/WordComparer.java) itself. It has a method that checks the clues and returns a  map that indicates which clues are valid and which ones are not. It also has a few of helper classes, which aid in that task. There is also a method to check if a given guess was right or not. Again, since this class is not meant to be accessed by the client, but is automatically invoked by the game logic component, there is no controller which allows for that.
 
 ## Launch and Deployment
+This section covers how to launch and deploy the server side of the application. To view how to do the same for the client side, please visit the following git repository: https://github.com/sopra-fs-20-group-15/client.git
 
 ### Building with Gradle 
 
@@ -91,6 +90,9 @@ If you want to avoid running all tests with every change, use the following comm
 ### Tests
 If you wish to run the tests without having to build the application with gradle. Feel free to run the entire test suite found [here](src/test) through your IDE.
 
+### Deployment
+This project is set to deploy to Heroku (production build) and SonarCloud (quality control). This is done by using Github Actions. If you wish to deploy to your own Heroku and SonarCloud accounts you will have to create the corresponding secrets mentioned in [deploy.yml](.github/workflows/deploy.yml) (config file) for your branch / fork.
+
 ## Roadmap
 For any developers wanting to fork this project or contribute to this project by implementing new features, we highly recommend implementing following features:
 
@@ -111,12 +113,23 @@ Contributors to this project in alphabetical order:
 
 Special Thanks to:
 * Scheitlin, Alex (Teaching Assistant, General Development Advisor)
-* Enis, Peter (Main Beta Tester)
-* Friends and Family (Further Beta Testers)
+* Friends and Family (Beta Testers)
 
 ## License
+   Copyright 2020 Sopra Group 15
 
-??????????????????????????????????????????????????????
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
 
 
 
