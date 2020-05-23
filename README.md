@@ -15,8 +15,8 @@ This project is written in Java (JDK 13) and uses Spring Boot for additional too
 
 This project uses Gradle for its build automation and deployment ([Building With Gradle](#building-with-gradle)).
 
-Furthermore, this project makes use of two external APIs, to which requests are being made. The first is a WordStemAPI that returns the stem of a given word, which is used for word comparison. The second is the DataMuse Api, that helps our Bots give good clues with the help of a wordNet.
 
+Furthermore, this project makes use of two external APIs, to which requests are being made. The first is a WordStemAPI that returns the stem of a given word, which is used for word comparison. The second is the DataMuse Api, that helps our Bots give good clues with the help of a wordNet.
 ## High-level components
 ### Game Setup
 The Game Setup component handles the setup of a game. Meaning that it allows players to create public or private lobbies and other players to join them. It also allows the creator of a lobby to set a maximum amount of players able to join the lobby and add some bots to the game lobby. When creating an active game the values set by the game setup are taken into consideration.
