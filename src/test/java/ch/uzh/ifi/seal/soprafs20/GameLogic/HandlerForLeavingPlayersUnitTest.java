@@ -22,6 +22,7 @@ public class HandlerForLeavingPlayersUnitTest {
     @Mock
     Map<String, Long> map;
 
+    /**Creates users and puts them into a game*/
     @BeforeEach
     public void setup(){
         game=new GameEntity();
@@ -58,6 +59,7 @@ public class HandlerForLeavingPlayersUnitTest {
         game.setActivePlayerId(1L);
     }
 
+    /**Tests the "Handler" which handles the task to take a player out of a game once they were absent for a certain time*/
     @Test
     public void loadingPlayersIntoHandlerWorks() throws NoSuchFieldException, IllegalAccessException {
         game.getHandlerForLeavingPlayers().loadPlayersIntoHandler(game.getPlayers());
@@ -70,6 +72,8 @@ public class HandlerForLeavingPlayersUnitTest {
         }
     }
 
+    /** Every time a player calls the dead man switch, it gives the signal that his or her client is still connected to the server
+     * -> the map should get updated */
     @Test
     public void updatingDeadMansSwitchMapWorks() throws NoSuchFieldException, IllegalAccessException {
         //setup
@@ -88,6 +92,7 @@ public class HandlerForLeavingPlayersUnitTest {
         assertNotEquals(0L,deadManSwitchMap.get("OneToken"));
     }
 
+    /**Check that if a player has not called the method for a certain time, his or her account gets taken out of the game and replaced with a bot*/
     @Test
     public void passivePlayerGetsRemoved() throws NoSuchFieldException {
         //setup
@@ -107,6 +112,7 @@ public class HandlerForLeavingPlayersUnitTest {
         assertEquals(1,game.getAngels().size());
     }
 
+    /** Multiple players can also get removed at the same time*/
     @Test
     public void allPassivePlayersGetsRemoved() throws NoSuchFieldException {
         //setup

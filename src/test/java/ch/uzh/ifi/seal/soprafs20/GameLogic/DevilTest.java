@@ -1,14 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.GameLogic;
 
-import ch.uzh.ifi.seal.soprafs20.Entities.CardEntity;
 import org.junit.jupiter.api.Test;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,6 +33,7 @@ class DevilTest {
         assertNotNull(actual);
     }
 
+ /**Bots are not allowed to give two times the same clue, since otherwise there would be too many invalid clues in a round played with a lot of bots*/
     @Test
     void testGiveClueGivesTwoNonEqualClues(){
         Devil devil = new Devil();

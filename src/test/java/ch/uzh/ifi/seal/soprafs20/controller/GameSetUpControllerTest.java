@@ -31,7 +31,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * GameSetUpController Tests
+ * Structure of all tests:
  * Tests the Endpoints in the file "GameSetUpController"
+ * 1. Preparations for the test, e. g. creation of a player etc.
+ * 2. mocking of all the functions that will be called in that endpoint
+ * 3. Request
+ * 4. assertions that should hold
  */
 
 @WebMvcTest(GameSetUpController.class)

@@ -33,6 +33,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
+/**
+ * ChatControllerTest
+ * Structure of all tests:
+ * The tests always have the same structure:
+ * 1. Preparations for the test, e. g. creation of a player etc.
+ * 2. mocking of all the functions that will be called in that endpoint
+ * 3. Request
+ * 4. assertions that should hold
+ */
 @WebMvcTest(ChatController.class)
 public class ChatControllerTest {
     @Autowired

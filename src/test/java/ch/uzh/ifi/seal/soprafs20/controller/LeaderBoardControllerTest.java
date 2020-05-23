@@ -23,7 +23,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+/** Tests the LeaderBoardController
+ * Structure of all tests:
+ * 1. Preparations for the test, e. g. creation of a player etc.
+ * 2. mocking of all the functions that will be called in that endpoint
+ * 3. Request
+ * 4. assertions that should hold
+ * */
 @WebMvcTest(LeaderBoardController.class)
 public class LeaderBoardControllerTest {
 
@@ -79,20 +85,5 @@ public class LeaderBoardControllerTest {
                 .andExpect(jsonPath("$[0].playerName", is("Bilbo")))
                 .andExpect(jsonPath("$[0].rank", is(1)))
                 .andExpect(jsonPath("$[0].score", is(50000)));
-    }
-
-    /**
-     * Helper Method to convert userPostDTO into a JSON string such that the input can be processed
-     * Input will look like this: {"name": "Test User", "username": "testUsername"}
-     * @param object
-     * @return string
-     */
-    private String asJsonString(final Object object) {
-        try {
-            return new ObjectMapper().writeValueAsString(object);
-        }
-        catch (JsonProcessingException e) {
-            throw new SopraServiceException(String.format("The request body could not be created.%s", e.toString()));
-        }
     }
 }

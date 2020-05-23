@@ -1,9 +1,9 @@
 # Just One
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sopra-fs-20-group-15_server&metric=alert_status)](https://sonarcloud.io/dashboard?id=sopra-fs-20-group-15_server)
 
-This project aims to recreate the popular table top game "Just One" as a web application, while staying as true as possible to the original version. 
+This project aims to recreate the popular table top game "Just One" as a web application, while adding features such as for example a score system and bots. 
 
-The goal of this web application is to let players all around the world to enjoy "Just One" together. This application  allows for players to add bots to their games (which as of now can only give clues), if they do not have enough players to play a game or simply want more players in the game. It's also possible to play a game without having other human co-players as long as you add at least two bots to meet the minimum required player size of three.
+The goal of this web application is to let players all around the world  enjoy "Just One" together. This application  allows players to add bots to their games (which as of now can only give clues), if they do not have enough players to play a game or simply want more players in the game. It's also possible to play a game without having other human co-players as long as you add at least two bots to meet the minimum required player size of three.
 
 The web application is implemented in a way that it recognizes if a player has left the game during a game session and replaces the missing player with a bot at the end of the turn.
 
@@ -15,9 +15,11 @@ This project is written in Java (JDK 13) and uses Spring Boot for additional too
 
 This project uses Gradle for its build automation and deployment ([Building With Gradle](#building-with-gradle)).
 
+
+Furthermore, this project makes use of two external APIs, to which requests are being made. The first is a WordStemAPI that returns the stem of a given word, which is used for word comparison. The second is the DataMuse Api, that helps our Bots give good clues with the help of a wordNet.
 ## High-level components
 ### Game Setup
-The Game Setup component handles the setup of a game. Meaning that it allows players to create public or private lobbies and other players to join them. It also allows the creator of a lobby to set a maximum amount of players allowed to join the lobby and add some bots to the game lobby. When creating a active game the values set by the game setup are taken into consideration.
+The Game Setup component handles the setup of a game. Meaning that it allows players to create public or private lobbies and other players to join them. It also allows the creator of a lobby to set a maximum amount of players able to join the lobby and add some bots to the game lobby. When creating an active game the values set by the game setup are taken into consideration.
 
 The main class of this component would be the [GameSetupService](src/main/java/ch/uzh/ifi/seal/soprafs20/service/GameSetUpService.java). This service envelops all methods necessary to get the behaviour described above. The methods in this class have descriptive names, so that their function is self explanatory. The client interacts with this service through Rest-Requests which are handled by the services own [controller](src/main/java/ch/uzh/ifi/seal/soprafs20/controller/GameSetUpController.java).
 ### Active Game
@@ -25,17 +27,18 @@ The Active Game is responsible for handling the creation and deletion of a game.
 
 The main class of this component is the [ActiveGameService](src/main/java/ch/uzh/ifi/seal/soprafs20/service/ActiveGameService.java). Within this service you will find various methods for the creation of a game and its initialization as well as methods for the deletion of a game and its related methods. This class' functionality again is accessed by an own [controller](src/main/java/ch/uzh/ifi/seal/soprafs20/controller/ActiveGamesController.java) which handles Rest-Requests.
 ### Game Logic
-The Game Logic component is responsible for handling the entire game logic of a active game from start to finish.
+The Game Logic component is responsible for handling the entire game logic of an active game from start to finish.
 
 The main class of this is the [LogicService](src/main/java/ch/uzh/ifi/seal/soprafs20/service/LogicService.java). The LogicService is responsible for the entire game logic. It's broken down into several self explanatory methods with clear functions. All the methods, that should not be accessible during certain phases of a round or should have different functionality depending on the phase the game currently is in, are implemented using the state pattern. Many of the methods within the LogicService need to leverage classes stored in the [GameLogic Folder](src/main/java/ch/uzh/ifi/seal/soprafs20/GameLogic). This component again is accessed by the client through its own [controller](src/main/java/ch/uzh/ifi/seal/soprafs20/controller/LogicController.java). 
-### Player Validation
-This component is meant to check if players making rest-requests on a specific active game are actually part of the game and/or if they have the necessary rights to make the request. This component is utilized throughout most of the methods game logic component, since it is essential to disallow unwanted requests to be made.
+### Bots
+We implemented our [bots](src/main/java/ch/uzh/ifi/seal/soprafs20/GameLogic/Bot.java) as an interface. There two kinds of bots. The first are the [Angels](src/main/java/ch/uzh/ifi/seal/soprafs20/GameLogic/Angel.java), which are bots that give helpful clues and the seconds are the [Devils](src/main/java/ch/uzh/ifi/seal/soprafs20/GameLogic/Devil.java), which are bots that give misleading clues.
 
-The main class of this component is the [ValidationService](src/main/java/ch/uzh/ifi/seal/soprafs20/service/ValidationService.java). This service includes three methods. One to simply check if the player is part of the game, one to check if the player is part of the game and the active player and one to check if the player is part of the game and a passive player. Since this service mainly accessed through the game logic component and there is no need to access the ValidationService for other reasons, there is no need for this service to have its own controller.
+Angels and Devils act as passive Players and give Clues using the Datamuse Api. To increase their speed and make us less dependent on the external Apis, we stored clues for all mystery Words in a separate file for each bot type, so that we only have to make  API requests, if loading the clues from the files fails or if we add new mystery words.
+
 ### Word Comparer
 The Word Comparer is a component used for clue and guess evaluation and analysis. It interacts with the game logic through calls in the game logic methods.
 
-The main and only class of this component is the [WordComparer](src/main/java/ch/uzh/ifi/seal/soprafs20/GameLogic/WordComparer.java) itself. It has a method that checks the clues and returns a  map that indicates which clues are valid and which ones are not. It also has a few of helper classes, which aid in that task. There is also a method to check if a given guess was right or not. Again, since this class is not meant to be accessed by the client, but is automatically invoked by the game logic component, there is no controller which allows for that.
+The main and only class of this component is the [WordComparer](src/main/java/ch/uzh/ifi/seal/soprafs20/GameLogic/WordComparer.java) itself. It has a method that checks the clues and returns a  map that indicates which clues are valid and which ones are not. It makes use of an external WordStemApi and a few helper classes, to aid with that task. There is also a method to check if a given guess was right or not. Again, since this class is not meant to be accessed by the client, but is automatically invoked by the game logic component, there is no controller needed.
 
 ## Launch and Deployment
 This section covers how to launch and deploy the server side of the application. To view how to do the same for the client side, please visit the following git repository: https://github.com/sopra-fs-20-group-15/client.git

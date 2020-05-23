@@ -4,7 +4,7 @@ import ch.uzh.ifi.seal.soprafs20.Entities.PlayerEntity;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+/**Are scores calculated correctly for the active player and passive players?*/
 public class ScoreCalculatorTest {
     @Test
     public void correctValuesActivePlayer(){
