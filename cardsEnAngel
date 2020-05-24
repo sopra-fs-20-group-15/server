@@ -129,6 +129,7 @@ Button: 0.joystick 1.pressing 2.massa 3.menu 4.webber
 Cheese: 0.curd 1.feta 2.cheddar 3.mozzarella 4.whey 
 Chewbacca: 0.leia 1.boba 2.hairy 3.yoda 4.endor
 Revolver: 0.handgun 1.holster 2.chambered 3.caliber 4.colt
+Straw: 0.hat 1.plastic 2.bales 3.bedding 4.horse
 Doctor: 0.strange 1.tardis 2.aid 3.octopus 4.wound
 Strawberry: 0.shortcake 1.ice 2.raspberry 3.switchblade 4.blueberry 
 Nuclear power: 0.plants 1.atom 2.energy 3.chernobyl 4.bomb
@@ -149,8 +150,7 @@ Chain: 0.saw 1.supermarket 2.reaction 3.discount 4.prison
 Strong: 0.winds 1.weak 2.resemblance 3.currents 4.arm
 Cookie: 0.jar 1.oreo 2.puss 3.dough 4.crumbs 
 Croissant: 0.baguette 1.pastry 2.dough 3.gluten 4.bakery
-Spirit: 0.soul 1.god 2.holy 3.ghost 4.divine 
-Straw: 0.hat 1.boater 2.bales 3.bedding 4.horse
+Spirit: 0.soul 1.god 2.holy 3.ghost 4.divine
 Nail: 0.ingrown 1.biter 2.varnish 3.hoof 4.psoriasis 
 Potter: 0.deathly 1.hallows 2.harry 3.quidditch 4.snape
 Darwin: 0.scientist 1.naturalist 2.huxley 3.palmerston 4.erasmus 
