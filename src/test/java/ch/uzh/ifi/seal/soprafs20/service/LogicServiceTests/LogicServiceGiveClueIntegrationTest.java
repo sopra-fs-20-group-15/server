@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class LogicServiceGiveClueIntegrationTest extends TestSETUPCreatesActiveGame {
 
+    /**Uses the setup which creates an active game with three human players*/
     @Autowired
     public LogicServiceGiveClueIntegrationTest(@Qualifier("cardService") CardService cardService, @Qualifier("gameSetUpService") GameSetUpService gameSetUpService, @Qualifier("logicService") LogicService logicService, @Qualifier("playerService") PlayerService playerService, @Qualifier("playerRepository") PlayerRepository playerRepository, @Qualifier("gameSetUpEntityRepository") GameSetUpRepository gameSetUpRepository, @Qualifier("gameRepository") GameRepository gameRepository, @Qualifier("activeGameService") ActiveGameService activeGameService, LSStateChooseMysteryWord lsStateChooseMysteryWord, LSSGiveClues lssGiveClues, LSSGiveGuess lssGiveGuess, LSSWordReveal lssWordReveal, LSSGameHasEnded lssGameHasEnded) {
         super(cardService, logicService, gameSetUpService, playerService, playerRepository, activeGameService, gameRepository, gameSetUpRepository,lsStateChooseMysteryWord, lssGiveClues, lssGiveGuess, lssWordReveal, lssGameHasEnded);
@@ -55,18 +56,22 @@ public class LogicServiceGiveClueIntegrationTest extends TestSETUPCreatesActiveG
 
     @Test
     public void passivePlayerGivesClue() {
+        //given
         createdActiveGame.setActiveMysteryWord("Test");
         CluePostDTO cluePostDTO = new CluePostDTO();
         cluePostDTO.setPlayerToken("Two");
         cluePostDTO.setClue("Clue");
         p2.setTimePassed(123L);
+        //function
         logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
+        //is the clue saved correctly?
         assertNotEquals(123L,p2.getTimePassed());
         assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
         assertEquals(createdActiveGame.getClueMap().get("Two"), "Clue");
         assertTrue(createdActiveGame.getValidClues().isEmpty());
     }
 
+    /**A player is not allowed to give the same clue twice*/
     @Test
     public void passivePlayerGivesClueTwice() {
         createdActiveGame.setActiveMysteryWord("Test");
@@ -76,6 +81,7 @@ public class LogicServiceGiveClueIntegrationTest extends TestSETUPCreatesActiveG
         logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
         assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
         assertEquals(createdActiveGame.getClueMap().get("Two"), "Clue");
+        //is correct error message thrown at second attempt to give clue?
         assertThrows(UnauthorizedException.class, () -> {logicService.giveClue(createdActiveGame.getId(), cluePostDTO);});
     }
 
@@ -91,6 +97,7 @@ public class LogicServiceGiveClueIntegrationTest extends TestSETUPCreatesActiveG
         cluePostDTO.setClue("Table");
         logicService.giveClue(createdActiveGame.getId(), cluePostDTO);
 
+        //When all players have given their clues, the list with valid clues is updated as well
         assertTrue(createdActiveGame.getClueMap().containsKey("Two"));
         assertEquals(createdActiveGame.getClueMap().get("Two"), "Clue");
         assertTrue(createdActiveGame.getClueMap().containsKey("Three"));

@@ -31,6 +31,7 @@ public class LogicServiceIntegrationTestGetCardAmount extends TestSETUPCreatesAc
         assertEquals(13,logicService.getCardAmount(createdActiveGame.getId()).getCardsOnStack());
     }
 
+    /**Does the getCardAmount work after a card is drawn?*/
     @Transactional
     @Test
     public void getCardAmountWorksAfterChange() {

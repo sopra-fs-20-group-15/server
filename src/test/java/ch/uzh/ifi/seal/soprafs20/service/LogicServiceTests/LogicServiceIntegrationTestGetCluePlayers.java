@@ -1,6 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.service.LogicServiceTests;
 
-import ch.uzh.ifi.seal.soprafs20.Entities.GameEntity;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameSetUpRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
@@ -18,11 +17,11 @@ import ch.uzh.ifi.seal.soprafs20.Helper.TestSETUPCreatesActiveGame;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
+/**Is the list for the client returned correctly, that marks which players have already submitted their clue?*/
 @Transactional
 @WebAppConfiguration
 @SpringBootTest

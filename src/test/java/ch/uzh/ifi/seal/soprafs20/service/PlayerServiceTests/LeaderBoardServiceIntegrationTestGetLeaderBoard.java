@@ -33,6 +33,7 @@ public class LeaderBoardServiceIntegrationTestGetLeaderBoard {
     PlayerEntity p2;
     PlayerEntity p3;
 
+    /**Set data for the leader board*/
     @BeforeTransaction
     public void setup() {
         playerRepository.deleteAll();

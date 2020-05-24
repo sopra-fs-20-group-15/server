@@ -32,6 +32,7 @@ public class LogicServiceIntegrationTestGetStatistics extends TestSETUPCreatesAc
         super(cardService, logicService, gameSetUpService, playerService, playerRepository, activeGameService, gameRepository, gameSetUpRepository, lsStateChooseMysteryWord, lssGiveClues, lssGiveGuess, lssWordReveal, lssGameHasEnded);
     }
 
+    /**Puts scores into scoreboard so that statistics can be created based on the scores*/
     @BeforeEach
     public void setup2() {
 

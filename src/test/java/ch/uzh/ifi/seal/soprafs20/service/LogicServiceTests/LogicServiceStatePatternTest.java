@@ -40,7 +40,7 @@ public class LogicServiceStatePatternTest extends TestSETUPCreatesActiveGame{
         playerRepository.deleteAll();
         cardRepository.deleteAll();
     }
-
+    /**The phases should be changed automatically, e.g. when the mysteryWord is set, "GiveClues" should start etc. */
     @Test
     public void ChangesStateCorrectly() {
         //Initializes game before it starts

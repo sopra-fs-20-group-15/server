@@ -48,36 +48,5 @@ public class LogicServiceTestInitializeTurn {
         assertEquals(oldIdFromFirstCardOnStack, newActiveCardId);
         assertEquals(oldStackSize-1, newStackSize);
     }
-    /**Test Helper Method goOnePlayerFurther*/
 
-    /**
-    @Test
-    public void goOnePlayerFurtherWorks() {
-        GameEntity activeGame = new GameEntity();
-        activeGame.setActivePlayerId(1L);
-        List<Long> idList = new ArrayList<Long>();
-        idList.add(2L);
-        idList.add(3L);
-        idList.add(4L);
-        activeGame.setPassivePlayerIds(idList);
-
-        //Values before function
-        Long activePlayerIdBefore = activeGame.getActivePlayerId();
-        List<Long> passivePlayerIdsBefore = new ArrayList<Long>();
-        passivePlayerIdsBefore = activeGame.getPassivePlayerIds();
-        Long oldPassivePlayerIdFirst = passivePlayerIdsBefore.get(0);
-
-        //call function
-        GameEntity changedGame = logicService.goOnePlayerFurther(activeGame);
-        //get important information from game after function call
-        Long activePlayerId = activeGame.getActivePlayerId();
-        List<Long> passivePlayerIds = activeGame.getPassivePlayerIds();
-
-        //Check if it holds
-        assertEquals(passivePlayerIdsBefore.size(), passivePlayerIds.size());
-        assertEquals(activePlayerIdBefore, passivePlayerIds.get(passivePlayerIdsBefore.size()-1));
-        assertEquals(oldPassivePlayerIdFirst, activePlayerId);
-
-
-    }*/
 }

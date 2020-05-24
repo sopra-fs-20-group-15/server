@@ -39,42 +39,6 @@ public class LogicServiceIntegrationTestFinishingPhasesAutomatically extends Tes
         super(cardService, logicService, gameSetUpService, playerService, playerRepository, activeGameService, gameRepository, gameSetUpRepository, lsStateChooseMysteryWord, lssGiveClues, lssGiveGuess, lssWordReveal, lssGameHasEnded);
     }
 
-//    /**ChooseMysteryWord can finish automatically*/
-//    @Test
-//    public void ChooseMysteryWordFinishesAutomatically() {
-//        //Preparations
-//        createdActiveGame.setStateForLogicService(State.WordReveal);
-//        logicService.initializeTurn(createdActiveGame.getId());
-//        createdActiveGame.setTimeStart(0L);
-//        createdActiveGame.setActiveMysteryWord("");
-//
-//        createdActiveGame.setActiveCardId(0L);
-//        List<String> words=new ArrayList<>();
-//        words.add("Duck");
-//        words.add("Mullard");
-//        words.add("Goose");
-//        words.add("Honk");
-//        words.add("Test");
-//        CardEntity cardEntity= new CardEntity();
-//        cardEntity.setWords(words);
-//        cardEntity.setId(0L);
-//        cardRepository.save(cardEntity);
-//
-//        //Mock the current time of the System -> Uses logicService2 to spy
-//        Mockito.doReturn(40000L).when(logicService2).getSystemCurrentMillis();
-//
-//        //Perform the phase switch
-//        logicService2.checkThatPhaseHasNotEndedYet(createdActiveGame.getId());
-//
-//        //Check that a MysteryWord has been chosen correctly
-//        assertNotNull(createdActiveGame.getActiveMysteryWord());
-//        assertFalse(createdActiveGame.getActiveMysteryWord().isBlank());
-//        //Check that the phase has been switched
-//        assertEquals(State.GiveClues, createdActiveGame.getStateForLogicService());
-//        //Check that the timer has been reinitialized
-//        assertNotEquals(0L, createdActiveGame.getTimeStart());
-//    }
-//
     /**ChooseMysteryWord does not finish automatically when timer has not finished yet*/
     @Test
     public void ChooseMysteryWordFinishesAutomaticallyFailsBecauseTimeNotEndedYet() {

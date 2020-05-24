@@ -36,6 +36,7 @@ public class LogicServiceIntegrationTestGetClues extends TestSETUPCreatesActiveG
         super(cardService, logicService, gameSetUpService, playerService, playerRepository, activeGameService, gameRepository, gameSetUpRepository, lsStateChooseMysteryWord, lssGiveClues, lssGiveGuess, lssWordReveal, lssGameHasEnded);
     }
 
+    /**Extends the setup which has created an active game with three players so that clues are given which then can be retrieved*/
     @BeforeEach
     public void setup2() {
         createdActiveGame.setActiveMysteryWord("Test");

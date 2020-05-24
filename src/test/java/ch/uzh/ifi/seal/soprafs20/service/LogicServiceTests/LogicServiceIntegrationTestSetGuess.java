@@ -44,6 +44,7 @@ public class LogicServiceIntegrationTestSetGuess extends TestSETUPCreatesActiveG
         playerRepository.deleteAll();
     }
 
+    /**MysteryWord and Clues are set artificially*/
     @BeforeEach
     public void setup2() {
         createdActiveGame.setStateForLogicService(State.ChooseMysteryWord);
@@ -82,7 +83,9 @@ public class LogicServiceIntegrationTestSetGuess extends TestSETUPCreatesActiveG
         for (Map.Entry<String, Integer> entry: scoresBefore.entrySet()) {
             assertNotEquals(entry.getValue(),createdActiveGame.getScoreboard().getScore().get(entry.getKey()));
         }
+        // is the number of correctly guessed mysteryWords for that player updated?
         assertEquals(1,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("OneName"));
+        // is no supplementary card drawn?
         assertEquals(12, createdActiveGame.getCardIds().size());
     }
 
@@ -95,9 +98,11 @@ public class LogicServiceIntegrationTestSetGuess extends TestSETUPCreatesActiveG
         assertEquals(createdActiveGame.getGuess(), "Tree");
         assertFalse(createdActiveGame.getIsValidGuess());
         assertEquals(0,createdActiveGame.getScoreboard().getCorrectlyGuessedMysteryWordsPerPlayer().get("TwoName"));
+        //A card should be drawn if the guess was wrong
         assertEquals(11, createdActiveGame.getCardIds().size());
     }
 
+    /**Edge Case: Do no problems arise if the cardStack is already empty and the guess is wrong -> second card should not be drawn and no error thrown*/
     @Test
     public void activePlayerGivesIncorrectGuessAndTheCardStackIsEmpty() {
         createdActiveGame.setCardIds(new ArrayList<Long>());
@@ -112,7 +117,7 @@ public class LogicServiceIntegrationTestSetGuess extends TestSETUPCreatesActiveG
         assertEquals(0, createdActiveGame.getCardIds().size());
     }
 
-    /**Not possible in every phase except GiveGuess*/
+    /**Not possible in any phase except GiveGuess*/
 
     @Test
     public void giveGuessFailsInChooseMysteryWord() {

@@ -38,7 +38,7 @@ public class PlayerServiceIntegrationTest {
     }
 
 
-
+    /**Can a player be created if the inputs are valid?*/
     @Test
     public void createPlayer_validInputs_success() {
         // given

@@ -36,7 +36,8 @@ public class LogicServiceIntegrationTestHasGameEnded extends TestSETUPCreatesAct
 
     }
 
-/***/
+/**Check a case where the game has ended
+ * -> Compared to earlier versions, "hasGamEnded" only checks the state of the game, but does not set "hasEnded" anymore -> is in giveGuess now*/
     @Test
     public void GameHasEnded() {
 
