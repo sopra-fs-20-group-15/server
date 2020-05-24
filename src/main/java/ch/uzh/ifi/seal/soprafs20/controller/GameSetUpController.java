@@ -24,7 +24,7 @@ import static java.lang.Long.parseLong;
 public class GameSetUpController {
 
     private final PlayerService playerService;
-    private final GameSetUpService gameService;
+    private final GameSetUpService gameService; 
 
 
 
