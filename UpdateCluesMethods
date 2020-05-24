@@ -1,0 +1,133 @@
+/*
+    When updating the cardsEnAngel File for new mystery>words, you will need those,
+    but since they change the file and thus could break it, they are commented out, so nobody uses them.
+
+
+    public List<String> giveClueList(String mysteryWord) {
+        ApiRequester apiRequester = new ApiRequester();
+        WordComparer wordComparer = new WordComparer();
+        String returnClue = this.apiFailureClue();
+        List<String> clues1 = new ArrayList<>();
+        List<String> clues2 = new ArrayList<>();
+        try { clues1 = apiRequester.getFiveWordsFromDatamuseApi(mysteryWord, "rel_trg");
+        } catch (IOException ex) {
+            returnClue = this.apiFailureClue();
+        }
+        this.stripWords(clues1);
+        //if api didn't give back useful words
+
+        try { clues2 = apiRequester.getFiveWordsFromDatamuseApi(mysteryWord, "ml");
+            this.stripWords(clues2);
+        } catch (IOException ex) {
+            returnClue = this.apiFailureClue();
+        }
+
+        List<String> clues3 = this.giveClueListFromFile(mysteryWord);
+
+        clues1.addAll(clues2);
+        clues1.addAll(clues3);
+        return clues1;
+    }
+
+    public List<String> giveClueListFromFile(String mysteryWord) {
+        int length = mysteryWord.length();
+        String line = "Error";
+        List<String> clues3 = new ArrayList<>();
+
+        try (BufferedReader bufReader = new BufferedReader(new FileReader("cardsEnAngel"))) {
+            line = bufReader.readLine();
+            while (line != null && !line.substring(0, length).equalsIgnoreCase(mysteryWord)) {
+                line = bufReader.readLine();
+            }
+        } catch (IOException e) {
+        }
+        for (int i = 0; i < 5; i ++) {
+            String clue = this.correctClueFromLine(line, i);
+            clues3.add(clue);
+        }
+
+        return clues3;
+    }
+
+    try {
+            FileWriter fw = new FileWriter("cardsEnAngel");
+            for (int i = 0; i < listOfLines.size(); i++) {
+                String mWord = listOfLines.get(i);
+                List<String> clues = angel.giveClueList(mWord);
+                fw.write(mWord + ": ");
+                for (int j = 0; j < clues.size(); j++){
+                    fw.write( j + "." + clues.get(j) + " ");
+                }
+                if (clues.isEmpty()) {
+
+                    System.out.println("Empty: " + mWord + " number:" + i);
+                }
+                fw.write("\n");
+            }
+            fw.close();
+        } catch (IOException e) {
+            System.out.println("ErrorWriter");
+        }
+
+     */
+
+ /*
+     When updating the cardsEnDevil File for new mystery>words, you will need those,
+     but since they change the file and thus could break it, they are commented out, so nobody uses them.
+
+     public List<String> giveMoleList(String mysteryWord) {
+         ApiRequester apiRequester = new ApiRequester();
+         Angel angel = new Angel();
+         WordComparer wordComparer = new WordComparer();
+         List<String> relWords = new ArrayList<>();
+         try {
+             relWords = apiRequester.getFiveWordsFromDatamuseApi(mysteryWord, "ml");
+         } catch (IOException ex) {
+         }
+         if (relWords.size() < 3) {
+             relWords.add("Error");
+             relWords.add(this.randomWord());
+             relWords.add(this.randomWord());
+         }
+         List<String> moleClues = new ArrayList<>();
+         try {
+             moleClues = apiRequester.getFiveWordsFromDatamuseApi(relWords.get(2), "ml");
+             moleClues.addAll(apiRequester.getFiveWordsFromDatamuseApi(relWords.get(1), "ml"));
+             moleClues.addAll(apiRequester.getFiveWordsFromDatamuseApi(relWords.get(1), "rel_trg"));
+         } catch (IOException ex) { }
+
+         List<String> goodClues = angel.giveClueList(mysteryWord);
+         this.removeToHelpfulClues(goodClues, moleClues);
+
+         wordComparer.notSuitableBotClue(moleClues, mysteryWord);
+         Map<String, Integer> check = wordComparer.compareClues((ArrayList<String>) moleClues, mysteryWord);
+         for (Map.Entry<String, Integer> entry : check.entrySet()) {
+             if (entry.getValue() > 0) {
+                 moleClues.remove(entry.getKey());
+             }
+         }
+
+         return moleClues;
+     }
+
+     //used to write clues into the file
+     try {
+             FileWriter fw = new FileWriter("cardsEnDevil");
+             for (int i = 0; i < listOfLines.size(); i++) {
+                 String mWord = listOfLines.get(i);
+                 List<String> clues = devil.giveMoleList(mWord);
+                 fw.write(mWord + ": ");
+                 for (int j = 0; j < clues.size(); j++){
+                     fw.write(clues.get(j) + " ");
+                 }
+                 if (clues.isEmpty()) {
+
+                     System.out.println("Empty: " + mWord + " number:" + i);
+                 }
+                 fw.write("\n");
+             }
+             fw.close();
+         } catch (IOException e) {
+             System.out.println("ErrorWriter");
+         }
+      */
