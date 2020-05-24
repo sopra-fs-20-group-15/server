@@ -6,7 +6,8 @@ Rose: 0.love 1.tattoo 2.garden 3.pasadena 4.ranks
 Puppet: 0.marionette 1.pinocchio 2.cords 3.troupe 4.theater 
 Game: 0.nintendo 1.sega 2.xbox 3.console 4.arcade 
 Vegas: 0.nevada 1.las 2.casino 3.strip 4.poker 
-Chest: 0.lungs 1.pains 2.pleural 3.shoulders 4.abdomen  
+Chest: 0.lungs 1.pains 2.pleural 3.shoulders 4.abdomen
+New: 0.fresh 1.modern 2.original 3.revolutionary 4.recently
 Airplane: 0.pilot 1.hangar 2.takeoff 3.crash 4.clouds 
 Cord: 0.spinal 1.placenta 2.nerves 3.brainstem 4.plexus 
 Australia: 0.english 1.kangaroo 2.perth 3.adelaide 4.papua 
@@ -19,7 +20,7 @@ Chain: 0.stores 1.metal 2.reaction 3.polymer 4.pizza
 Farm: 0.dairy 1.animals 2.fields 3.lexington 4.machinery 
 Belgium: 0.luxembourg 1.brussels 2.flanders 3.ghent 4.netherlands 
 Pepper: 0.spice 1.cooking 2.paprika 3.cardamom 4.cumin  
-Triangle: 0.hypotenuse 1.angles 2.pythagoras 3.obtuse 4.vertices
+Triangle: 0.hypotenuse 1.sound 2.pythagoras 3.obtuse 4.vertices
 Doll: 0.barbie 1.toy 2.chucky 3.outfits 4.voodoo 
 Italy: 0.mussolini 1.pizza 2.sicily 3.naples 4.turin  
 Stage: 0.theatre 1.rapper 2.knockout 3.productions 4.actor 
@@ -40,18 +41,18 @@ Cactus: 0.needle 1.desert 2.pincushion 3.cholla 4.prickly
 Tennis: 0.croquet 1.racquet 2.game 3.courts 4.challenger  
 France: 0.Paris 1.luxembourg 2.baguette 3.snail 4.spain
 Moon: 0.lunar 1.apollo 2.crater 3.saturn 4.titan 
-Canteen: 0.cafeteria 1.snacks 2.hostel 3.meals 4.cafeteria 
+Canteen: 0.cafeteria 1.snacks 2.hostel 3.meals 4.coffee
 Emperor penguin: 0.mammal 1.bird 2.ice 3.turtle 4.goose
 Tool: 0.kit 1.cutting 2.interface 3.shed 4.maker 
 Brain: 0.tumour 1.head 2.amygdala 3.hippocampus 4.cortex
 Mask: 0.zorro 1.ball 2.airway 3.wig 4.disguise 
 Concert: 0.orchestra 1.pianist 2.musician 3.philharmonic 4.soloist  
-Troy: 0.HighSchoolMusical 1.trojan 2.iliad 3.aeneas 4.odysseus 
+Troy: 0.HighSchoolMusical 1.city 2.iliad 3.aeneas 4.odysseus
 Shark: 0.dogfish 1.hammerhead 2.viviparous 3.thresher 4.fins 
 Music: 0.songs 1.conservatory 2.video 3.genres 4.lyrics  
 Neck: 0.fingerboard 1.throat 2.vertebrae 3.cervical 4.collar  
 America: 0.Trump 1.continent 2.ecuador 3.colombia 4.venezuela  
-Coffee: 0.caffeine 1.arabica 2.espresso 3.robusta 4.beans 
+Coffee: 0.energy 1.arabica 2.espresso 3.robusta 4.beans
 Fever: 0.hot 1.dengue 2.chills 3.sick 4.cough 
 Barbie: 0.doll 1.chatty 2.rapunzel 3.girly 4.mariposa 
 Chocolate: 0.hazelnut 1.cacao 2.toffee 3.icecream 4.vanilla 
@@ -69,7 +70,7 @@ Sherlock: 0.holmes 1.theatre 2.pastiche 3.doyle 4.hound
 Bottle: 0.perfume 1.champagne 2.vodka 3.whisky 4.glass
 Virus: 0.corona 1.herpes 2.pathogenic 3.infect 4.hemorrhagic  
 Poison: 0.die 1.antidote 2.dart 3.frog 4.pill 
-Star: 0.trek 1.constellation 2.sun 3.magnitude 4.stellar  
+Star: 0.trek 1.wars 2.sun 3.magnitude 4.sign
 Wolf: 0.canis 1.lupus 2.cub 3.coyote 4.jackal 
 Lena: 0.yakutsk 1.bianca 2.ethan 3.siberia 4.maggie
 Birthday: 0.party 1.cake 2.bash 3.celebration 4.gift 
@@ -82,32 +83,33 @@ Buffy: 0.slayer 1.vampire 2.blood 3.joss 4.willow
 Volcano: 0.eruptive 1.lava 2.ash 3.pompei 4.pyroclastic  
 Passion: 0.hobby 1.christ 2.commitment 3.resurrection 4.fruit  
 Cock: 0.chicken 1.crowing 2.penis 3.rooster 4.doodle 
-Electricity: 0.kwh 1.magnetism 2.hydropower 3.renewable 4.hydro  
+Electricity: 0.kwh 1.magnetism 2.hydropower 3.renewable 4.windmill
 Genius: 0.intelligent 1.scientist 2.inventor 3.brilliant 4.science  
 Dracula: 0.vampire 1.blood 2.vlad 3.mina 4.nosferatu  
 Lion: 0.king 1.cat 2.panthera 3.rampant 4.tamer
 Sock: 0.stinks 1.foot 2.foreleg 3.spinnaker 4.hind
-Friday: 0.saturday 1.party 2.prayers 3.sunday 4.monday  
-Pirate: 0.blackbeard 1.treasure 2.ship 3.privateer 4.parrot 
+Friday: 0.saturday 1.party 2.prayers 3.good 4.thursday
+Pirate: 0.blackbeard 1.treasure 2.ship 3.robbery 4.parrot
 Holidays: 0.christmas 1.vacations 2.yom 3.ramadan 4.easter 
 Fairy: 0.tale 1.cinderella 2.grimm 3.prion 4.pinocchio 
 Magnet: 0.poles 1.field 2.dipole 3.baccalaureate 4.wire
 Fork: 0.spoon 1.eating 2.flathead 3.eel 4.tributary 
 Syrup: 0.sweet 1.maltose 2.treacle 3.fructose 4.citric 
-Forest: 0.trees 1.dark 2.animals 3.scrub 4.logging  
+Forest: 0.trees 1.dark 2.animals 3.scrub 4.logging
+Pig: 0.pork 1.roast 2.bacon 3.daffy 4.saucage
 Scale: 0.magnitude 1.numbers 2.intensity 3.earthquake 4.insects  
-Zeus: 0.typhon 1.cronus 2.hera 3.hephaestus 4.semele 5.tartarus 
-Cockroach: 0.roaches 1.bug 2.termite 3.exterminator 4.hissing 
-Dinosaur: 0.hadrosaur 1.tyrannosaurus 2.sauropod 3.stegosaurus 4.triceratops 
+Zeus: 0.lightning 1.cronus 2.hera 3.god 4.semele
+Cockroach: 0.termite 1.bug 2.survival 3.exterminator 4.hissing
+Dinosaur: 0.hadrosaur 1.t-rex 2.sauropod 3.stegosaurus 4.triceratops
 Yellow: 0.egg 1.sun 2.Pikachu 3.petals 4.color  
 Mushroom: 0.Mario 1.food 2.infection 3.spore 4.boletus 
 Pigeon: 0.bird 1.roost 2.droppings 3.forge 4.peas  
 Pikachu: 0.ash 1.lie 2.yellow 3.Pokemon 4.animal
 Asterix: 0.Obelix 1.potion 2.panacea 3.legionary 4.menhir  
 Robots: 0.automaton 1.AI 2.machines 3.androids 4.intelligence 
-Comedy: 0.funny 1.satire 2.sketch 3.sitcome 4.directed
+Comedy: 0.funny 1.satire 2.sketch 3.laughter 4.directed
 Language: 0.english 1.dialect 2.french 3.linguistic 4.syntax  
-Hairdresser: 0.cut 1.hair 2.florist 3.stylist 4.salon 
+Hairdresser: 0.cut 1.coloring 2.florist 3.stylist 4.salon
 Cocktail: 0.drink 1.grenadine 2.liqueur 3.bitters 4.garnish  
 Mario: 0.kart 1.bowser 2.peach 3.luigi 4.bros 
 Cork: 0.vine 1.bottle 2.bandon 3.munster 4.decider 
@@ -117,20 +119,20 @@ Fox: 0.wolf 1.fire 2.affiliate 3.scully 4.squirrel
 Police: 0.brutality 1.weapon 2.constable 3.officers 4.inspector 
 Simpson: 0.marge 1.homer 2.lisa 3.bart 4.nicole  
 Donut: 0.police 1.sarge 2.sweet 3.torus 4.eclair 
-Newspaper: 0.news 1.reading 2.publisher 3.circulation 4.columnist  
+Newspaper: 0.reading 1.Times 2.publisher 3.circulation 4.columnist
 Mountains: 0.alps 1.glacier 2.maud 3.massif 4.peaks  
 Peanut: 0.butter 1.satay 2.bread 3.jelly 4.allergies 
 Light bulb: 0.lamp 1.incandescent 2.fluorescent 3.room 4.glow
 Jedi: 0.sith 1.coruscant 2.yoda 3.lightsaber 4.darth
 Chili: 0.spicyn 1.capsicum 2.hot 3.carne 4.californication
 Sombrero: 0.hat 1.poncho 2.mariachi  3.anguilla 4.tres 
-Cloverleaf: 0.luck 1.charm 2.ramps 3.beltway 4.ramp
+Cloverleaf: 0.luck 1.charm 2.ramps 3.beltway 4.plant
 Button: 0.joystick 1.pressing 2.massa 3.menu 4.webber 
 Cheese: 0.curd 1.feta 2.cheddar 3.mozzarella 4.whey 
 Chewbacca: 0.leia 1.boba 2.hairy 3.yoda 4.endor
 Revolver: 0.handgun 1.holster 2.chambered 3.caliber 4.colt
 Straw: 0.hat 1.plastic 2.bales 3.bedding 4.horse
-Doctor: 0.strange 1.tardis 2.aid 3.octopus 4.wound
+Doctor: 0.strange 1.tardis 2.aid 3.who 4.wound
 Strawberry: 0.shortcake 1.ice 2.raspberry 3.switchblade 4.blueberry 
 Nuclear power: 0.plants 1.atom 2.energy 3.chernobyl 4.bomb
 Lottery: 0.powerball 1.gambling 2.jackpot 3.winnings 4.tickets
@@ -161,7 +163,7 @@ Binoculars: 0.birdwatching 1.scopes 2.eyepiece 3.magnification 4.galilean
 Fata morgana: 0.desert 1.water 2.geometer 3.fossae 4.oneiric 
 Ramses: 0.egypt 1.khafre 2.seleucid 3.chephren 4.meroe 
 Fire: 0.extinguished 1.alarm 2.smoke 3.flames 4.burned 
-Intersection: 0.undivided 1.road 2.highway 3.boulevard 4.roadway 
+Intersection: 0.undivided 1.road 2.highway 3.boulevard 4.signs
 Princess: 0.leia 1.highness 2.duchess 3.consort 4.dowager 
 Spaceship: 0.aliens 1.planet 2.serenity 3.crashes 4.martian  
 Bowling: 0.tenpin 1.alleys 2.beer 3spinner 4.ball
@@ -175,8 +177,7 @@ Tolkien: 0.elvish 1.hobbit 2.bilbo 3.beowulf 4.rings
 River: 0.watershed 1.flows 2.empties 3.tributaries 4.headwaters 
 Carpet: 0.rug 1.sweeper 2.weaving 3.upholstery 4.woven 
 Pony: 0.horse 1.children 2.cutie 3.penning 4.cob 5.mane 
-Crown: 0.thorns 1.jewels 2.aragon 3.king 4.prince 
-New: 0.fresh 1.modern 2.original 3.revolutionary 4.recently 
+Crown: 0.thorns 1.jewels 2.aragon 3.king 4.prince
 Tarantino: 0.blood 1.stallone 2.hollywood 3.coogan 4.cowell 
 Heino: 0.singer 1.schlager 2.song 3.famous 4.blonde
 Ninja: 0.shuriken 1.shredder 2.sensei 3.samurai 4.mutant
@@ -199,7 +200,7 @@ Glass: 0.bottle 1.beads 2.window 3.stained 4.corning
 Meatball: 0.spaghetti 1.soup 2.noodles 3.sandwiches 4.stew 
 Greece: 0.crete 1.hellenic 2.ionian 3.cypruss 4.macedonia 
 Tradition: 0.buddhism 1.worship 2.orthodox 3.folk 4.christianity 
-Snake: 0.venom 1.bite 2.eel 3.venomous 4.fear
+Snake: 0.venomous 1.bite 2.eel 3.scary 4.fear
 Trophy: 0.sport 1.goaltender 2.winner 3.mvp 4.skate 
 Picasso: 0.braque 1.derain 2.matisse 3.lipchitz 4.lapin 
 Clock: 0.ticking 1.synchronization 2.chimes 3.circadian 4.pendulum 
@@ -223,7 +224,7 @@ Pillows: 0.rest 1.cushions 2.mats 3.bags 4.pads
 Armstrong: 0.moon 1.apollo 2.niel 3.doping 4.tyne
 Sword: 0.sharp 1.steel 2.saber 3.katana 4.excalibur 
 Flight: 0.simulator 1.attendant 2.takeoff 3.deck 4.boeing
-Ticket: 0.vending 1.fares 2.machines 3.fare 4.sales 
+Ticket: 0.vending 1.fare 2.machines 3.train 4.sales
 Penguin: 0.oystercatcher 1.bird 2.ice 3.fish 4.gull 
 Cell: 0.mitosis 1.replication 2.carcinoma 3.adhesion 4.cytoplasm 
 Gandhi: 0.nonviolence 1.mahatma 2.maidan 3.ashram 4.nehru 
@@ -231,11 +232,11 @@ Oasis: 0.desert 1.palm 2.noel 3.radiohead 4.liam
 Crocodile: 0.alligators  1.mugger 2.africa 3.hippopotamus 4.caiman
 Jewellery: 0.earrings 1.brooch 2.gemstone 3.hoard 4.necklace 
 Subway: 0.city 1.train 2.seoul 3.transit 4.nagoya 
-Glasses: 0.lenses 1.eyewear 2.goggles 3.pint 4.anaglyph
+Glasses: 0.lense 1.goggles 2.eyewear 3.pint 4.anaglyph
 Falco: 0.musician 1.nintendo 2.austria 3.slippy 4.buteo 
 Jackson: 0.pollock 1.michael 2.mississippi 3.janet 4.hole 
 Cigarette: 0.butts 1.nicotine 2.smoker 3.menthol 4.tobacco
-Bracelet: 0.cuffs 1.bangels 2.wristband 3.gold 4.wrist
+Bracelet: 0.cuffs 1.bangels 2.wristband 3.gold 4.accesories
 Weather forecast: 0.meteorology 1.clear 2.hail 3.sunny 4.rain 
 Tower: 0.skyscraper 1.spire 2.belfry 3.tallest 4.parapet 5.storeys 
 Tattoo: 0.rose 1.forearm 2.parlour 3.ink 4.piercing 
@@ -256,14 +257,13 @@ Window: 0.transparent 1.lancet 2.openings 3.air 4.view
 Pomegranate: 0.food 1.fruit 2.quince 3.guava 4.red
 Filling: 0.pastry 1.gaps 2.dough 3.vacancy 4.baked
 Brush: 0.calligraphy 1.strokes 2.palette 3.finch 4.ink
-Pig: 0.pork 1.roast 2.bacon 3.daffy 4.saucage 
 Avicii: 0.singer 1.dead 2.famous 3.madonna 4.justin
-Slipper: 0.limpet 1.spurge 2.snails 3.cinderella 4.lobster 5.orchid 6.moccasin 7.clutch 8.spiny 
+Slipper: 0.foot 1.house 2.indoors 3.warm 4.confy
 Sheet: 0.weaver 1.wood 2.paper 3.metal 4.thickness 
 Puma: 0.cat 1.mammal 2.ocelot 3.peccary 4.cougar 
 Revolution: 0.bolshevik 1.lenin 2.mao 3.overthrow 4.monarchy 
 Sahara: 0.sand 1.mauritania 2.moroccan 3.hot 4.timbuktu 
-Knight: 0.templar 1.castle 2.fight 3.horse 4.templar 
+Knight: 0.templar 1.castle 2.armor 3.horse 4.sword
 Peace: 0.nobel 1.talks 2.prosperity 3.accord 4.treaties 
 Flower: 0.sun 1.smell 2.color 3.corolla 4.anthers 
 Switzerland: 0.bern 1.gold 2.liechtenstein 3.jura 4.zurich 

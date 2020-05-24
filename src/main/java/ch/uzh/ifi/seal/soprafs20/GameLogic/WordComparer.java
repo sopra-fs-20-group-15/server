@@ -85,10 +85,10 @@ public class WordComparer {
     //calculates the strictness of the WordComparer depending on the length of the String
     private int strictness(String s) {
         int strictness;
-        if (s.length() > 5) {
+        if (s.length() > 6) {
             strictness = 2;
         }
-        else if (s.length() > 3){
+        else if (s.length() > 4){
             strictness = 1;
         } else {
             strictness = 0;
